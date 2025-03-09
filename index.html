@@ -45,7 +45,50 @@
       border-radius: 10px;
       display: block;
     }
+ /* ====== 覆盖层(桌面端) ====== */
+    .demo1-overlay {
+      position: absolute;
+      left: 30px;  /* 桌面端：示例性地左上 */
+      bottom: 60px;
+      color: #fff;
+      transition: opacity 0.5s ease;
+      opacity: 0; /* 初始隐藏，active时显示 */
+    }
+    .demo1-carousel-slide.active .demo1-overlay {
+      opacity: 1;
+    }
 
+    .demo1-text-top {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      background: rgba(0,0,0,0.5);
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 4px;
+    }
+    .demo1-title {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+    }
+    .demo1-explore-btn {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #007BFF;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .demo1-text-bottom {
+      font-size: 1rem;
+      margin-top: 10px;
+      background: rgba(0,0,0,0.5);
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 4px;
+    }
     /* 小圆点容器：桌面端放在容器外 */
     .demo1-carousel-dots-container {
       text-align: center;
@@ -117,27 +160,53 @@
 <body>
   <h2>Carousel with Alpha Shift</h2>
 
+   <!-- 轮播容器 -->
   <div class="demo1-carousel-container">
     <div class="demo1-carousel-track">
       <!-- 幻灯片1 -->
       <div class="demo1-carousel-slide">
         <img src="Lv-Se-qing-cai.png" alt="Slide1">
+        <div class="demo1-overlay">
+          <div class="demo1-text-top">Stream now</div>
+          <div class="demo1-title">小颗青菜</div>
+          <button class="demo1-explore-btn">Explore now</button>
+          <div class="demo1-text-bottom">Sci-Fi · New season.</div>
+        </div>
       </div>
       <!-- 幻灯片2 -->
       <div class="demo1-carousel-slide">
         <img src="Two baskets of vegetables.png" alt="Slide2">
+        <div class="demo1-overlay">
+          <div class="demo1-text-top">Stream now</div>
+          <div class="demo1-title">青菜</div>
+          <button class="demo1-explore-btn">Explore now</button>
+          <div class="demo1-text-bottom">Sci-Fi · New season.</div>
+        </div>
       </div>
       <!-- 幻灯片3 -->
       <div class="demo1-carousel-slide">
-        <img src="合作伙伴Logo1.png" alt="Slide3">
+        <img src="A full-body portrait wearing a stylish summer work uniform.png" alt="Slide3">
+        <div class="demo1-overlay">
+          <div class="demo1-text-top">Stream now</div>
+          <div class="demo1-title">红菜苔</div>
+          <button class="demo1-explore-btn">Explore now</button>
+          <div class="demo1-text-bottom">Sci-Fi · New season.</div>
+        </div>
       </div>
       <!-- 幻灯片4 -->
       <div class="demo1-carousel-slide">
-        <img src="合作伙伴Logo2.png" alt="Slide4">
+        <img src="Di cai hua.png" alt="Slide4">
+        <div class="demo1-overlay">
+          <div class="demo1-text-top">Stream now</div>
+          <div class="demo1-title">地菜花</div>
+          <button class="demo1-explore-btn">Explore now</button>
+          <div class="demo1-text-bottom">Sci-Fi · New season.</div>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- 小圆点容器(4个) -->
   <div class="demo1-carousel-dots-container">
     <span class="demo1-carousel-dot"></span>
     <span class="demo1-carousel-dot"></span>
