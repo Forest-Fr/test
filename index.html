@@ -38,7 +38,7 @@
       flex: 0 0 auto;
       width: 100%;
       position: relative;
-      opacity: 1 !important;
+      opacity: 1;
       transition: opacity 0.3s ease-in-out;
       display: flex;
       justify-content: center;
@@ -46,14 +46,12 @@
     }
     .demo1-carousel-slide img {
       width: 100%;
-      height: auto; /* 桌面端保持图片原比例 */
+      height: auto; /* 保持原比例 */
       display: block;
       border-radius: 10px;
       filter: none !important;
       opacity: 1 !important;
     }
-    
-    /* 小圆点（桌面端放在容器外） */
     .demo1-carousel-dots-container {
       text-align: center;
       margin-top: 10px;
@@ -75,28 +73,28 @@
     @media (max-width: 768px) {
       .demo1-carousel-container {
         width: 100%;
-        height: 495px; /* 固定高度 */
-        margin: 20px auto; /* 可调整上下间距 */
-        padding: 0;  /* 移动端不需要左右留白 */
+        height: 495px;      /* 固定高度 */
+        margin: 20px auto;  /* 上下间距 */
+        padding: 0;         /* 不再左右留白 */
         overflow: hidden;
       }
       .demo1-carousel-track {
-        gap: 15px;    /* 图片之间 15px 间距 */
+        gap: 15px;          /* 每张图片之间间隔 15px */
         height: 100%;
       }
-      /* 移动端幻灯片宽度设置为85% */
+      /* 移动端每个幻灯片占 85% 宽 */
       .demo1-carousel-slide {
         flex: 0 0 85%;
-        height: 100%; /* 固定495px */
+        height: 100%;       /* 固定495px */
       }
-      /* 移动端图片统一裁剪到495px */
+      /* 强制图片裁剪为 495px 高 */
       .demo1-carousel-slide img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         border-radius: 10px;
       }
-      /* 将小圆点固定在轮播容器底部 */
+      /* 小圆点容器绝对定位在容器底部 */
       .demo1-carousel-dots-container {
         position: absolute;
         left: 0;
@@ -118,6 +116,7 @@
 </head>
 <body>
   <h2>Carousel Test</h2>
+  
   <!-- 轮播容器 -->
   <div class="demo1-carousel-container">
     <div class="demo1-carousel-track">
@@ -139,6 +138,7 @@
       </div>
     </div>
   </div>
+  
   <!-- 小圆点容器 -->
   <div class="demo1-carousel-dots-container">
     <span class="demo1-carousel-dot"></span>
@@ -146,7 +146,7 @@
     <span class="demo1-carousel-dot"></span>
     <span class="demo1-carousel-dot"></span>
   </div>
-
+  
   <script>
     (function(){
       const container = document.querySelector(".demo1-carousel-container");
@@ -157,38 +157,41 @@
       
       // 假设真实幻灯片数量为4
       const totalReal = 4;
-      // 克隆首尾以实现无限循环
+      // 克隆首尾
       const firstClone = slides[0].cloneNode(true);
       const lastClone = slides[totalReal - 1].cloneNode(true);
       track.insertBefore(lastClone, track.firstChild);
       track.appendChild(firstClone);
       
       const allSlides = Array.from(track.querySelectorAll(".demo1-carousel-slide"));
-      const totalSlidesWithClones = allSlides.length; // 应该为6
-      let currentIndex = 1;  // 初始指向真实第一张(克隆后在索引1)
+      const totalSlidesWithClones = allSlides.length; // 应为6
+      let currentIndex = 1; // 初始指向真实第一张(克隆后在索引1)
       let isAnimating = false;
       
-      // 计算每张幻灯片的宽度：
-      // 移动端：0.85 * window.innerWidth + 15；桌面端：使用容器宽度（包含左右留白）
+      // 计算每个幻灯片的“有效宽度”
+      // 桌面端：我们使用容器宽（包括左右留白），但为了让左右漏出效果，
+      // 可以采用一个比例，比如 0.8 * containerWidth + gap，桌面端可选用全宽（如需要居中模式，也可用下面的公式）
+      // 这里我们统一采用：有效宽度 = (0.85 * containerWidth) + 15
       function getSlideWidth() {
         if(window.innerWidth <= 768) {
           const gap = 15;
-          return Math.floor(window.innerWidth * 0.85) + gap;
+          return (window.innerWidth * 0.85) + gap;
         } else {
+          // 桌面端使用容器宽度（留白已由 CSS 处理）
           const measured = container.getBoundingClientRect().width;
           return measured;
         }
       }
       
-      // 更新轮播（加居中偏移：所有平台都用居中模式以保证左右部分可见且对称）
+      // 更新轮播位置
       function updateCarousel() {
         const slideWidth = getSlideWidth();
         const containerWidth = container.getBoundingClientRect().width;
-        // 居中偏移：将当前 slide 居中
-        const offset = -(currentIndex * slideWidth) + (containerWidth - slideWidth)/2;
+        // 使用居中偏移公式：让当前幻灯片（包括间隔）居中显示
+        const offset = -(currentIndex * slideWidth) + (containerWidth - slideWidth) / 2;
         track.style.transform = `translateX(${offset}px)`;
-      
-        // 更新圆点（基于真实幻灯片的索引）
+        
+        // 更新圆点，映射真实幻灯片索引：真实幻灯片对应索引 = currentIndex - 1
         let dotIndex;
         if(currentIndex === 0) {
           dotIndex = totalReal - 1;
@@ -200,8 +203,8 @@
         dots.forEach((dot, i) => {
           dot.classList.toggle("active", i === dotIndex);
         });
-      
-        // 设置 active 类
+        
+        // 标记 active 状态
         allSlides.forEach(sl => sl.classList.remove("active"));
         allSlides[currentIndex].classList.add("active");
       }
@@ -222,12 +225,12 @@
         updateCarousel();
       }
       
-      // 小圆点点击事件
+      // 小圆点点击
       dots.forEach((dot, i) => {
         dot.addEventListener("click", () => {
           if(isAnimating) return;
           isAnimating = true;
-          currentIndex = i + 1;  // 对应真实幻灯片索引
+          currentIndex = i + 1;
           track.style.transition = "transform 0.5s ease-in-out";
           updateCarousel();
         });
@@ -259,7 +262,14 @@
         interval = setInterval(nextSlide, 4000);
       }
       
-      // 监听 resize 重新计算
+      // 初始化
+      track.style.transition = "none";
+      updateCarousel();
+      setTimeout(() => {
+        track.style.transition = "transform 0.5s ease-in-out";
+      }, 50);
+      
+      // 监听resize，重新计算
       window.addEventListener("resize", () => {
         isAnimating = false;
         track.style.transition = "none";
@@ -268,13 +278,6 @@
           track.style.transition = "transform 0.5s ease-in-out";
         }, 50);
       });
-      
-      // 初始
-      track.style.transition = "none";
-      updateCarousel();
-      setTimeout(() => {
-        track.style.transition = "transform 0.5s ease-in-out";
-      }, 50);
       
     })();
   </script>
