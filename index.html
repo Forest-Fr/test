@@ -127,7 +127,7 @@
 const initdemo1CarouselTrack = () => {
   const container = document.querySelector(".demo1-carousel-container");
   const track = document.querySelector(".demo1-carousel-track");
-  const slides = Array.from(document.querySelectorAll(".demo1-carousel-slide"));
+  let slides = Array.from(document.querySelectorAll(".demo1-carousel-slide"));
   const prevBtn = document.querySelector(".demo1-carousel-prev");
   const nextBtn = document.querySelector(".demo1-carousel-next");
   const dots = Array.from(document.querySelectorAll(".demo1-carousel-dot"));
@@ -135,41 +135,69 @@ const initdemo1CarouselTrack = () => {
   if (!container || !track || slides.length === 0 || !dots.length) return;
 
   const totalReal = slides.length;
-  let currentIndex = 0; // 取消从1开始，确保索引从0开始计算
   let isAnimating  = false;
 
-  function getSlideWidth() {
-    return slides[0].getBoundingClientRect().width + 15; // 直接取幻灯片宽度 + 间距
-  }
+  // 克隆首尾幻灯片，实现无缝滚动
+  const firstClone = slides[0].cloneNode(true);
+  const lastClone = slides[totalReal - 1].cloneNode(true);
 
-  function updateCarousel() {
-    const slideWidth = getSlideWidth();
-    track.style.transform = `translateX(${-currentIndex * slideWidth}px)`; // 直接按索引位移
-    dots.forEach((dot, i) => {
-      dot.classList.toggle("active", i === currentIndex);
-    });
+  track.appendChild(firstClone); // 添加到最后
+  track.insertBefore(lastClone, track.firstChild); // 添加到最前
+
+  slides = Array.from(track.querySelectorAll(".demo1-carousel-slide")); // 更新 slides
+  let currentIndex = 1; // 让它从克隆的第一张开始，避免左边空白
+  let slideWidth = slides[0].getBoundingClientRect().width + 15; // 幻灯片宽度 + 间距
+
+  function updateCarousel(animated = true) {
+    track.style.transition = animated ? "transform 0.5s ease-in-out" : "none";
+    track.style.transform = `translateX(${-currentIndex * slideWidth}px)`;
+
+    // 更新小圆点
+    let dotIndex = (currentIndex === totalReal + 1) ? 0 :
+                   (currentIndex === 0) ? totalReal - 1 :
+                   currentIndex - 1;
+
+    dots.forEach((dot, i) => dot.classList.toggle("active", i === dotIndex));
   }
 
   function nextSlide() {
     if (isAnimating) return;
     isAnimating = true;
-    currentIndex = (currentIndex + 1) % totalReal; // 循环索引
+    currentIndex++;
+
     updateCarousel();
-    setTimeout(() => isAnimating = false, 500);
+
+    setTimeout(() => {
+      if (currentIndex === totalReal + 1) { // 轮播到克隆的第一张
+        track.style.transition = "none";
+        currentIndex = 1; // 立刻跳回真实第一张
+        updateCarousel(false);
+      }
+      isAnimating = false;
+    }, 500);
   }
 
   function prevSlide() {
     if (isAnimating) return;
     isAnimating = true;
-    currentIndex = (currentIndex - 1 + totalReal) % totalReal;
+    currentIndex--;
+
     updateCarousel();
-    setTimeout(() => isAnimating = false, 500);
+
+    setTimeout(() => {
+      if (currentIndex === 0) { // 轮播到克隆的最后一张
+        track.style.transition = "none";
+        currentIndex = totalReal; // 立刻跳回真实最后一张
+        updateCarousel(false);
+      }
+      isAnimating = false;
+    }, 500);
   }
 
   function jumpToSlide(index) {
     if (isAnimating) return;
     isAnimating = true;
-    currentIndex = index;
+    currentIndex = index + 1; // 因为有克隆元素，所以 +1
     updateCarousel();
     setTimeout(() => isAnimating = false, 500);
   }
@@ -178,12 +206,22 @@ const initdemo1CarouselTrack = () => {
   nextBtn?.addEventListener("click", nextSlide);
   dots.forEach((dot, index) => dot.addEventListener("click", () => jumpToSlide(index)));
 
-  setInterval(nextSlide, 5000);
-  updateCarousel();
+  let interval = setInterval(nextSlide, 5000);
+  function resetInterval() {
+    clearInterval(interval);
+    interval = setInterval(nextSlide, 5000);
+  }
+
+  track.addEventListener("transitionend", () => {
+    isAnimating = false;
+  });
+
+  updateCarousel(false); // 初始位置，避免开头左边空白
 };
 
 window.addEventListener("load", initdemo1CarouselTrack);
 })();
+
 
 </script>
 </body>
