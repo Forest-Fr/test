@@ -347,8 +347,7 @@ opacity: 0;
 
 
 
-<script>
-(function(){
+(function () {
   const initdemo1CarouselTrack = () => {
     const container = document.querySelector(".demo1-carousel-container");
     const track = document.querySelector(".demo1-carousel-track");
@@ -414,7 +413,7 @@ opacity: 0;
         if (aTag) aTag.style.pointerEvents = "none";
       });
 
-      // 当前图片 => .active + 允许 <a> 点击
+      // ✅ **修复 `.active` 问题，确保 Explore Now 只在当前 slide 显示**
       slides[currentIndex].classList.add("active");
       const centerA = slides[currentIndex].querySelector("a");
       if (centerA) centerA.style.pointerEvents = "auto";
@@ -431,6 +430,18 @@ opacity: 0;
           slide.classList.add("shadow");
         }
       });
+
+      // ✅ **修复 Explore Now 按钮在所有图片上可见**
+      document.querySelectorAll(".demo1-explore-btn").forEach(btn => {
+        btn.style.opacity = "0";
+        btn.style.pointerEvents = "none";
+      });
+
+      const activeBtn = slides[currentIndex].querySelector(".demo1-explore-btn");
+      if (activeBtn) {
+        activeBtn.style.opacity = "1";
+        activeBtn.style.pointerEvents = "auto";
+      }
     }
 
     function nextSlide() {
@@ -496,6 +507,15 @@ opacity: 0;
       track.style.transition = "transform 0.5s ease-in-out";
     }, 50);
 
+    // ✅ **修复手机端按钮显示问题**
+    if (window.innerWidth <= 768) {
+      prevBtn.style.display = "block";
+      nextBtn.style.display = "block";
+    } else {
+      prevBtn.style.display = "none";
+      nextBtn.style.display = "none";
+    }
+
     // 点击：中间图 => 链接，左右图 => 切换
     slides.forEach(slide => {
       slide.addEventListener("click", (e) => {
@@ -553,8 +573,6 @@ opacity: 0;
 
   window.addEventListener("load", initdemo1CarouselTrack);
 })();
-
-
 
 
 
