@@ -30,9 +30,10 @@
     }
 
     .demo1-carousel-track {
-      display: flex;
-      align-items: center;
-      transition: transform 0.5s ease-in-out;
+     display: flex; /* 使用 flex 布局 */
+  gap: 15px; /* 图片之间的间隔 */
+  transition: transform 0.5s ease-in-out;
+  justify-content: flex-start; /* 确保图片从左开始排列 */
     }
 
     /* 每个幻灯片：桌面端 100% 宽度(左对齐) */
