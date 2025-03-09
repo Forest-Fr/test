@@ -58,13 +58,13 @@
     .demo1-carousel-dot.active { background: #007BFF; }
 
     /* ========== 移动端适配 ========== */
-  @media (max-width: 768px) {
+@media (max-width: 768px) {
   .demo1-carousel-container {
     display: flex;
-    flex-direction: column; /* 纵向布局 */
+    flex-direction: column;
     align-items: center;
     width: 100%;
-    min-height: 495px; /* 确保整个容器不会塌陷 */
+    min-height: 495px; /* 确保不会塌陷 */
     height: auto;
     margin-top: 12px;
     padding-bottom: 25px;
@@ -72,34 +72,36 @@
 
   .demo1-carousel-track {
     display: flex;
-    flex-direction: column; /* 让幻灯片纵向排列 */
-    gap: 15px; /* 幻灯片之间间距 */
+    flex-direction: column;
+    gap: 15px;
     align-items: center;
     width: 100%;
-    min-height: 495px; /* 确保整个track不会塌陷 */
+    min-height: 495px;
+    height: auto; /* 让track继承内容高度 */
   }
 
   .demo1-carousel-slide {
     width: 85%;
-    height: 495px; /* 强制所有幻灯片高度一致 */
     min-height: 495px;
     max-height: 495px;
+    height: 495px;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden; /* 避免溢出 */
-    position: relative; /* 让 img 绝对定位可生效 */
+    overflow: hidden;
+    position: relative;
   }
 
   .demo1-carousel-slide img {
     width: 100%;
-    height: 495px; /* 彻底锁死高度 */
-    min-height: 495px;
-    max-height: 495px;
-    object-fit: cover; /* 保证填充不会拉伸 */
+    height: 495px;
+    object-fit: cover; /* 确保填充 */
+    aspect-ratio: 16 / 9; /* 避免拉伸 */
     border-radius: 10px;
-    display: block; /* 让 img 避免 inline 高度塌陷问题 */
+    display: block;
   }
+
+ 
 
  
 
