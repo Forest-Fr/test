@@ -64,44 +64,36 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    min-height: 495px; /* 确保不会塌陷 */
     height: auto;
-    margin-top: 12px;
-    padding-bottom: 25px;
+    margin-top: 12px; /* 上方间距 */
+    padding-bottom: 45px; /* 下方适当增加以适应圆点 */
   }
 
   .demo1-carousel-track {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 15px; /* 轮播图片之间的间隔 */
     align-items: center;
     width: 100%;
-    min-height: 495px;
-    height: auto; /* 让track继承内容高度 */
+    height: auto;
   }
 
   .demo1-carousel-slide {
-    width: 85%;
-    min-height: 495px;
-    max-height: 495px;
-    height: 495px;
+    width: 85%; /* 宽度减少 15% */
+    height: 999px; /* 统一所有幻灯片高度 */
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
-    position: relative;
+    overflow: hidden; /* 避免超出 */
   }
 
   .demo1-carousel-slide img {
     width: 100%;
-    height: 495px;
-    object-fit: cover; /* 确保填充 */
-    aspect-ratio: 16 / 9; /* 避免拉伸 */
+    height: 999px; /* 强制固定高度 */
+    object-fit: cover; /* 确保填充，不拉伸 */
     border-radius: 10px;
     display: block;
   }
-
- 
 
  
 
@@ -163,6 +155,17 @@ const initdemo1CarouselTrack = () => {
   const totalReal = slides.length;
   let isAnimating  = false;
 
+  // **仅在手机端执行优化**
+  if (window.innerWidth <= 768) {
+    slides.forEach(slide => {
+      slide.style.height = "999px"; // 强制手机端轮播高度为 999px
+    });
+
+    document.querySelectorAll(".demo1-carousel-slide img").forEach(img => {
+      img.style.height = "999px";
+    });
+  }
+
   // 克隆首尾幻灯片，实现无缝滚动
   const firstClone = slides[0].cloneNode(true);
   const lastClone = slides[totalReal - 1].cloneNode(true);
@@ -172,13 +175,12 @@ const initdemo1CarouselTrack = () => {
 
   slides = Array.from(track.querySelectorAll(".demo1-carousel-slide")); // 更新 slides
   let currentIndex = 1; // 让它从克隆的第一张开始，避免左边空白
-  let slideWidth = slides[0].getBoundingClientRect().width + 15; // 幻灯片宽度 + 间距
+  let slideWidth = slides[0].getBoundingClientRect().width + 15; // 计算幻灯片宽度 + 间距
 
   function updateCarousel(animated = true) {
     track.style.transition = animated ? "transform 0.5s ease-in-out" : "none";
     track.style.transform = `translateX(${-currentIndex * slideWidth}px)`;
 
-    // 更新小圆点
     let dotIndex = (currentIndex === totalReal + 1) ? 0 :
                    (currentIndex === 0) ? totalReal - 1 :
                    currentIndex - 1;
@@ -223,7 +225,7 @@ const initdemo1CarouselTrack = () => {
   function jumpToSlide(index) {
     if (isAnimating) return;
     isAnimating = true;
-    currentIndex = index + 1; // 因为有克隆元素，所以 +1
+    currentIndex = index + 1;
     updateCarousel();
     setTimeout(() => isAnimating = false, 500);
   }
@@ -242,11 +244,12 @@ const initdemo1CarouselTrack = () => {
     isAnimating = false;
   });
 
-  updateCarousel(false); // 初始位置，避免开头左边空白
+  updateCarousel(false);
 };
 
 window.addEventListener("load", initdemo1CarouselTrack);
 })();
+
 
 
 </script>
