@@ -190,11 +190,28 @@
   /**
    * 让当前索引 currentIndex 的那张图居中 => offset = -(index * slideWidth) + (containerWidth - slideWidth)/2
    */
-  function updateCarousel() {
-    const slideWidth = getSlideWidth();
-    const containerWidth = container.getBoundingClientRect().width;
-    const offset = -(currentIndex * slideWidth) + (containerWidth - slideWidth)/2;
-    track.style.transform = `translateX(${offset}px)`;
+ function updateCarousel() {
+  const slideWidth = getSlideWidth();
+  const containerWidth = container.getBoundingClientRect().width;
+  
+  // 你可以做移动端 / 桌面端分别设定 α
+  let alpha;
+  if (window.innerWidth <= 768) {
+    // 移动端仍然对称
+    alpha = 0.5; 
+  } else {
+    // 桌面端让左边漏出更少
+    alpha = 0.33; 
+  }
+
+  const leftover = containerWidth - slideWidth;
+  // 新公式: offset = -(currentIndex * slideWidth) + leftover * alpha
+  const offset = -(currentIndex * slideWidth) + leftover * alpha;
+
+  track.style.transform = `translateX(${offset}px)`;
+
+  // ... 其余更新小圆点、克隆首尾逻辑 ...
+}
 
     // 更新小圆点
     let dotIndex;
