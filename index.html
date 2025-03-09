@@ -2,17 +2,23 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>Carousel Symmetric Test</title>
+  <title>Carousel with Alpha Shift</title>
   <style>
-    body { margin: 0; padding: 0; background: #f0f0f0; font-family: Arial, sans-serif; }
+    /* ========== 全局基础样式 ========== */
+    body {
+      margin: 0; padding: 0;
+      background: #f0f0f0;
+      font-family: Arial, sans-serif;
+    }
     h2 { text-align: center; margin: 20px 0; }
-    
+
+    /* ========== 桌面端样式 ========== */
     .demo1-carousel-container {
       position: relative;
       width: 100%;
-      height: 495px;
+      height: 495px;         /* 固定高度 */
       margin: auto;
-      padding: 0 10%; /* 桌面端两侧留白10% */
+      padding: 0 10%;        /* 桌面端左右留白10% */
       box-sizing: border-box;
       overflow: hidden;
       display: flex;
@@ -21,36 +27,43 @@
     }
     .demo1-carousel-track {
       display: flex;
-      align-items: center;
-      gap: 15px; /* 幻灯片之间 15px */
+      gap: 15px;             /* 幻灯片之间 15px 间距 */
       transition: transform 0.5s ease-in-out;
+      align-items: center;
     }
     .demo1-carousel-slide {
       flex: 0 0 auto;
-      width: 100%; /* 桌面端脚本会用 0.8 * containerWidth 作为实际宽度 */
+      width: 100%;          /* 脚本会将 slideWidth 视为 0.8 * containerWidth */
       display: flex;
       align-items: center;
       justify-content: center;
     }
     .demo1-carousel-slide img {
       width: 100%;
-      height: auto; /* 桌面端保持原比例, 如需固定495px可改 height: 100%; object-fit:cover; */
+      height: auto;         /* 桌面端保持原比例 */
       border-radius: 10px;
       display: block;
     }
-    .demo1-carousel-dots-container { text-align: center; margin-top: 10px; }
+
+    /* 小圆点容器：桌面端放在容器外 */
+    .demo1-carousel-dots-container {
+      text-align: center;
+      margin-top: 10px;
+    }
     .demo1-carousel-dot {
-      width: 10px; height: 10px; background: #ccc; border-radius: 50%;
-      margin: 0 5px; display: inline-block; cursor: pointer;
+      width: 10px; height: 10px; background: #ccc;
+      border-radius: 50%; margin: 0 5px; display: inline-block;
+      cursor: pointer;
     }
     .demo1-carousel-dot.active { background: #007BFF; }
-    
+
+    /* ========== 移动端适配 ========== */
     @media (max-width: 768px) {
       .demo1-carousel-container {
         width: 100%;
         height: 495px;
         margin: 20px auto;
-        padding: 0; /* 去掉桌面端留白 */
+        padding: 0; /* 去掉桌面端10%留白 */
       }
       .demo1-carousel-track {
         gap: 15px;
@@ -79,8 +92,8 @@
   </style>
 </head>
 <body>
-  <h2>Symmetric Center Carousel</h2>
-  
+  <h2>Carousel with Alpha Shift</h2>
+
   <div class="demo1-carousel-container">
     <div class="demo1-carousel-track">
       <!-- 幻灯片1 -->
@@ -101,25 +114,27 @@
       </div>
     </div>
   </div>
-  
+
   <div class="demo1-carousel-dots-container">
     <span class="demo1-carousel-dot"></span>
     <span class="demo1-carousel-dot"></span>
     <span class="demo1-carousel-dot"></span>
     <span class="demo1-carousel-dot"></span>
   </div>
-  
+
 <script>
 (function(){
   const container = document.querySelector(".demo1-carousel-container");
   const track = document.querySelector(".demo1-carousel-track");
   const slides = Array.from(document.querySelectorAll(".demo1-carousel-slide"));
   const dots = Array.from(document.querySelectorAll(".demo1-carousel-dot"));
-  if(!container || !track || slides.length === 0 || dots.length === 0) return;
+  if(!container || !track || slides.length===0 || dots.length===0) return;
 
+  // 幻灯片数量
   const totalReal = 4;
+  // 克隆首尾
   const firstClone = slides[0].cloneNode(true);
-  const lastClone  = slides[totalReal - 1].cloneNode(true);
+  const lastClone  = slides[totalReal -1].cloneNode(true);
   track.insertBefore(lastClone, track.firstChild);
   track.appendChild(firstClone);
 
@@ -128,23 +143,39 @@
   let currentIndex = 1; // 初始让第1张真实图居中
   let isAnimating = false;
 
+  // 你可以根据需要调下面两个值
+  // alphaDesktop < 0.5 => 左边更少, 右边更大
+  // alphaDesktop = 0.5 => 左右对称
+  // alphaDesktop > 0.5 => 左边更大, 右边更少
+  const alphaDesktop = 0.4; 
+  const alphaMobile = 0.5;  // 移动端用对称
+
   function getSlideWidth() {
     const cWidth = container.getBoundingClientRect().width;
     if(window.innerWidth <= 768) {
-      // 移动端: 85%
+      // 移动端: 85% of container
       return cWidth * 0.85;
     } else {
-      // 桌面端: 80%
+      // 桌面端: 80% of container
       return cWidth * 0.8;
     }
   }
 
   function updateCarousel() {
-    const slideWidth = getSlideWidth();
     const cWidth = container.getBoundingClientRect().width;
-    // 标准对称 => alpha = 0.5
+    const slideWidth = getSlideWidth();
+
+    // 计算 leftover
     const leftover = cWidth - slideWidth;
-    const offset = -(currentIndex * slideWidth) + leftover * 0.5;
+    // 判断当前是否移动端
+    let alpha;
+    if(window.innerWidth <= 768) {
+      alpha = alphaMobile; 
+    } else {
+      alpha = alphaDesktop;
+    }
+    // offset = -(index * slideWidth) + leftover * alpha
+    const offset = -(currentIndex * slideWidth) + leftover * alpha;
 
     track.style.transform = `translateX(${offset}px)`;
 
@@ -152,12 +183,12 @@
     let dotIndex;
     if(currentIndex === 0) {
       dotIndex = totalReal - 1;
-    } else if(currentIndex === totalSlidesWithClones - 1) {
+    } else if(currentIndex === totalSlidesWithClones -1) {
       dotIndex = 0;
     } else {
       dotIndex = currentIndex - 1;
     }
-    dots.forEach((d,i)=>d.classList.toggle("active", i===dotIndex));
+    dots.forEach((dot,i)=> dot.classList.toggle("active", i===dotIndex));
   }
 
   function nextSlide() {
@@ -175,18 +206,19 @@
     updateCarousel();
   }
 
-  dots.forEach((dot, i)=>{
+  dots.forEach((dot,i)=>{
     dot.addEventListener("click", ()=>{
       if(isAnimating) return;
       isAnimating = true;
-      currentIndex = i+1; 
+      currentIndex = i+1;
       track.style.transition = "transform 0.5s ease-in-out";
       updateCarousel();
     });
   });
 
+  // 无限循环
   track.addEventListener("transitionend", ()=>{
-    if(currentIndex === totalSlidesWithClones - 1) {
+    if(currentIndex === totalSlidesWithClones -1) {
       track.style.transition = "none";
       currentIndex = 1;
       updateCarousel();
@@ -203,8 +235,9 @@
     isAnimating = false;
   });
 
+  // 自动播放
   let interval = setInterval(nextSlide, 4000);
-  function resetInterval() {
+  function resetInterval(){
     clearInterval(interval);
     interval = setInterval(nextSlide, 4000);
   }
@@ -216,7 +249,7 @@
     track.style.transition = "transform 0.5s ease-in-out";
   },50);
 
-  // 监听resize
+  // 监听 resize => 重新计算
   window.addEventListener("resize", ()=>{
     isAnimating = false;
     track.style.transition = "none";
