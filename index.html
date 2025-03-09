@@ -41,6 +41,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative; /* 若用 ::before 需要父级 position: relative */原没有触发去阴影
     }
     .demo1-carousel-slide img {
       width: 100%;
@@ -48,6 +49,20 @@
       border-radius: 10px;
       display: block;
     }
+    .demo1-carousel-slide.shadow {
+  /* 简单做法：让其整体变暗 */
+  filter: brightness(0.6);
+  transition: filter 0.3s;
+}
+
+/* 或者用半透明遮罩 (叠加在slide上) */
+.demo1-carousel-slide.shadow::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.2);
+  pointer-events: none;
+}
  /* ====== 覆盖层(桌面端) ====== */
     .demo1-overlay {
       position: absolute;
