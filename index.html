@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>Test Carousel - Partial Visible</title>
+  <title>Test Carousel - Partial Visible (Optimized)</title>
   <style>
     /* 全局 */
     body {
@@ -26,17 +26,15 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      /* 如果想在桌面端左右留白，可加 padding: 0 10%; 
-         也可保留 0，视需求 */
       box-sizing: border-box;
     }
     .demo1-carousel-track {
       display: flex;
-      gap: 15px; /* 图片之间的间隔 */
+      gap: 15px; /* 图片之间间隔15px */
       transition: transform 0.5s ease-in-out;
       align-items: center;
     }
-    /* 每个幻灯片：桌面端先写 width: 100%; 脚本会按 measuredWidth+15 计算 */
+    /* 每个幻灯片 */
     .demo1-carousel-slide {
       flex: 0 0 auto;
       width: 100%;
@@ -45,15 +43,16 @@
       justify-content: center;
       align-items: center;
     }
+    /* 图片：占满幻灯片区域，高度 495px => cover */
     .demo1-carousel-slide img {
       width: 100%;
-      height: 100%; 
-      object-fit: cover; /* 统一裁剪到 495px 高 */
-      display: block;
+      height: 100%;
+      object-fit: cover;
       border-radius: 10px;
+      display: block;
     }
 
-    /* 小圆点容器 */
+    /* 小圆点 */
     .demo1-carousel-dots-container {
       text-align: center;
       margin-top: 10px;
@@ -70,12 +69,10 @@
     .demo1-carousel-dot.active {
       background: #007BFF;
     }
-
-    /* 若要移动端特别样式，可加 @media (max-width:768px) {...} */
   </style>
 </head>
 <body>
-  <h2>Test Carousel - Partial Visible</h2>
+  <h2>Test Carousel - Partial Visible (Optimized)</h2>
 
   <!-- 轮播容器 -->
   <div class="demo1-carousel-container">
@@ -120,7 +117,6 @@
     const totalReal = 4;
     const uniqueSlides = slides.slice(0, totalReal);
 
-    // 给每张slide设置 data-index
     uniqueSlides.forEach((slide, i) => {
       slide.setAttribute("data-index", i);
     });
@@ -130,42 +126,36 @@
     const lastSlide  = uniqueSlides[totalReal - 1];
     const firstClone = firstSlide.cloneNode(true);
     const lastClone  = lastSlide.cloneNode(true);
-    firstClone.setAttribute("data-index", 0);
-    lastClone.setAttribute("data-index", totalReal - 1);
     track.insertBefore(lastClone, track.firstChild);
     track.appendChild(firstClone);
 
     const allSlides = Array.from(track.querySelectorAll(".demo1-carousel-slide"));
-    const totalSlidesWithClones = allSlides.length; // = 6
-    let currentIndex = 1;  // 初始指向真实第1张(克隆后在索引1)
+    const totalSlidesWithClones = allSlides.length; // 6
+    let currentIndex = 1;  // 初始指向真实第1张
     let isAnimating  = false;
 
     /**
      * 3) getSlideWidth():
      *   - 移动端 => (0.85 * window.innerWidth) + 15
-     *   - 桌面端 => measuredWidth + 15
-     *     (借鉴你原脚本的思路)
+     *   - 桌面端 => (containerWidth * 0.8) + 15
+     *   (这样保证桌面端也比容器小，能左右露出)
      */
     function getSlideWidth() {
-      const slideElem = container.querySelector(".demo1-carousel-slide");
-      let measuredWidth = slideElem ? slideElem.getBoundingClientRect().width : 0;
-      if (measuredWidth === 0) {
-        measuredWidth = container.clientWidth || window.innerWidth;
-      }
+      const containerWidth = container.getBoundingClientRect().width;
       if (window.innerWidth <= 768) {
         let cardWidth = Math.floor(window.innerWidth * 0.85);
         let gap = 15;
         return cardWidth + gap;
       } else {
-        const gap = 15;
-        return measuredWidth + gap;
+        let gap = 15;
+        // 强制让每张slide占80%容器宽 + 15 => 确保左右漏出
+        return Math.floor(containerWidth * 0.8) + gap;
       }
     }
 
     /**
      * 4) updateCarousel():
      *    居中偏移 => offset = -(currentIndex * slideWidth) + (containerWidth - slideWidth)/2
-     *    => 左右对称漏出
      */
     function updateCarousel() {
       const slideWidth = getSlideWidth();
@@ -185,28 +175,9 @@
       dots.forEach((dot, i) => {
         dot.classList.toggle("active", i === dotIndex);
       });
-
-      // 移除所有 active/prev/next/shadow
-      allSlides.forEach(sl => sl.classList.remove("active", "prev", "next", "shadow"));
-
-      // 中间图 => .active
-      allSlides[currentIndex].classList.add("active");
-
-      // 左右 => .prev / .next
-      const nextIndex = (currentIndex + 1) % totalSlidesWithClones;
-      const prevIndex = (currentIndex - 1 + totalSlidesWithClones) % totalSlidesWithClones;
-      allSlides[nextIndex].classList.add("next");
-      allSlides[prevIndex].classList.add("prev");
-
-      // 非 .active => shadow
-      allSlides.forEach(slide => {
-        if (!slide.classList.contains("active")) {
-          slide.classList.add("shadow");
-        }
-      });
     }
 
-    // 5) 切换函数
+    // 5) next/prev/jump
     function nextSlide() {
       if (isAnimating) return;
       isAnimating = true;
@@ -229,7 +200,7 @@
       updateCarousel();
     }
 
-    // 6) 小圆点点击 => 跳转
+    // 6) dots点击
     dots.forEach((dot, i) => {
       dot.addEventListener("click", () => {
         jumpToSlide(i);
@@ -237,7 +208,7 @@
       });
     });
 
-    // 7) transitionend => 无限循环
+    // 7) transitionend => 无缝循环
     track.addEventListener("transitionend", () => {
       if (currentIndex === totalSlidesWithClones - 1) {
         track.style.transition = "none";
@@ -256,7 +227,7 @@
       isAnimating = false;
     });
 
-    // 8) 自动播放
+    // 8) auto
     let interval = setInterval(nextSlide, 5000);
     function resetInterval() {
       clearInterval(interval);
@@ -270,7 +241,7 @@
       track.style.transition = "transform 0.5s ease-in-out";
     }, 50);
 
-    // 10) 点击：中间图 => 链接(若有), 左右图 => 切换
+    // 10) 点击：中间图 => 链接, 左右图 => 切换(若需要)
     allSlides.forEach(slide => {
       slide.addEventListener("click", (e) => {
         if (slide.classList.contains("active")) {
@@ -296,7 +267,7 @@
       startX = e.touches[0].clientX;
     });
     container.addEventListener('touchmove', (e) => {
-      // 仅记录，不做实时拖拽
+      // ...
     });
     container.addEventListener('touchend', (e) => {
       if (!isSwiping) return;
