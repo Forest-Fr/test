@@ -60,25 +60,35 @@
     /* ========== 移动端适配 ========== */
     @media (max-width: 768px) {
       .demo1-carousel-container {
-        width: 100%;
-        height: 495px;
-        margin: 20px auto;
-        padding: 0; /* 去掉桌面端10%留白 */
-      }
+    display: flex;
+    flex-direction: column; /* 纵向布局 */
+    align-items: center;
+    width: 100%;
+    height: auto;
+    margin-top: 12px; /* 适应手机端上方间距 */
+    padding-bottom: 25px; /* 适当增加下方间距以适应圆点 */
+  }
       .demo1-carousel-track {
-        gap: 15px;
-        height: 100%;
-      }
-      .demo1-carousel-slide {
-        width: auto;
-        flex: 0 0 85%;
-        height: 100%;
-      }
-      .demo1-carousel-slide img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
+    display: flex;
+    flex-direction: column; /* 让幻灯片纵向排列 */
+    gap: 15px; /* 幻灯片之间的间距 */
+    align-items: center;
+    width: 100%;
+    height: auto;
+  }
+     .demo1-carousel-slide {
+    width: 85%; /* 保持适当宽度 */
+    height: 495px; /* 统一幻灯片高度 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+     .demo1-carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 确保填充容器 */
+    border-radius: 10px;
+  }
       .demo1-carousel-dots-container {
         position: absolute;
         left: 0; right: 0; bottom: 10px;
