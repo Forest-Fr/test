@@ -221,8 +221,8 @@ opacity: 0;
     flex-direction: column;
     align-items: center;
     width: 85%; /* 手机端宽度减少 15% */
-    min-height: 999px;
-    height: 999px;
+    min-height: 495px;
+    height: 495px;
     margin-top: 12px;
     padding-bottom: 45px; /* 适当增加底部空间，以适应小圆点 */
   }
@@ -233,14 +233,14 @@ opacity: 0;
     gap: 15px; /* 图片之间的间隔 */
     align-items: center;
     width: 100%;
-    height: 999px;
+    height: 495px;
   }
 
   .demo1-carousel-slide {
     width: 100%;
-    min-height: 999px;
-    max-height: 999px;
-    height: 999px; /* 彻底固定高度 */
+    min-height: 495px;
+    max-height: 495px;
+    height: 495px; /* 彻底固定高度 */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -250,8 +250,8 @@ opacity: 0;
   .demo1-carousel-slide img {
     width: 100%;
     min-width: 100%;
-    min-height: 999px;
-    height: 999px; /* 强制固定高度 */
+    min-height: 495px;
+    height: 495px; /* 强制固定高度 */
     object-fit: cover; /* 确保填充，不拉伸 */
     border-radius: 10px;
     display: block; /* 避免 inline 属性影响高度 */
@@ -365,18 +365,18 @@ opacity: 0;
     // **仅在手机端执行优化**
     if (window.innerWidth <= 768) {
       slides.forEach(slide => {
-        slide.style.height = "999px"; // 强制手机端轮播高度为 999px
+        slide.style.height = "495px"; // 强制手机端轮播高度为 495px
         slide.style.width = "85%"; // 宽度减少 15%
       });
 
       document.querySelectorAll(".demo1-carousel-slide img").forEach(img => {
-        img.style.height = "999px";
+        img.style.height = "495px";
         img.style.width = "100%"; // 确保填充整个 slide
       });
 
-      container.style.height = "999px"; // 确保整个容器不会塌陷
+      container.style.height = "495px"; // 确保整个容器不会塌陷
       container.style.width = "85%"; // 宽度减少 15%
-      track.style.height = "999px"; // 确保 track 高度正确
+      track.style.height = "495px"; // 确保 track 高度正确
     }
 
     // 克隆首尾幻灯片，实现无缝滚动
