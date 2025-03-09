@@ -136,11 +136,15 @@
 
   .demo1-carousel-slide img {
     width: 100%;
+    min-width: 100%;
+    min-height: 999px;
     height: 999px; /* 强制固定高度 */
     object-fit: cover; /* 确保填充，不拉伸 */
     border-radius: 10px;
     display: block; /* 避免 inline 属性影响高度 */
   }
+
+ 
 
 
  
@@ -238,7 +242,9 @@ const initdemo1CarouselTrack = () => {
 
     document.querySelectorAll(".demo1-carousel-slide img").forEach(img => {
       img.style.height = "999px";
+      img.style.minHeight = "999px"; // 防止高度塌陷
       img.style.width = "100%"; // 确保填充整个 slide
+      img.style.minWidth = "100%";
     });
 
     container.style.height = "999px"; // 确保整个容器不会塌陷
@@ -329,6 +335,7 @@ const initdemo1CarouselTrack = () => {
 
 window.addEventListener("load", initdemo1CarouselTrack);
 })();
+
 
 
 
