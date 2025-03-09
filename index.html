@@ -11,42 +11,41 @@
       background: #f0f0f0;
       font-family: Arial, sans-serif;
     }
-    h1, h2, h3, p {
-      margin: 0;
-      padding: 0;
+    h2 {
+      margin: 20px 0;
+      text-align: center;
     }
 
     /* ========== 轮播容器 ========== */
     .demo1-carousel-container {
       position: relative;
-      width: 90%;         /* 桌面端：可宽一点 */
-      max-width: 1200px;  /* 桌面端最大宽度 */
-      margin: 40px auto;  /* 居中 */
-      overflow: hidden;
+      width: 90%;            /* 桌面端宽度 */
+      max-width: 1200px;
+      margin: 40px auto;     /* 居中 */
+      overflow: hidden;      /* 隐藏溢出 */
     }
 
-    /* 轨道外层(可选)：如果你有 .demo1-carousel-track-wrapper，也可以写 */
     .demo1-carousel-track {
       display: flex;
       align-items: center;
       transition: transform 0.5s ease-in-out;
     }
 
-    /* 每个幻灯片：桌面端先 100% 宽度，左对齐 */
+    /* 每个幻灯片：桌面端 100% 宽度(左对齐) */
     .demo1-carousel-slide {
       flex: 0 0 100%;
       position: relative;
     }
     .demo1-carousel-slide img {
       width: 100%;
-      height: auto;       /* 桌面端先用 auto，高度随图 */
+      height: auto;  /* 桌面端先用 auto */
       display: block;
     }
 
-    /* ====== 覆盖层 ====== */
+    /* ====== 覆盖层(桌面端) ====== */
     .demo1-overlay {
       position: absolute;
-      left: 30px;  /* 桌面端：示例性地往左上摆 */
+      left: 30px;  /* 桌面端：示例性地左上 */
       bottom: 60px;
       color: #fff;
       transition: opacity 0.5s ease;
@@ -59,14 +58,6 @@
     .demo1-text-top {
       font-size: 1.1rem;
       margin-bottom: 10px;
-      background: rgba(0,0,0,0.5);
-      display: inline-block;
-      padding: 5px 10px;
-      border-radius: 4px;
-    }
-    .demo1-text-bottom {
-      font-size: 1rem;
-      margin-top: 10px;
       background: rgba(0,0,0,0.5);
       display: inline-block;
       padding: 5px 10px;
@@ -86,6 +77,14 @@
       color: #fff;
       border-radius: 4px;
       cursor: pointer;
+    }
+    .demo1-text-bottom {
+      font-size: 1rem;
+      margin-top: 10px;
+      background: rgba(0,0,0,0.5);
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 4px;
     }
 
     /* ===== 小圆点 ===== */
@@ -111,12 +110,11 @@
       .demo1-carousel-container {
         width: 100%;
         height: 495px;          /* 固定高度 */
-        margin: 20px auto;      /* 上下间距 */
-        overflow: hidden;
+        margin: 20px auto;
       }
       .demo1-carousel-track {
         gap: 15px;              /* 图片之间 15px 间距 */
-        height: 100%;           /* 让它与容器同高 495px */
+        height: 100%;
       }
       .demo1-carousel-slide {
         flex: 0 0 85%;          /* 与脚本 (0.85 * screenWidth + 15) 对应 */
@@ -125,10 +123,10 @@
       .demo1-carousel-slide img {
         width: 100%;
         height: 100%;
-        object-fit: cover;      /* 强制裁剪到 495px */
+        object-fit: cover;      /* 强制裁剪到 495px 高 */
         border-radius: 10px;
       }
-      /* 覆盖层移动端：示例性地放在底部居中 */
+      /* 覆盖层移动端：示例地放在底部居中 */
       .demo1-overlay {
         position: absolute;
         left: 0;
@@ -136,9 +134,6 @@
         width: 100%;
         text-align: center;
         opacity: 0;
-      }
-      .demo1-text-top, .demo1-text-bottom {
-        background: rgba(0,0,0,0.3);
       }
       .demo1-title {
         font-size: 1.8rem;
@@ -148,15 +143,14 @@
 </head>
 <body>
 
-  <h2 style="text-align:center;">Minimal Test Carousel</h2>
+  <h2>Minimal Test Carousel (4 Slides)</h2>
 
   <!-- 轮播容器 -->
   <div class="demo1-carousel-container">
-    <!-- 轨道 -->
     <div class="demo1-carousel-track">
       <!-- 幻灯片1 -->
       <div class="demo1-carousel-slide">
-        <img src="https://via.placeholder.com/1600x900/FF0000/FFFFFF?text=Slide1+%28Desktop+Wide%29" alt="Slide1">
+        <img src="Lv-Se-qing-cai.png" alt="Slide1">
         <div class="demo1-overlay">
           <div class="demo1-text-top">Stream now</div>
           <div class="demo1-title">SILO</div>
@@ -166,7 +160,7 @@
       </div>
       <!-- 幻灯片2 -->
       <div class="demo1-carousel-slide">
-        <img src="https://via.placeholder.com/1600x900/00FF00/000000?text=Slide2+%28Desktop+Wide%29" alt="Slide2">
+        <img src="Two baskets of vegetables.png" alt="Slide2">
         <div class="demo1-overlay">
           <div class="demo1-text-top">Stream now</div>
           <div class="demo1-title">SILO 2</div>
@@ -176,7 +170,7 @@
       </div>
       <!-- 幻灯片3 -->
       <div class="demo1-carousel-slide">
-        <img src="https://via.placeholder.com/1600x900/0000FF/FFFFFF?text=Slide3+%28Desktop+Wide%29" alt="Slide3">
+        <img src="合作伙伴Logo1.png" alt="Slide3">
         <div class="demo1-overlay">
           <div class="demo1-text-top">Stream now</div>
           <div class="demo1-title">SILO 3</div>
@@ -184,11 +178,22 @@
           <div class="demo1-text-bottom">Sci-Fi · New season.</div>
         </div>
       </div>
+      <!-- 幻灯片4 -->
+      <div class="demo1-carousel-slide">
+        <img src="合作伙伴Logo2.png" alt="Slide4">
+        <div class="demo1-overlay">
+          <div class="demo1-text-top">Stream now</div>
+          <div class="demo1-title">SILO 4</div>
+          <button class="demo1-explore-btn">Explore now</button>
+          <div class="demo1-text-bottom">Sci-Fi · New season.</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- 小圆点容器 -->
+  <!-- 小圆点容器(4个) -->
   <div class="demo1-carousel-dots-container">
+    <span class="demo1-carousel-dot"></span>
     <span class="demo1-carousel-dot"></span>
     <span class="demo1-carousel-dot"></span>
     <span class="demo1-carousel-dot"></span>
@@ -196,7 +201,7 @@
 
 <script>
 (function(){
-  // ========== 初始化 ========== 
+  // ========== 初始化 ==========
   const container = document.querySelector(".demo1-carousel-container");
   const track = document.querySelector(".demo1-carousel-track");
   const slides = Array.from(document.querySelectorAll(".demo1-carousel-slide"));
@@ -204,17 +209,17 @@
 
   if(!container || !track || slides.length === 0 || dots.length === 0) return;
 
-  // 假设真实幻灯片3张
-  const totalReal = 3;
+  // 假设真实幻灯片4张
+  const totalReal = 4;
 
   // 克隆首尾
   const firstSlide = slides[0].cloneNode(true);
-  const lastSlide = slides[totalReal-1].cloneNode(true);
+  const lastSlide = slides[totalReal - 1].cloneNode(true);
   track.insertBefore(lastSlide, track.firstChild);
   track.appendChild(firstSlide);
 
   const allSlides = Array.from(track.querySelectorAll(".demo1-carousel-slide"));
-  const totalSlidesWithClones = allSlides.length; // 5
+  const totalSlidesWithClones = allSlides.length; // 6
   let currentIndex = 1;  // 初始指向真实第一张(克隆后在索引1)
   let isAnimating = false;
 
@@ -225,9 +230,9 @@
       const gap = 15;
       return Math.floor(window.innerWidth * 0.85) + gap;
     } else {
-      // 桌面端：直接用容器宽(或slide宽) + 0
+      // 桌面端：用容器宽
       const measured = container.getBoundingClientRect().width;
-      return measured; 
+      return measured;
     }
   }
 
@@ -236,11 +241,11 @@
     const slideWidth = getSlideWidth();
     let offset;
     if(window.innerWidth <= 768) {
-      // 移动端：居中偏移
+      // 移动端 => 居中偏移
       const containerWidth = container.clientWidth;
       offset = -(currentIndex * slideWidth) + (containerWidth - slideWidth)/2;
     } else {
-      // 桌面端：左对齐
+      // 桌面端 => 左对齐
       offset = -currentIndex * slideWidth;
     }
     track.style.transform = `translateX(${offset}px)`;
