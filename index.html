@@ -187,34 +187,7 @@ opacity: 0;
     }
     .demo1-carousel-prev { left: 10px; }
     .demo1-carousel-next { right: 10px; }
-/* For PC: Hide the previous/next buttons */
-@media (min-width: 1024px) {
-    .demo1-carousel-prev,
-    .demo1-carousel-next {
-        display: none; /* Hide on large screens */
-    }
 
-    .demo1-carousel-dots {
-        display: block; /* Ensure the dots are visible on larger screens */
-        text-align: center;
-        margin-top: 15px;
-    }
-
-    .demo1-carousel-dot {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        background: #ccc;
-        border-radius: 50%;
-        margin: 0 5px;
-        cursor: pointer;
-        transition: background 0.3s;
-    }
-
-    .demo1-carousel-dot.active {
-        background: #007BFF;
-    }
-}
     /* ========== 移动端适配 ========== */
 @media (max-width: 768px) {
   .demo1-carousel-container {
