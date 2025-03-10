@@ -362,31 +362,14 @@ opacity: 0;
     const totalReal = slides.length;
     let isAnimating = false;
 
-    // **在 JavaScript 里确保 overlay 统一高度**
+    // **去除宽度/高度限制，确保 overlay 位置固定**
     slides.forEach(slide => {
       const overlay = slide.querySelector(".demo1-overlay");
       if (overlay) {
-        overlay.style.height = "120px"; // 统一 overlay 高度，防止随内容改变
-        overlay.style.bottom = "50px"; // 统一 bottom 固定位置
+        overlay.style.height = "auto"; // 让其随内容固定
+        overlay.style.bottom = "40px"; // 统一底部对齐
       }
     });
-
-    // **仅在手机端执行优化**
-    if (window.innerWidth <= 768) {
-      slides.forEach(slide => {
-        slide.style.height = "495px"; // 强制手机端轮播高度
-        slide.style.width = "85%"; // 宽度减少 15%
-      });
-
-      document.querySelectorAll(".demo1-carousel-slide img").forEach(img => {
-        img.style.height = "495px";
-        img.style.width = "100%"; // 确保填充整个 slide
-      });
-
-      container.style.height = "495px"; 
-      container.style.width = "85%"; 
-      track.style.height = "495px"; 
-    }
 
     // 克隆首尾幻灯片，实现无缝滚动
     const firstClone = slides[0].cloneNode(true);
@@ -395,9 +378,9 @@ opacity: 0;
     track.appendChild(firstClone); // 添加到最后
     track.insertBefore(lastClone, track.firstChild); // 添加到最前
 
-    slides = Array.from(track.querySelectorAll(".demo1-carousel-slide")); // 更新 slides
-    let currentIndex = 1; 
-    let slideWidth = slides[0].getBoundingClientRect().width + 15; 
+    slides = Array.from(track.querySelectorAll(".demo1-carousel-slide"));
+    let currentIndex = 1;
+    let slideWidth = slides[0].getBoundingClientRect().width + 15;
 
     function updateCarousel(animated = true) {
       track.style.transition = animated ? "transform 0.5s ease-in-out" : "none";
@@ -418,7 +401,7 @@ opacity: 0;
       slides.forEach(sl => {
         const overlay = sl.querySelector(".demo1-overlay");
         if (overlay) {
-          overlay.style.bottom = "50px"; // 统一 overlay 位置
+          overlay.style.bottom = "40px"; // 统一底部对齐
         }
       });
 
@@ -436,19 +419,13 @@ opacity: 0;
       const centerA = slides[currentIndex].querySelector("a");
       if (centerA) centerA.style.pointerEvents = "auto";
 
-      // **在 active slide 上锁定 overlay 位置**
-      const activeOverlay = slides[currentIndex].querySelector(".demo1-overlay");
-      if (activeOverlay) {
-        activeOverlay.style.bottom = "50px"; // 确保 overlay 固定
-      }
-
       // **左右相邻 prev/next**
       const nextIndex = (currentIndex + 1) % slides.length;
       const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
       slides[nextIndex].classList.add("next");
       slides[prevIndex].classList.add("prev");
 
-      // 非 .active 图片加阴影
+      // **非 active 图片加阴影**
       slides.forEach(slide => {
         if (!slide.classList.contains("active")) {
           slide.classList.add("shadow");
@@ -522,7 +499,6 @@ opacity: 0;
 
   window.addEventListener("load", initdemo1CarouselTrack);
 })();
-
 
 
 
