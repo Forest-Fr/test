@@ -362,22 +362,7 @@ opacity: 0;
     const totalReal = slides.length;
     let isAnimating = false;
 
-    // **仅在手机端执行优化**
-    if (window.innerWidth <= 768) {
-      slides.forEach(slide => {
-        slide.style.height = "495px"; // 强制手机端轮播高度为 495px
-        slide.style.width = "85%"; // 宽度减少 15%
-      });
-
-      document.querySelectorAll(".demo1-carousel-slide img").forEach(img => {
-        img.style.height = "495px";
-        img.style.width = "100%"; // 确保填充整个 slide
-      });
-
-      container.style.height = "495px"; // 确保整个容器不会塌陷
-      container.style.width = "85%"; // 宽度减少 15%
-      track.style.height = "495px"; // 确保 track 高度正确
-    }
+  
 
     // 克隆首尾幻灯片，实现无缝滚动
     const firstClone = slides[0].cloneNode(true);
