@@ -16,39 +16,47 @@
     h2 { text-align: center; margin: 20px 0; }
 
     /* ========== 桌面端样式 ========== */
-    .demo1-carousel-container {
-      position: relative;
-      width: 100%;
-      height: 495px;         /* 固定高度 */
-      margin: auto;
-      padding: 0 10%;        /* 桌面端左右留白10% */
-      box-sizing: border-box;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .demo1-carousel-track {
-      display: flex;
-      gap: 15px;             /* 幻灯片之间 15px 间距 */
-      transition: transform 0.5s ease-in-out;
-      align-items: center;
-    }
-    .demo1-carousel-slide {
-      flex: 0 0 auto;
-      width: 100%;          /* 脚本会将 slideWidth 视为 0.8 * containerWidth */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative; /* 若用 ::before 需要父级 position: relative */原没有触发去阴影
-    }
-    .demo1-carousel-slide img {
-      width: 100%;
-      height: auto;         /* 桌面端保持原比例 */
-      border-radius: 10px;
-      display: block;
-    }
-    .demo1-carousel-slide.shadow {
+   .demo1-carousel-container {
+  position: relative;
+  width: 100%;
+  height: 495px; /* 固定高度 */
+  overflow: hidden;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 10%; /* 两侧留白 */
+}
+
+/* ===== 轮播轨道 ===== */
+.demo1-carousel-track {
+  display: flex; /* 使用 flex 布局 */
+  gap: 15px; /* 图片之间的间隔 */
+  transition: transform 0.5s ease-in-out;
+  justify-content: flex-start; /* 确保图片从左开始排列 */
+
+}
+
+.demo1-carousel-slide {
+ flex: 0 0 auto;
+  width: 100%;
+  position: relative; /* Relative positioning to position the overlay */
+  opacity: 1 !important;
+  transition: opacity 0.3s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+position: relative; /* 若用 ::before 需要父级 position: relative */原没有触发去阴影
+}
+.demo1-carousel-slide img {
+width: 100%; /* Ensure the image adapts to the container's width */
+    height: auto; /* Maintain the aspect ratio of the images */
+    display: block;
+    border-radius: 10px;
+filter: none !important;
+  opacity: 1 !important;
+}
+.demo1-carousel-slide.shadow {
   /* 简单做法：让其整体变暗 */
   filter: brightness(0.6);
   transition: filter 0.3s;
@@ -62,131 +70,211 @@
   background: rgba(0,0,0,0.2);
   pointer-events: none;
 }
- /* ====== 覆盖层(桌面端) ====== */
-    .demo1-overlay {
-      position: absolute;
-      left: 30px;  /* 桌面端：示例性地左上 */
-      bottom: 60px;
-      color: #fff;
-      opacity: 0; /* 初始隐藏，active时显示 */
-      white-space: nowrap; 
-       display: inline-block; /* 建议配合 inline-block，效果更可控 */
-        transform: translateY(50px); /* 初始位置在下方 */
+/* ===== 覆盖层：从下往上的动画效果 ===== */
+.demo1-overlay {
+  position: absolute;
+  left: 10%; 原50%/* 桌面端：按钮和文字的相对位置 */
+ padding-bottom: 40px;原bottom
+  z-index: 10; /* 确保按钮和文字在图片之上 */
+    gap: 10px; /* 按钮和文字之间的间隔 */
+display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  opacity: 0; /* 初始状态不可见 */
+  transform: translateY(50px); /* 初始位置在下方 */
   transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
-    }
-    /* 轮播激活时再让覆盖层显示 */
-.demo1-carousel-slide.active .demo1-overlay {
-  opacity: 1;
-  transform: translateY(0); /* 复位 */
+white-space: nowrap; /* 禁止自动换行 */
+  display: inline-block; /* 建议配合 inline-block，效果更可控 */
+}
+/* 父容器：行内排列，底部对齐 */
+.demo1-bottom-row {
+  display: flex;
+  align-items: flex-end; /* 元素间的底部对齐 */
+  gap: 10px;            /* 按钮和文字的间距 */
+  position: relative;   /* 或绝对定位也可，看需求 */
 }
 
-    .demo1-text-top {
-      font-size: 1.1rem;
-      margin-bottom: 10px;
-      background: rgba(0,0,0,0.5);
-      display: inline-block;
-      padding: 5px 10px;
-      border-radius: 4px;
-    }
-    .demo1-title {
-      font-size: 3rem;
-      font-weight: bold;
-      margin-bottom:320px;
-      text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
-      transform: translateY(10px); */
-        color: white;
+.demo1-title {
+  position: absolute;
+  left: 0;            /* 与按钮左边对齐 */
+bottom:60px;原margin和bottom和210px;       /* 假设按钮高度 ~ 40px，上方留 5px 空隙 */
+  font-size:3.1rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.3), 0 0 25px rgba(255,255,255,0.5);
+padding-left:15px;
+opacity: 0; 
+transform: translateY(10px); */
 white-space: nowrap; /* 禁止自动换行 */
   display: inline-block; /* 建议配合 inline-block，效果更可控 */
 overflow: visible;
-      overflow: visible;
+
   /* 动画或渐入逻辑，如初始下移、active 时上移 */
   opacity: 0;
   transform: translateY(40px);
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
   z-index: 999;
-    }
-    .demo1-carousel-slide.active .demo1-title {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.4s; /* 按钮比文字慢 0.4s */
-   }
-    .demo1-explore-btn {
-      margin-top: 10px;
-      padding: 10px 20px;
-      border: none;
-      background-color: #007BFF;
-      color: #fff;
-      border-radius: 4px;
-      cursor: pointer;
-   z-index: 999;
-opacity: 0;
-  transform: translateY(60px); /* 初始往下偏移 60px */
-  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
-       position: absolute;
 }
-    /* 按钮渐入 */
+/* 父容器：相对定位，让按钮与标题可通过绝对定位精确控制 */注:.调按钮框高度的,可以不启用BuqiYong,用bottom
+demo1-button-title-group {
+  position: relative;
+width:460px;  /* 示例值，可根据按钮宽度或设计需求调整 */
+  height: 200px; /* 给足够高度容纳按钮+标题 */
+}
+/* 下行文字，例如 "Sci-Fi · New season" */
+.demo1-text-bottom {
+position:fixed
+  font-size: 1rem;
+padding-bottom: 40px;原Margin和top
+  opacity: 1;
+  transform: translateY(40px);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
+  z-index: 1000;
+  color: white; 
+display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap:  0px; /* 按钮和文字之间的间隔 */
+ left: 50%; /* 调整文字的水平位置，使其与按钮对齐 */
+padding-bottom:5px; /* 将文字稍微放低一点，保持适当的间距 */
+padding-left:0px; /* 水平向右移动65px */原20
+}
+
+/* 文字的单独动画 */
+.demo1-text-top, .demo1-text-bottom {
+  opacity: 0;
+  transform: translateY(40px); /* 初始位置更低一点 */
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
+}
+/* 轮播激活时再让覆盖层显示 */
+.demo1-carousel-slide.active .demo1-overlay {
+  opacity: 1;
+  transform: translateY(0); /* 复位 */
+}
+/* 按钮渐入 */
 .demo1-carousel-slide.active .demo1-explore-btn {
   opacity: 1;
   transform: translateY(0);
   transition-delay: 0.4s; /* 按钮比文字慢 0.4s */
 }
-    .demo1-explore-btn:hover {
-  background-color: #0056b3;
-}
-    .demo1-text-bottom {
-      font-size: 1rem;
-      margin-top: 10px;
-      background: rgba(0,0,0,0.5);
-      display: inline-block;
-      padding: 5px 10px;
-      border-radius: 4px;
-        flex-direction: column;
-  align-items: flex-start;
-      opacity: 1;
-        transform: translateY(40px);
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
-  z-index: 1000;
-    }
-  /* 文字渐入 */
+/* 文字渐入 */
 .demo1-carousel-slide.active .demo1-text-top,
 .demo1-carousel-slide.active .demo1-text-bottom {
   opacity: 1;
   transform: translateY(0);
   transition-delay: 0.2s; /* 文字比整体动画稍微慢 0.2s */
 }
+/* 按钮样式 */
+.demo1-explore-btn {
+  padding: 10px 20px;
+ background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 15px;
+z-index: 999;
+opacity: 0;
+  transform: translateY(60px); /* 初始往下偏移 60px */
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
+}
+
+.demo1-explore-btn:hover {
+  background-color: #0056b3;
+}
+
+/* 上行文字，例如 "Stream now" */
+.demo1-text-top {
+ position: absolute;
+  font-size: 1.1rem;
+  margin-bottom: 320px;
+  opacity: 1;
+  transform: translateY(40px);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
+  z-index: 999;
+  color: white; /* 设置字体颜色为白色 */
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3), 0 0 25px rgba(255, 255, 255, 0.5); /* 文字阴影效果，增加亮度 */
+}
 
 
-    /* 小圆点容器：桌面端放在容器外 */
-    .demo1-carousel-dots-container {
-      text-align: center;
-      margin-top: 10px;
-    }
-    .demo1-carousel-dot {
-      width: 10px; height: 10px; background: #ccc;
-      border-radius: 50%; margin: 0 5px; display: inline-block;
-      cursor: pointer;
-    }
-    
+/* 轮播激活时再让文字显示 */
+.demo1-carousel-slide.active .demo1-text-bottom {
+  opacity: 1;
+  transform: translateY(0); /* 文字从下方上升 */
+}
+
+.demo1-carousel-slide.active .demo1-title {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.4s; /* 按钮比文字慢 0.4s */
+   未启用weiqiyongtransform换translateX(-50%) translateY(0); /* 上升效果，按钮和文字出现 */
+}
+/* ===== 小圆点容器 ===== */
+.demo1-carousel-dots-container {
+  position: relative;  /* 独立模块 */
+  width: 100%;
+  height: 36px;        /* 预留足够空间 */原23
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 小圆点区域 */
+.demo1-carousel-dots {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 5px;
+  width: 100%;
+}
+
+.demo1-carousel-dot {
+  width: 10px;
+  height: 10px;
+  background: #ccc;
+  border-radius: 50%;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
 .demo1-carousel-dot.active {
   background: #007BFF;
 }
 
-/* ========== 轮播按钮 ========== */
-    .demo1-carousel-prev, .demo1-carousel-next {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 30px;
-      color: white;
-      border: none;
-      background: none;
-      cursor: pointer;
-      z-index: 100;
-      display: none; /* 默认隐藏，手机端显示 */
-    }
-    .demo1-carousel-prev { left: 10px; }
-    .demo1-carousel-next { right: 10px; }
+/* 控制按钮的显示 */
+.demo1-carousel-prev,
+.demo1-carousel-next {
+  display: none; /* 默认在桌面端隐藏按钮 */
+}
+
 /* For PC: Hide the previous/next buttons */
+@media (min-width: 1024px) {
+    .demo1-carousel-prev,
+    .demo1-carousel-next {
+        display: none; /* Hide on large screens */
+    }
+
+    .demo1-carousel-dots {
+        display: block; /* Ensure the dots are visible on larger screens */
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .demo1-carousel-dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background: #ccc;
+        border-radius: 50%;
+        margin: 0 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .demo1-carousel-dot.active {
+        background: #007BFF;
+    }
+}
 @media (min-width: 1024px) {
     .demo1-carousel-prev,
     .demo1-carousel-next {
@@ -279,70 +367,93 @@ opacity: 0;
 <body>
   <h2>Carousel with Alpha Shift</h2>
 
-<!-- 轮播容器 -->
+<!-- ===== 轮播容器 ===== -->
 <div class="demo1-carousel-container">
-  
-  <!-- 左侧按钮 -->
   <button class="demo1-carousel-prev">&lt;</button>
+  <!-- 新增 demo1-carousel-track-wrapper 作为包裹层 -->
+  <div class="demo1-carousel-track-wrapper">
+    <div class="demo1-carousel-track">
+    <!-- 轮播项1 -->
+    <div class="demo1-carousel-slide">
+      <a href="example.html">
+        <img src="Di cai hua.png" alt="Di cai hua">
+      </a>
+      <div class="demo1-overlay">
+        <!-- 新增 .demo1-button-title-group 作为父容器 -->
+        <div class="demo1-button-title-group">
+          <!-- 保留原先的 .demo1-bottom-row，按钮和 New season. 并排 -->
+          <div class="demo1-bottom-row">
+            <button class="demo1-explore-btn">Explore now</button>
+            <div class="demo1-text-bottom">New season.</div>
+          </div>
+          <!-- 标题放在同一个父容器里，用绝对定位控制它与按钮左端对齐、在上方 -->
+          <div class="demo1-title">地菜花</div>
+        </div>
+      </div>
+    </div>
 
-  <div class="demo1-carousel-track">
-    <!-- 幻灯片1 -->
+    <!-- 轮播项2 -->
     <div class="demo1-carousel-slide">
       <a href="example.html">
-        <img src="Lv-Se-qing-cai.png" alt="Slide1">
+        <img src="Lv-Se-qing-cai.png" alt="Lv-Se-qing-cai">
       </a>
       <div class="demo1-overlay">
-        <div class="demo1-title">小颗青菜</div>
-        <button class="demo1-explore-btn">Explore now</button>
-        <div class="demo1-text-bottom">Sci-Fi · New season.</div>
+        <div class="demo1-button-title-group">
+          <div class="demo1-bottom-row">
+            <button class="demo1-explore-btn">Explore now</button>
+            <div class="demo1-text-bottom">New season.</div>
+          </div>
+          <div class="demo1-title">小颗青菜</div>
+        </div>
       </div>
     </div>
-    <!-- 幻灯片2 -->
+
+    <!-- 轮播项3 -->
     <div class="demo1-carousel-slide">
       <a href="example.html">
-        <img src="Two baskets of vegetables.png" alt="Slide2">
+        <img src="Two baskets of vegetables.png" alt="Two baskets of vegetables">
       </a>
       <div class="demo1-overlay">
-        <div class="demo1-title">青菜</div>
-        <button class="demo1-explore-btn">Explore now</button>
-        <div class="demo1-text-bottom">Sci-Fi · New season.</div>
+        <div class="demo1-button-title-group">
+          <div class="demo1-bottom-row">
+            <button class="demo1-explore-btn">Explore now</button>
+            <div class="demo1-text-bottom">New season.</div>
+          </div>
+          <div class="demo1-title">青菜</div>
+        </div>
       </div>
     </div>
-    <!-- 幻灯片3 -->
+
+    <!-- 轮播项4 -->
     <div class="demo1-carousel-slide">
-      <a href="example.html">
-        <img src="A full-body portrait wearing a stylish summer work uniform.png" alt="Slide3">
+      <a href="product-lite.html">
+        <img src="A full-body portrait wearing a stylish summer work uniform.png" alt="红菜苔">
       </a>
       <div class="demo1-overlay">
-        <div class="demo1-title">红菜苔</div>
-        <button class="demo1-explore-btn">Explore now</button>
-        <div class="demo1-text-bottom">Sci-Fi · New season.</div>
-      </div>
-    </div>
-    <!-- 幻灯片4 -->
-    <div class="demo1-carousel-slide">
-      <a href="example.html">
-        <img src="Di cai hua.png" alt="Slide4">
-      </a>
-      <div class="demo1-overlay">
-        <div class="demo1-title">地菜花</div>
-        <button class="demo1-explore-btn">Explore now</button>
-        <div class="demo1-text-bottom">Sci-Fi · New season.</div>
+        <div class="demo1-button-title-group">
+          <div class="demo1-bottom-row">
+            <button class="demo1-explore-btn">Explore now</button>
+            <div class="demo1-text-bottom">New season.</div>
+          </div>
+          <div class="demo1-title">红菜苔</div>
+       
+</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- 右侧按钮 -->
   <button class="demo1-carousel-next">&gt;</button>
-
 </div>
 
-<!-- 小圆点容器(4个) -->
+<!-- 小圆点容器放在轮播容器外部 -->
 <div class="demo1-carousel-dots-container">
-  <span class="demo1-carousel-dot"></span>
-  <span class="demo1-carousel-dot"></span>
-  <span class="demo1-carousel-dot"></span>
-  <span class="demo1-carousel-dot"></span>
+  <div class="demo1-carousel-dots">
+    <span class="demo1-carousel-dot"></span>
+    <span class="demo1-carousel-dot"></span>
+    <span class="demo1-carousel-dot"></span>
+    <span class="demo1-carousel-dot"></span>
+  </div>
 </div>
 
 
