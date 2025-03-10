@@ -355,27 +355,44 @@ opacity: 0;
     const prevBtn = document.querySelector(".demo1-carousel-prev");
     const nextBtn = document.querySelector(".demo1-carousel-next");
     const dots = Array.from(document.querySelectorAll(".demo1-carousel-dot"));
-  
+
     if (!container || !track || slides.length === 0 || !dots.length) return;
-  
+
     const totalReal = slides.length;
-    let isAnimating  = false;
-  
+    let isAnimating = false;
+
+    // **仅在手机端执行优化**
+    if (window.innerWidth <= 768) {
+      slides.forEach(slide => {
+        slide.style.height = "999px"; // 强制手机端轮播高度为 999px
+        slide.style.width = "85%"; // 宽度减少 15%
+      });
+
+      document.querySelectorAll(".demo1-carousel-slide img").forEach(img => {
+        img.style.height = "999px";
+        img.style.width = "100%"; // 确保填充整个 slide
+      });
+
+      container.style.height = "999px"; // 确保整个容器不会塌陷
+      container.style.width = "85%"; // 宽度减少 15%
+      track.style.height = "999px"; // 确保 track 高度正确
+    }
+
     // 克隆首尾幻灯片，实现无缝滚动
     const firstClone = slides[0].cloneNode(true);
     const lastClone = slides[totalReal - 1].cloneNode(true);
-  
+
     track.appendChild(firstClone); // 添加到最后
     track.insertBefore(lastClone, track.firstChild); // 添加到最前
-  
+
     slides = Array.from(track.querySelectorAll(".demo1-carousel-slide")); // 更新 slides
-    let currentIndex = 1; // 从克隆的第一张开始，避免左边空白
-    let slideWidth = slides[0].getBoundingClientRect().width + 15; // 幻灯片宽度 + 间距
-  
+    let currentIndex = 1; // 让它从克隆的第一张开始，避免左边空白
+    let slideWidth = slides[0].getBoundingClientRect().width + 15; // 计算幻灯片宽度 + 间距
+
     function updateCarousel(animated = true) {
       track.style.transition = animated ? "transform 0.5s ease-in-out" : "none";
       track.style.transform = `translateX(${-currentIndex * slideWidth}px)`;
-  
+
       // 更新小圆点
       let dotIndex;
       if (currentIndex === 0) {
@@ -386,67 +403,61 @@ opacity: 0;
         dotIndex = currentIndex - 1;
       }
       dots.forEach((dot, i) => dot.classList.toggle("active", i === dotIndex));
-  
+
       // 移除所有 active/prev/next/shadow
       slides.forEach(sl => sl.classList.remove("active", "prev", "next", "shadow"));
-  
-      // 禁用所有内部 <a> 的点击
+
+      // 禁用它们内部 <a> 点击
       slides.forEach(sl => {
         const aTag = sl.querySelector("a");
         if (aTag) aTag.style.pointerEvents = "none";
       });
-  
-      // 中间图 => .active + a可点
+
+      // 当前图片 => .active + 允许 <a> 点击
       slides[currentIndex].classList.add("active");
       const centerA = slides[currentIndex].querySelector("a");
       if (centerA) centerA.style.pointerEvents = "auto";
-  
-      // 调整 active 内的 Explore 按钮及文字，取消内部过渡，设置为绝对定位居中
-      const exploreElements = slides[currentIndex].querySelectorAll('.demo1-explore-btn, .demo1-explore-text');
-      exploreElements.forEach(el => {
-        el.style.transition = "none";
-        el.style.position = "absolute";
-        el.style.top = "50%";
-        el.style.left = "50%";
-        el.style.transform = "translate(-50%, -50%)";
-      });
-  
-      // 左右相邻幻灯片添加 .prev / .next
+
+      // 左右相邻 => .prev / .next
       const nextIndex = (currentIndex + 1) % slides.length;
       const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
       slides[nextIndex].classList.add("next");
       slides[prevIndex].classList.add("prev");
-  
-      // 非 active 幻灯片添加阴影
+
+      // 非 .active 图片加阴影
       slides.forEach(slide => {
         if (!slide.classList.contains("active")) {
           slide.classList.add("shadow");
         }
       });
     }
-  
+
     function nextSlide() {
       if (isAnimating) return;
       isAnimating = true;
       currentIndex++;
+
       updateCarousel();
+
       setTimeout(() => {
-        if (currentIndex === slides.length - 1) { // 到达克隆的第一张
+        if (currentIndex === slides.length - 1) { // 轮播到克隆的第一张
           track.style.transition = "none";
-          currentIndex = 1; // 立即跳回真实第一张
+          currentIndex = 1; // 立刻跳回真实第一张
           updateCarousel(false);
         }
         isAnimating = false;
       }, 500);
     }
-  
+
     function prevSlide() {
       if (isAnimating) return;
       isAnimating = true;
       currentIndex--;
+
       updateCarousel();
+
       setTimeout(() => {
-        if (currentIndex === 0) { // 到达克隆的最后一张
+        if (currentIndex === 0) { // 轮播到克隆的最后一张
           track.style.transition = "none";
           currentIndex = totalReal;
           updateCarousel(false);
@@ -454,7 +465,7 @@ opacity: 0;
         isAnimating = false;
       }, 500);
     }
-  
+
     function jumpToSlide(index) {
       if (isAnimating) return;
       isAnimating = true;
@@ -462,33 +473,33 @@ opacity: 0;
       updateCarousel();
       setTimeout(() => isAnimating = false, 500);
     }
-  
-    prevBtn?.addEventListener("click", () => { prevSlide(); resetInterval(); });
-    nextBtn?.addEventListener("click", () => { nextSlide(); resetInterval(); });
+
+    prevBtn?.addEventListener("click", prevSlide);
+    nextBtn?.addEventListener("click", nextSlide);
     dots.forEach((dot, index) => dot.addEventListener("click", () => jumpToSlide(index)));
-  
+
     let interval = setInterval(nextSlide, 5000);
     function resetInterval() {
       clearInterval(interval);
       interval = setInterval(nextSlide, 5000);
     }
-  
+
     track.addEventListener("transitionend", () => {
       isAnimating = false;
     });
-  
+
     // 初始化
     track.style.transition = "none";
     updateCarousel();
     setTimeout(() => {
       track.style.transition = "transform 0.5s ease-in-out";
     }, 50);
-  
-    // 点击幻灯片：中间图执行链接跳转，左右图切换幻灯片
+
+    // 点击：中间图 => 链接，左右图 => 切换
     slides.forEach(slide => {
       slide.addEventListener("click", (e) => {
         if (slide.classList.contains("active")) {
-          // 保留 <a> 跳转默认行为
+          // 不阻止 <a> 跳转
         } else if (slide.classList.contains("next")) {
           e.preventDefault();
           nextSlide();
@@ -500,8 +511,8 @@ opacity: 0;
         }
       });
     });
-  
-    // Explore now 按钮逻辑
+
+    // Explore Now 按钮逻辑
     const exploreBtns = document.querySelectorAll('.demo1-explore-btn');
     exploreBtns.forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -511,23 +522,23 @@ opacity: 0;
         }
       });
     });
-  
-    /* ========== 新增：触摸滑动逻辑 ========== */
+
+    // 触摸滑动逻辑
     let startX = 0;
     let isSwiping = false;
-  
+
     container.addEventListener('touchstart', (e) => {
       if (isAnimating) return;
       isSwiping = true;
       startX = e.touches[0].clientX;
     });
-  
+
     container.addEventListener('touchend', (e) => {
       if (!isSwiping) return;
       let endX = e.changedTouches[0].clientX;
       let distance = endX - startX;
       isSwiping = false;
-  
+
       if (Math.abs(distance) > 50) {
         if (distance < 0) {
           nextSlide();
@@ -537,29 +548,10 @@ opacity: 0;
         resetInterval();
       }
     });
-  
-    /* ========== 针对手机端左右箭头按钮显示问题的优化 ========== */
-    const adjustArrowDisplay = () => {
-      if (window.innerWidth < 768) {  // 可根据需要调整断点
-        if (prevBtn) {
-          prevBtn.style.display = "block";
-          prevBtn.style.position = "absolute";
-          prevBtn.style.zIndex = "1000";
-        }
-        if (nextBtn) {
-          nextBtn.style.display = "block";
-          nextBtn.style.position = "absolute";
-          nextBtn.style.zIndex = "1000";
-        }
-      }
-    };
-    adjustArrowDisplay();
-    window.addEventListener("resize", adjustArrowDisplay);
   };
-  
+
   window.addEventListener("load", initdemo1CarouselTrack);
 })();
-
 
 
 
