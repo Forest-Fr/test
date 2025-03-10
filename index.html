@@ -348,60 +348,96 @@ opacity: 0;
 
 
 <script>
-(function(){
-const initdemo1CarouselTrack = () => {
-  const container = document.querySelector(".demo1-carousel-container");
-  const track = document.querySelector(".demo1-carousel-track");
-  let slides = Array.from(document.querySelectorAll(".demo1-carousel-slide"));
-  const prevBtn = document.querySelector(".demo1-carousel-prev");
-  const nextBtn = document.querySelector(".demo1-carousel-next");
-  const dots = Array.from(document.querySelectorAll(".demo1-carousel-dot"));
+(function () {
+  const initdemo1CarouselTrack = () => {
+    const container = document.querySelector(".demo1-carousel-container");
+    const track = document.querySelector(".demo1-carousel-track");
+    let slides = Array.from(document.querySelectorAll(".demo1-carousel-slide"));
+    const prevBtn = document.querySelector(".demo1-carousel-prev");
+    const nextBtn = document.querySelector(".demo1-carousel-next");
+    const dots = Array.from(document.querySelectorAll(".demo1-carousel-dot"));
 
-  if (!container || !track || slides.length === 0 || !dots.length) return;
+    if (!container || !track || slides.length === 0 || !dots.length) return;
 
-  // 假设真实幻灯片共4张
-  const totalReal = 4;
-  const uniqueSlides = slides.slice(0, totalReal);
-  uniqueSlides.forEach((slide, i) => {
-    slide.setAttribute("data-index", i);
-  });
+    const totalReal = slides.length;
+    let isAnimating = false;
 
-  // 克隆首尾
-  const firstSlide = uniqueSlides[0];
-  const lastSlide  = uniqueSlides[totalReal - 1];
-  const firstClone = firstSlide.cloneNode(true);
-  const lastClone  = lastSlide.cloneNode(true);
-  firstClone.setAttribute("data-index", 0);
-  lastClone.setAttribute("data-index", totalReal - 1);
-  track.insertBefore(lastClone, track.firstChild);
-  track.appendChild(firstClone);
+    // 克隆首尾幻灯片，实现无缝滚动
+    const firstClone = slides[0].cloneNode(true);
+    const lastClone = slides[totalReal - 1].cloneNode(true);
 
-  const allSlides = Array.from(track.querySelectorAll(".demo1-carousel-slide"));
-  const totalSlidesWithClones = allSlides.length;
-  let currentIndex = 1;
-  let isAnimating  = false;
+    track.appendChild(firstClone); // 添加到最后
+    track.insertBefore(lastClone, track.firstChild); // 添加到最前
 
-  // 计算每张幻灯片的宽度(手机端85% + 15px 间距, 桌面端用原逻辑)
-  function getSlideWidth() {
-    const slideElem = container.querySelector(".demo1-carousel-slide");
-    let measuredWidth = slideElem ? slideElem.getBoundingClientRect().width : 0;
-    if (measuredWidth === 0) {
-      measuredWidth = container.clientWidth || window.innerWidth;
+    slides = Array.from(track.querySelectorAll(".demo1-carousel-slide")); // 更新 slides
+    let currentIndex = 1; // 让它从克隆的第一张开始，避免左边空白
+
+    // **计算幻灯片宽度**
+    function getSlideWidth() {
+      const slideElem = container.querySelector(".demo1-carousel-slide");
+      let measuredWidth = slideElem ? slideElem.getBoundingClientRect().width : 0;
+
+      if (measuredWidth === 0) {
+        measuredWidth = container.clientWidth || window.innerWidth;
+      }
+
+      if (window.innerWidth <= 768) {
+        let cardWidth = Math.floor(window.innerWidth * 0.85);
+        let gap = 15;
+        return cardWidth + gap;
+      } else {
+        const gap = 15;
+        return measuredWidth + gap;
+      }
     }
-    if (window.innerWidth <= 768) {
-      let cardWidth = Math.floor(window.innerWidth * 0.85);
-      let gap = 15;
-      return cardWidth + gap;
-    } else {
-      const gap = 15;
-      return measuredWidth + gap;
-    }
-  }
 
-  function updateCarousel() {
-    const slideWidth = getSlideWidth();
-    const offset = -currentIndex * slideWidth;
-    track.style.transform = `translateX(${offset}px)`;
+    function updateCarousel(animated = true) {
+      let slideWidth = getSlideWidth();
+      track.style.transition = animated ? "transform 0.5s ease-in-out" : "none";
+      track.style.transform = `translateX(${-currentIndex * slideWidth}px)`;
+    }
+
+    // **初始化幻灯片位置**
+    updateCarousel(false);
+
+    // **按钮事件**
+    nextBtn.addEventListener("click", () => {
+      if (isAnimating) return;
+      isAnimating = true;
+      currentIndex++;
+      updateCarousel();
+
+      setTimeout(() => {
+        if (currentIndex >= slides.length - 1) {
+          currentIndex = 1;
+          updateCarousel(false);
+        }
+        isAnimating = false;
+      }, 500);
+    });
+
+    prevBtn.addEventListener("click", () => {
+      if (isAnimating) return;
+      isAnimating = true;
+      currentIndex--;
+      updateCarousel();
+
+      setTimeout(() => {
+        if (currentIndex <= 0) {
+          currentIndex = slides.length - 2;
+          updateCarousel(false);
+        }
+        isAnimating = false;
+      }, 500);
+    });
+
+    // **窗口大小改变时重新计算**
+    window.addEventListener("resize", () => {
+      updateCarousel(false);
+    });
+  };
+
+
     // 更新小圆点
     let dotIndex;
     if (currentIndex === 0) {
@@ -561,6 +597,7 @@ const initdemo1CarouselTrack = () => {
 
 window.addEventListener("load", initdemo1CarouselTrack);
 })();
+
 
 
 
