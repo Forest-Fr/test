@@ -16,7 +16,10 @@
     h2 { text-align: center; margin: 20px 0; }
 
     /* ========== 桌面端样式 ========== */
-    .demo1-carousel-container {
+ 
+/* For PC: Hide the previous/next buttons */
+@media (min-width: 1024px) {
+     .demo1-carousel-container {
       position: relative;
       width: 100%;
       height: 495px;         /* 固定高度 */
@@ -186,8 +189,6 @@ opacity: 0;
     }
     .demo1-carousel-prev { left: 10px; }
     .demo1-carousel-next { right: 10px; }
-/* For PC: Hide the previous/next buttons */
-@media (min-width: 1024px) {
     .demo1-carousel-prev,
     .demo1-carousel-next {
         display: none; /* Hide on large screens */
