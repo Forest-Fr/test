@@ -347,7 +347,7 @@ opacity: 0;
 
 
 <script>
-(function () { 
+(function () {
   const initdemo1CarouselTrack = () => {
     const container = document.querySelector(".demo1-carousel-container");
     const track = document.querySelector(".demo1-carousel-track");
@@ -360,18 +360,103 @@ opacity: 0;
 
     const totalReal = slides.length;
     let isAnimating = false;
+    let currentIndex = 1; 
+    let interval; // 轮播自动播放的定时器
 
-    // 克隆首尾幻灯片
+    // 1) 克隆首尾幻灯片
     const firstClone = slides[0].cloneNode(true);
     const lastClone = slides[totalReal - 1].cloneNode(true);
     track.appendChild(firstClone);
     track.insertBefore(lastClone, track.firstChild);
 
-    slides = Array.from(track.querySelectorAll(".demo1-carousel-slide")); 
-    let currentIndex = 1; 
-    let slideWidth = slides[1].getBoundingClientRect().width + 15; 
+    // 重新获取 slides
+    slides = Array.from(track.querySelectorAll(".demo1-carousel-slide"));
 
+    // 2) 根据设备类型执行预加载与初始化
+    if (window.innerWidth <= 768) {
+      // 手机端：先隐藏轨道，预加载图片后再显示并初始化
+      track.style.transition = "none";
+      track.style.opacity = "0";
+      preloadImages(slides, () => {
+        initMobileCarousel();
+      });
+    } else {
+      // 桌面端：直接初始化（保持原逻辑）
+      initDesktopCarousel();
+    }
+
+    // ========== 公用函数 ==========
+    function preloadImages(slideElems, callback) {
+      let loadedCount = 0;
+      const totalSlides = slideElems.length;
+      slideElems.forEach(slide => {
+        const img = slide.querySelector("img");
+        if (!img) {
+          loadedCount++;
+          if (loadedCount === totalSlides) callback();
+        } else {
+          if (img.complete) {
+            loadedCount++;
+            if (loadedCount === totalSlides) callback();
+          } else {
+            img.addEventListener("load", () => {
+              loadedCount++;
+              if (loadedCount === totalSlides) callback();
+            });
+          }
+        }
+      });
+    }
+
+    function initMobileCarousel() {
+      // 计算 slideWidth（含间隔 15px）
+      let slideWidth = slides[1].getBoundingClientRect().width + 15;
+
+      // 让真实第一张( slides[1] )居中
+      centerFirstSlideOnLoad();
+
+      // 显示轨道
+      track.style.opacity = "1";
+
+      // 初始更新一次轮播（无动画）
+      updateCarousel(false);
+
+      // 启动过渡动画
+      setTimeout(() => {
+        track.style.transition = "transform 0.5s ease-in-out";
+      }, 50);
+
+      // 启动自动播放
+      interval = setInterval(nextSlide, 5000);
+
+      // 显示左右按钮（手机端需要）
+      if (prevBtn) prevBtn.style.display = "block";
+      if (nextBtn) nextBtn.style.display = "block";
+    }
+
+    function initDesktopCarousel() {
+      // 桌面端保持原逻辑
+      track.style.transition = "none";
+      updateCarousel(false);
+      setTimeout(() => {
+        track.style.transition = "transform 0.5s ease-in-out";
+      }, 50);
+      interval = setInterval(nextSlide, 5000);
+      if (prevBtn) prevBtn.style.display = "none";
+      if (nextBtn) nextBtn.style.display = "none";
+    }
+
+    // 让“真实第一张”居中（注意：由于克隆，真实第一张在 slides[1]）
+    function centerFirstSlideOnLoad() {
+      if (!container || !slides[1]) return;
+      const slideCenter = slides[1].offsetLeft + slides[1].offsetWidth / 2;
+      const containerCenter = container.offsetWidth / 2;
+      container.scrollLeft = slideCenter - containerCenter;
+    }
+
+    // 更新轮播位置、设置 active/prev/next 及阴影、按钮显隐
     function updateCarousel(animated = true) {
+      let slideWidth = slides[1].getBoundingClientRect().width + 15;
       track.style.transition = animated ? "transform 0.5s ease-in-out" : "none";
       track.style.transform = `translateX(${-currentIndex * slideWidth}px)`;
 
@@ -381,10 +466,10 @@ opacity: 0;
                      currentIndex - 1;
       dots.forEach((dot, i) => dot.classList.toggle("active", i === dotIndex));
 
-      // 移除所有 active/prev/next/shadow
+      // 清除所有 active/prev/next/shadow
       slides.forEach(sl => sl.classList.remove("active", "prev", "next", "shadow"));
 
-      // 禁用内部 <a> 点击
+      // 禁用所有 <a> 的点击
       slides.forEach(sl => {
         const aTag = sl.querySelector("a");
         if (aTag) aTag.style.pointerEvents = "none";
@@ -401,14 +486,14 @@ opacity: 0;
       slides[nextIndex].classList.add("next");
       slides[prevIndex].classList.add("prev");
 
-      // 给非 .active 的 slide 添加阴影
+      // 给非 active 的 slide 添加阴影
       slides.forEach(slide => {
         if (!slide.classList.contains("active")) {
           slide.classList.add("shadow");
         }
       });
 
-      // 修复 Explore Now 按钮仅在 .active 显示
+      // 按钮显隐处理：所有按钮隐藏，仅当前 active slide 的按钮显示
       document.querySelectorAll(".demo1-explore-btn").forEach(btn => {
         btn.style.opacity = "0";
         btn.style.pointerEvents = "none";
@@ -426,14 +511,17 @@ opacity: 0;
       currentIndex++;
       updateCarousel();
 
-      setTimeout(() => {
-        if (currentIndex === slides.length - 1) {
-          track.style.transition = "none";
-          currentIndex = 1;
-          updateCarousel(false);
-        }
-        isAnimating = false;
-      }, 500);
+      // 桌面端用 setTimeout 重置索引（手机端依赖 transitionend）
+      if (window.innerWidth > 768) {
+        setTimeout(() => {
+          if (currentIndex === slides.length - 1) {
+            track.style.transition = "none";
+            currentIndex = 1;
+            updateCarousel(false);
+          }
+          isAnimating = false;
+        }, 500);
+      }
     }
 
     function prevSlide() {
@@ -442,14 +530,16 @@ opacity: 0;
       currentIndex--;
       updateCarousel();
 
-      setTimeout(() => {
-        if (currentIndex === 0) {
-          track.style.transition = "none";
-          currentIndex = totalReal;
-          updateCarousel(false);
-        }
-        isAnimating = false;
-      }, 500);
+      if (window.innerWidth > 768) {
+        setTimeout(() => {
+          if (currentIndex === 0) {
+            track.style.transition = "none";
+            currentIndex = totalReal;
+            updateCarousel(false);
+          }
+          isAnimating = false;
+        }, 500);
+      }
     }
 
     function jumpToSlide(index) {
@@ -460,37 +550,36 @@ opacity: 0;
       setTimeout(() => isAnimating = false, 500);
     }
 
+    // 绑定左右按钮（原始绑定）
     prevBtn?.addEventListener("click", prevSlide);
     nextBtn?.addEventListener("click", nextSlide);
+
+    // 小圆点点击事件
     dots.forEach((dot, index) => dot.addEventListener("click", () => jumpToSlide(index)));
 
-    let interval = setInterval(nextSlide, 5000);
+    // 自动播放间隔重置
     function resetInterval() {
       clearInterval(interval);
       interval = setInterval(nextSlide, 5000);
     }
 
+    // transitionend事件：针对手机端无缝无限轮播
     track.addEventListener("transitionend", () => {
+      if (window.innerWidth <= 768) {
+        if (currentIndex === slides.length - 1) {
+          track.style.transition = "none";
+          currentIndex = 1;
+          updateCarousel(false);
+        } else if (currentIndex === 0) {
+          track.style.transition = "none";
+          currentIndex = totalReal;
+          updateCarousel(false);
+        }
+      }
       isAnimating = false;
     });
 
-    // 初始化
-    track.style.transition = "none";
-    updateCarousel();
-    setTimeout(() => {
-      track.style.transition = "transform 0.5s ease-in-out";
-    }, 50);
-
-    // 处理手机端按钮显示
-    if (window.innerWidth <= 768) {
-      prevBtn.style.display = "block";
-      nextBtn.style.display = "block";
-    } else {
-      prevBtn.style.display = "none";
-      nextBtn.style.display = "none";
-    }
-
-    // 点击逻辑
+    // 点击逻辑：点击非 active 的 slide 触发相应动作
     slides.forEach(slide => {
       slide.addEventListener("click", (e) => {
         if (slide.classList.contains("active")) {
@@ -507,7 +596,7 @@ opacity: 0;
       });
     });
 
-    // Explore Now 按钮逻辑
+    // Explore Now 按钮点击逻辑
     const exploreBtns = document.querySelectorAll('.demo1-explore-btn');
     exploreBtns.forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -533,7 +622,6 @@ opacity: 0;
       let endX = e.changedTouches[0].clientX;
       let distance = endX - startX;
       isSwiping = false;
-
       if (Math.abs(distance) > 50) {
         if (distance < 0) {
           nextSlide();
@@ -543,13 +631,20 @@ opacity: 0;
         resetInterval();
       }
     });
+
+    // ========== 手机端补丁：修复事件绑定问题 ==========
+    if (window.innerWidth <= 768) {
+      // 移除可能错误的绑定（如果存在）
+      prevBtn?.removeEventListener("click", nextSlide);
+      nextBtn?.removeEventListener("click", prevSlide);
+      // 重新绑定正确的事件
+      prevBtn?.addEventListener("click", prevSlide);
+      nextBtn?.addEventListener("click", nextSlide);
+    }
   };
 
   window.addEventListener("load", initdemo1CarouselTrack);
 })();
-
-
-
 
 
 
