@@ -1,235 +1,354 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MeFan - Products</title>
-  
-  <!-- 引入字体 -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <title>Carousel with Alpha Shift</title>
   <link rel="stylesheet" href="styles.css">
-<script src="scripts.js" defer></script>
-<script src="scroll.js" defer></script> <!-- 引入优化的滚动脚本 -->
+  <script src="scripts.js" defer></script>
+  <script src="scroll.js" defer></script> <!-- 引入优化的滚动脚本 -->
   <style>
- /* 模态框整体样式 */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-body {
-  font-family: 'Poppins', sans-serif;
-  background-color: #fff; /* 保持整体背景 */
-  color: #333;
-  line-height: 1.6;
-padding-top:40px; /* 确保内容不会被导航栏挡住，80px 可根据导航栏高度调整 */
-}
-    
+    /* ========== 全局基础样式 ========== */
+    body {
+      margin: 0; padding: 0;
+      background: #f0f0f0;
+      font-family: Arial, sans-serif;
+    }
+    h2 { text-align: center; margin: 20px 0; }
+
+    /* ========== 桌面端样式 ========== */
     .demo1-carousel-container {
-  display: flex;
-  justify-content: center;
-  overflow: hidden;
-  position: relative;
+      position: relative;
+      width: 100%;
+      height: 495px;         /* 固定高度 */
+      margin: auto;
+      padding: 0 10%;        /* 桌面端左右留白10% */
+      box-sizing: border-box;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .demo1-carousel-track {
+      display: flex;
+      gap: 15px;             /* 幻灯片之间 15px 间距 */
+      transition: transform 0.5s ease-in-out;
+      align-items: center;
+    }
+    .demo1-carousel-slide {
+      flex: 0 0 auto;
+      width: 100%;          /* 脚本会将 slideWidth 视为 0.8 * containerWidth */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative; /* 若用 ::before 需要父级 position: relative */原没有触发去阴影
+    }
+    .demo1-carousel-slide img {
+      width: 100%;
+      height: auto;         /* 桌面端保持原比例 */
+      border-radius: 10px;
+      display: block;
+    }
+    .demo1-carousel-slide.shadow {
+  /* 简单做法：让其整体变暗 */
+  filter: brightness(0.6);
+  transition: filter 0.3s;
 }
 
-.demo1-carousel-track {
-  display: flex;
-  transition: transform 0.5s ease-in-out;
-}
-
-.demo1-carousel-slide {
-  flex: 0 0 80%;
-  margin: 0 10px;
-  opacity: 0.5;
-  transition: opacity 0.5s ease-in-out;
-}
-
-.demo1-carousel-slide.active {
-  opacity: 1;
-}
-
-.demo1-carousel-prev,
-.demo1-carousel-next {
+/* 或者用半透明遮罩 (叠加在slide上) */
+.demo1-carousel-slide.shadow::before {
+  content: "";
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.2);
+  pointer-events: none;
+}
+ /* ====== 覆盖层(桌面端) ====== */
+    .demo1-overlay {
+      position: absolute;
+      left: 30px;  /* 桌面端：示例性地左上 */
+      bottom: 60px;
+      color: #fff;
+      opacity: 0; /* 初始隐藏，active时显示 */
+      white-space: nowrap; 
+       display: inline-block; /* 建议配合 inline-block，效果更可控 */
+        transform: translateY(50px); /* 初始位置在下方 */
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
+    }
+    /* 轮播激活时再让覆盖层显示 */
+.demo1-carousel-slide.active .demo1-overlay {
+  opacity: 1;
+  transform: translateY(0); /* 复位 */
 }
 
-.demo1-carousel-prev { left: 10px; }
-.demo1-carousel-next { right: 10px; }
-
+    .demo1-text-top {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      background: rgba(0,0,0,0.5);
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 4px;
+    }
+    .demo1-title {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom:320px;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+      transform: translateY(10px); */
+        color: white;
+white-space: nowrap; /* 禁止自动换行 */
+  display: inline-block; /* 建议配合 inline-block，效果更可控 */
+overflow: visible;
+      overflow: visible;
+  /* 动画或渐入逻辑，如初始下移、active 时上移 */
+  opacity: 0;
+  transform: translateY(40px);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
+  z-index: 999;
+    }
+    .demo1-carousel-slide.active .demo1-title {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.4s; /* 按钮比文字慢 0.4s */
+   }
+    .demo1-explore-btn {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #007BFF;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+   z-index: 999;
+opacity: 0;
+  transform: translateY(60px); /* 初始往下偏移 60px */
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
+       position: absolute;
 }
-/* 响应式布局 */
+    /* 按钮渐入 */
+.demo1-carousel-slide.active .demo1-explore-btn {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.4s; /* 按钮比文字慢 0.4s */
+}
+    .demo1-explore-btn:hover {
+  background-color: #0056b3;
+}
+    .demo1-text-bottom {
+      font-size: 1rem;
+      margin-top: 10px;
+      background: rgba(0,0,0,0.5);
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 4px;
+        flex-direction: column;
+  align-items: flex-start;
+      opacity: 1;
+        transform: translateY(40px);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
+  z-index: 1000;
+    }
+  /* 文字渐入 */
+.demo1-carousel-slide.active .demo1-text-top,
+.demo1-carousel-slide.active .demo1-text-bottom {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.2s; /* 文字比整体动画稍微慢 0.2s */
+}
+
+
+    /* 小圆点容器：桌面端放在容器外 */
+    .demo1-carousel-dots-container {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .demo1-carousel-dot {
+      width: 10px; height: 10px; background: #ccc;
+      border-radius: 50%; margin: 0 5px; display: inline-block;
+      cursor: pointer;
+    }
+    
+.demo1-carousel-dot.active {
+  background: #007BFF;
+}
+
+/* ========== 轮播按钮 ========== */
+    .demo1-carousel-prev, .demo1-carousel-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 30px;
+      color: white;
+      border: none;
+      background: none;
+      cursor: pointer;
+      z-index: 100;
+      display: none; /* 默认隐藏，手机端显示 */
+    }
+    .demo1-carousel-prev { left: 10px; }
+    .demo1-carousel-next { right: 10px; }
+/* For PC: Hide the previous/next buttons */
+@media (min-width: 1024px) {
+    .demo1-carousel-prev,
+    .demo1-carousel-next {
+        display: none; /* Hide on large screens */
+    }
+
+    .demo1-carousel-dots {
+        display: block; /* Ensure the dots are visible on larger screens */
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .demo1-carousel-dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background: #ccc;
+        border-radius: 50%;
+        margin: 0 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .demo1-carousel-dot.active {
+        background: #007BFF;
+    }
+}
+    /* ========== 移动端适配 ========== */
 @media (max-width: 768px) {
-   .demo1-carousel-container {
-  display: flex;
-  justify-content: center;
-  overflow: hidden;
-  position: relative;
-}
+  .demo1-carousel-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 85%; /* 手机端宽度减少 15% */
+    min-height: 495px;
+    height: 495px;
+    margin-top: 12px;
+    padding-bottom: 45px; /* 适当增加底部空间，以适应小圆点 */
+  }
 
-.demo1-carousel-track {
-  display: flex;
-  transition: transform 0.5s ease-in-out;
-}
+  .demo1-carousel-track {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* 图片之间的间隔 */
+    align-items: center;
+    width: 100%;
+    height: 495px;
+  }
 
-.demo1-carousel-slide {
-  flex: 0 0 80%;
-  margin: 0 10px;
-  opacity: 0.5;
-  transition: opacity 0.5s ease-in-out;
-}
+  .demo1-carousel-slide {
+    width: 100%;
+    min-height: 495px;
+    max-height: 495px;
+    height: 495px; /* 彻底固定高度 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
 
-.demo1-carousel-slide.active {
-  opacity: 1;
-}
+  .demo1-carousel-slide img {
+    width: 100%;
+    min-width: 100%;
+    min-height: 495px;
+    height: 495px; /* 强制固定高度 */
+    object-fit: cover; /* 确保填充，不拉伸 */
+    border-radius: 10px;
+    display: block; /* 避免 inline 属性影响高度 */
+  }
 
-.demo1-carousel-prev,
-.demo1-carousel-next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  cursor: pointer;
-}
+ 
+.demo1-carousel-prev, .demo1-carousel-next {
+        display: block;
+      }
 
-.demo1-carousel-prev { left: 10px; }
-.demo1-carousel-next { right: 10px; }
+ 
 
+      .demo1-carousel-dots-container {
+        position: absolute;
+        left: 0; right: 0; bottom: 10px;
+        margin: 0; z-index: 99;
+        display: flex; justify-content: center; align-items: center;
+      }
+      .demo1-carousel-dot {
+        width: 8px; height: 8px; margin: 0 4px;
+      }
+    }
   </style>
 </head>
 <body>
+  <h2>Carousel with Alpha Shift</h2>
 
-  <!-- 顶部导航栏 -->
-  <header class="header-gradient">
-    <img src="MeFan Logo.png" alt="MeFan Logo" class="logo-img" />
-
-    <!-- 汉堡菜单 -->
-    <div class="menu-icon" id="menuIcon">
-      <span class="bar"></span>
-      <span class="bar"></span>
-    </div>
-
-    <nav id="mobileNav" role="navigation">
-      <div class="close-btn" id="closeBtn">&times;</div>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="products.html" class="active">Products</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
-<!-- ===== 轮播容器 ===== -->
+<!-- 轮播容器 -->
 <div class="demo1-carousel-container">
+  
+  <!-- 左侧按钮 -->
   <button class="demo1-carousel-prev">&lt;</button>
-  <!-- 新增 demo1-carousel-track-wrapper 作为包裹层 -->
-  <div class="demo1-carousel-track-wrapper">
-    <div class="demo1-carousel-track">
-      
-      <!-- 轮播项1 -->
-      <div class="demo1-carousel-slide">
-        <a href="example.html" target="_blank">
-          <img src="Di cai hua.png" alt="Di cai hua">
-        </a>
-        <div class="demo1-overlay">
-          <div class="demo1-button-title-group">
-            <div class="demo1-bottom-row">
-              <button class="demo1-explore-btn" onclick="window.open('example.html', '_blank')">Explore now</button>
-              <div class="demo1-text-bottom">New season.</div>
-            </div>
-            <div class="demo1-title">地菜花</div>
-          </div>
-        </div>
-      </div>
 
-      <!-- 轮播项2 -->
-      <div class="demo1-carousel-slide">
-        <a href="example.html" target="_blank">
-          <img src="Lv-Se-qing-cai.png" alt="Lv-Se-qing-cai">
-        </a>
-        <div class="demo1-overlay">
-          <div class="demo1-button-title-group">
-            <div class="demo1-bottom-row">
-              <button class="demo1-explore-btn" onclick="window.open('example.html', '_blank')">Explore now</button>
-              <div class="demo1-text-bottom">New season.</div>
-            </div>
-            <div class="demo1-title">小颗青菜</div>
-          </div>
-        </div>
+  <div class="demo1-carousel-track">
+    <!-- 幻灯片1 -->
+    <div class="demo1-carousel-slide">
+      <a href="example.html">
+        <img src="Lv-Se-qing-cai.png" alt="Slide1">
+      </a>
+      <div class="demo1-overlay">
+        <div class="demo1-title">小颗青菜</div>
+        <button class="demo1-explore-btn">Explore now</button>
+        <div class="demo1-text-bottom">Sci-Fi · New season.</div>
       </div>
-
-      <!-- 轮播项3 -->
-      <div class="demo1-carousel-slide">
-        <a href="example.html" target="_blank">
-          <img src="Two baskets of vegetables.png" alt="Two baskets of vegetables">
-        </a>
-        <div class="demo1-overlay">
-          <div class="demo1-button-title-group">
-            <div class="demo1-bottom-row">
-              <button class="demo1-explore-btn" onclick="window.open('example.html', '_blank')">Explore now</button>
-              <div class="demo1-text-bottom">New season.</div>
-            </div>
-            <div class="demo1-title">青菜</div>
-          </div>
-        </div>
+    </div>
+    <!-- 幻灯片2 -->
+    <div class="demo1-carousel-slide">
+      <a href="example.html">
+        <img src="Two baskets of vegetables.png" alt="Slide2">
+      </a>
+      <div class="demo1-overlay">
+        <div class="demo1-title">青菜</div>
+        <button class="demo1-explore-btn">Explore now</button>
+        <div class="demo1-text-bottom">Sci-Fi · New season.</div>
       </div>
-
-      <!-- 轮播项4 -->
-      <div class="demo1-carousel-slide">
-        <a href="example.html" target="_blank">
-          <img src="A full-body portrait wearing a stylish summer work uniform.png" alt="红菜苔">
-        </a>
-        <div class="demo1-overlay">
-          <div class="demo1-button-title-group">
-            <div class="demo1-bottom-row">
-              <button class="demo1-explore-btn" onclick="window.open('example.html', '_blank')">Explore now</button>
-              <div class="demo1-text-bottom">New season.</div>
-            </div>
-            <div class="demo1-title">红菜苔</div>
-          </div>
-        </div>
+    </div>
+    <!-- 幻灯片3 -->
+    <div class="demo1-carousel-slide">
+      <a href="example.html">
+        <img src="A full-body portrait wearing a stylish summer work uniform.png" alt="Slide3">
+      </a>
+      <div class="demo1-overlay">
+        <div class="demo1-title">红菜苔</div>
+        <button class="demo1-explore-btn">Explore now</button>
+        <div class="demo1-text-bottom">Sci-Fi · New season.</div>
       </div>
-
+    </div>
+    <!-- 幻灯片4 -->
+    <div class="demo1-carousel-slide">
+      <a href="example.html">
+        <img src="Di cai hua.png" alt="Slide4">
+      </a>
+      <div class="demo1-overlay">
+        <div class="demo1-title">地菜花</div>
+        <button class="demo1-explore-btn">Explore now</button>
+        <div class="demo1-text-bottom">Sci-Fi · New season.</div>
+      </div>
     </div>
   </div>
 
+  <!-- 右侧按钮 -->
   <button class="demo1-carousel-next">&gt;</button>
+
 </div>
 
-
-<!-- 小圆点容器放在轮播容器外部 -->
+<!-- 小圆点容器(4个) -->
 <div class="demo1-carousel-dots-container">
-  <div class="demo1-carousel-dots">
-    <span class="demo1-carousel-dot"></span>
-    <span class="demo1-carousel-dot"></span>
-    <span class="demo1-carousel-dot"></span>
-    <span class="demo1-carousel-dot"></span>
-  </div>
+  <span class="demo1-carousel-dot"></span>
+  <span class="demo1-carousel-dot"></span>
+  <span class="demo1-carousel-dot"></span>
+  <span class="demo1-carousel-dot"></span>
 </div>
 
 
-
-  <!-- 横线部分 -->
-  <div class="divider"></div>
-
-  <!-- 公司信息和社交媒体 -->
-  <div class="footer-extend">
-    <p>&copy; 2025 MeFan@Oliver F. All rights reserved.</p>
-  </div>
-
-  <!-- JavaScript 逻辑 -->
-  <script>
-(function () {
-  const initCarousel = () => {
+<script>
+(function () { 
+  const initdemo1CarouselTrack = () => {
     const container = document.querySelector(".demo1-carousel-container");
     const track = document.querySelector(".demo1-carousel-track");
     let slides = Array.from(document.querySelectorAll(".demo1-carousel-slide"));
@@ -242,37 +361,63 @@ padding-top:40px; /* 确保内容不会被导航栏挡住，80px 可根据导航
     const totalReal = slides.length;
     let isAnimating = false;
 
-    // 克隆首尾
+    // 克隆首尾幻灯片
     const firstClone = slides[0].cloneNode(true);
     const lastClone = slides[totalReal - 1].cloneNode(true);
     track.appendChild(firstClone);
     track.insertBefore(lastClone, track.firstChild);
 
-    slides = Array.from(track.querySelectorAll(".demo1-carousel-slide"));
-    let currentIndex = 1;
-    let slideWidth = slides[1].offsetWidth + 15;
+    slides = Array.from(track.querySelectorAll(".demo1-carousel-slide")); 
+    let currentIndex = 1; 
+    let slideWidth = slides[1].getBoundingClientRect().width + 15; 
 
     function updateCarousel(animated = true) {
-      slideWidth = slides[1].offsetWidth + 15;
       track.style.transition = animated ? "transform 0.5s ease-in-out" : "none";
       track.style.transform = `translateX(${-currentIndex * slideWidth}px)`;
 
-      let dotIndex = currentIndex === 0 ? totalReal - 1 : currentIndex === slides.length - 1 ? 0 : currentIndex - 1;
+      // 更新小圆点
+      let dotIndex = (currentIndex === 0) ? totalReal - 1 : 
+                     (currentIndex === slides.length - 1) ? 0 : 
+                     currentIndex - 1;
       dots.forEach((dot, i) => dot.classList.toggle("active", i === dotIndex));
-    }
 
-    function fixIndexIfNeeded() {
-      setTimeout(() => {
-        if (currentIndex === slides.length - 1) {
-          track.style.transition = "none";
-          currentIndex = 1;
-          updateCarousel(false);
-        } else if (currentIndex === 0) {
-          track.style.transition = "none";
-          currentIndex = totalReal;
-          updateCarousel(false);
+      // 移除所有 active/prev/next/shadow
+      slides.forEach(sl => sl.classList.remove("active", "prev", "next", "shadow"));
+
+      // 禁用内部 <a> 点击
+      slides.forEach(sl => {
+        const aTag = sl.querySelector("a");
+        if (aTag) aTag.style.pointerEvents = "none";
+      });
+
+      // 设定 active slide
+      slides[currentIndex].classList.add("active");
+      const centerA = slides[currentIndex].querySelector("a");
+      if (centerA) centerA.style.pointerEvents = "auto";
+
+      // 设定 prev / next
+      const nextIndex = (currentIndex + 1) % slides.length;
+      const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+      slides[nextIndex].classList.add("next");
+      slides[prevIndex].classList.add("prev");
+
+      // 给非 .active 的 slide 添加阴影
+      slides.forEach(slide => {
+        if (!slide.classList.contains("active")) {
+          slide.classList.add("shadow");
         }
-      }, 50);
+      });
+
+      // 修复 Explore Now 按钮仅在 .active 显示
+      document.querySelectorAll(".demo1-explore-btn").forEach(btn => {
+        btn.style.opacity = "0";
+        btn.style.pointerEvents = "none";
+      });
+      const activeBtn = slides[currentIndex].querySelector(".demo1-explore-btn");
+      if (activeBtn) {
+        activeBtn.style.opacity = "1";
+        activeBtn.style.pointerEvents = "auto";
+      }
     }
 
     function nextSlide() {
@@ -280,6 +425,15 @@ padding-top:40px; /* 确保内容不会被导航栏挡住，80px 可根据导航
       isAnimating = true;
       currentIndex++;
       updateCarousel();
+
+      setTimeout(() => {
+        if (currentIndex === slides.length - 1) {
+          track.style.transition = "none";
+          currentIndex = 1;
+          updateCarousel(false);
+        }
+        isAnimating = false;
+      }, 500);
     }
 
     function prevSlide() {
@@ -287,49 +441,124 @@ padding-top:40px; /* 确保内容不会被导航栏挡住，80px 可根据导航
       isAnimating = true;
       currentIndex--;
       updateCarousel();
+
+      setTimeout(() => {
+        if (currentIndex === 0) {
+          track.style.transition = "none";
+          currentIndex = totalReal;
+          updateCarousel(false);
+        }
+        isAnimating = false;
+      }, 500);
     }
 
-    prevBtn?.addEventListener("click", () => {
-      prevSlide();
-    });
-    nextBtn?.addEventListener("click", () => {
-      nextSlide();
-    });
+    function jumpToSlide(index) {
+      if (isAnimating) return;
+      isAnimating = true;
+      currentIndex = index + 1;
+      updateCarousel();
+      setTimeout(() => isAnimating = false, 500);
+    }
+
+    prevBtn?.addEventListener("click", prevSlide);
+    nextBtn?.addEventListener("click", nextSlide);
+    dots.forEach((dot, index) => dot.addEventListener("click", () => jumpToSlide(index)));
+
+    let interval = setInterval(nextSlide, 5000);
+    function resetInterval() {
+      clearInterval(interval);
+      interval = setInterval(nextSlide, 5000);
+    }
 
     track.addEventListener("transitionend", () => {
-      fixIndexIfNeeded();
       isAnimating = false;
     });
 
-    let startX = 0, startY = 0, isSwiping = false;
+    // 初始化
+    track.style.transition = "none";
+    updateCarousel();
+    setTimeout(() => {
+      track.style.transition = "transform 0.5s ease-in-out";
+    }, 50);
+
+    // 处理手机端按钮显示
+    if (window.innerWidth <= 768) {
+      prevBtn.style.display = "block";
+      nextBtn.style.display = "block";
+    } else {
+      prevBtn.style.display = "none";
+      nextBtn.style.display = "none";
+    }
+
+    // 点击逻辑
+    slides.forEach(slide => {
+      slide.addEventListener("click", (e) => {
+        if (slide.classList.contains("active")) {
+          // 允许 <a> 正常跳转
+        } else if (slide.classList.contains("next")) {
+          e.preventDefault();
+          nextSlide();
+          resetInterval();
+        } else if (slide.classList.contains("prev")) {
+          e.preventDefault();
+          prevSlide();
+          resetInterval();
+        }
+      });
+    });
+
+    // Explore Now 按钮逻辑
+    const exploreBtns = document.querySelectorAll('.demo1-explore-btn');
+    exploreBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const link = e.target.closest('.demo1-carousel-slide')?.querySelector('a');
+        if (link) {
+          window.location.href = link.href;
+        }
+      });
+    });
+
+    // 触摸滑动交互
+    let startX = 0;
+    let isSwiping = false;
 
     container.addEventListener('touchstart', (e) => {
       if (isAnimating) return;
       isSwiping = true;
       startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      slideWidth = slides[1].offsetWidth + 15;
     });
 
     container.addEventListener('touchend', (e) => {
-      if (!isSwiping || isAnimating) return;
-      isSwiping = false;
+      if (!isSwiping) return;
       let endX = e.changedTouches[0].clientX;
-      let deltaX = endX - startX;
+      let distance = endX - startX;
+      isSwiping = false;
 
-      if (Math.abs(deltaX) < 20) {
-        updateCarousel(false);
-        return;
+      if (Math.abs(distance) > 50) {
+        if (distance < 0) {
+          nextSlide();
+        } else {
+          prevSlide();
+        }
+        resetInterval();
       }
-      isAnimating = true;
-      deltaX < 0 ? nextSlide() : prevSlide();
     });
   };
 
-  window.addEventListener("load", initCarousel);
+  window.addEventListener("load", initdemo1CarouselTrack);
 })();
 
 
-  </script>
+
+
+
+
+
+
+
+
+
+
+</script>
 </body>
 </html>
