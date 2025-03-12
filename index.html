@@ -17,38 +17,42 @@
 
     /* ========== 桌面端样式 ========== */
 .demo1-carousel-container {
-      position: relative;
-      width: 100%;
-      height: 495px;         /* 固定高度 */
-      margin: auto;
-      padding: 0 10%;        /* 桌面端左右留白10% */
-      box-sizing: border-box;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .demo1-carousel-track {
-      display: flex;
-      gap: 15px;             /* 幻灯片之间 15px 间距 */
-      transition: transform 0.5s ease-in-out;
-      align-items: center;
-    }
-    .demo1-carousel-slide {
-      flex: 0 0 auto;
-      width: 100%;          /* 脚本会将 slideWidth 视为 0.8 * containerWidth */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative; /* 若用 ::before 需要父级 position: relative */原没有触发去阴影
-    }
-    .demo1-carousel-slide img {
-      width: 100%;
-      height: auto;         /* 桌面端保持原比例 */
-      border-radius: 10px;
-      display: block;
-    }
-    .demo1-carousel-slide.shadow {
+  position: relative;
+  width: 100%;
+  height: 495px;         /* 固定高度 */
+  margin: auto;
+  padding: 0 10%;        /* 桌面端左右留白10% */
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.demo1-carousel-track {
+  display: flex;
+  gap: 15px;             /* 幻灯片之间 15px 间距 */
+  transition: transform 0.5s ease-in-out;
+  align-items: center;
+}
+
+.demo1-carousel-slide {
+  flex: 0 0 auto;
+  width: 100%;          /* 脚本会将 slideWidth 视为 0.8 * containerWidth */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative; /* 若用 ::before 需要父级 position: relative */
+}
+
+.demo1-carousel-slide img {
+  width: 100%;
+  height: auto;         /* 桌面端保持原比例 */
+  border-radius: 10px;
+  display: block;
+}
+
+.demo1-carousel-slide.shadow {
   /* 简单做法：让其整体变暗 */
   filter: brightness(0.6);
   transition: filter 0.3s;
@@ -62,92 +66,101 @@
   background: rgba(0,0,0,0.2);
   pointer-events: none;
 }
- /* ====== 覆盖层(桌面端) ====== */
-    .demo1-overlay {
-      position: absolute;
-      left: 30px;  /* 桌面端：示例性地左上 */
-      bottom: 60px;
-      color: #fff;
-      opacity: 0; /* 初始隐藏，active时显示 */
-      white-space: nowrap; 
-       display: inline-block; /* 建议配合 inline-block，效果更可控 */
-        transform: translateY(50px); /* 初始位置在下方 */
+
+/* ====== 覆盖层(桌面端) ====== */
+.demo1-overlay {
+  position: absolute;
+  left: 30px;  /* 桌面端：示例性地左上 */
+  bottom: 60px;
+  color: #fff;
+  opacity: 0; /* 初始隐藏，active时显示 */
+  white-space: nowrap; 
+  display: inline-block; /* 建议配合 inline-block，效果更可控 */
+  transform: translateY(50px); /* 初始位置在下方 */
   transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
-    }
-    /* 轮播激活时再让覆盖层显示 */
+}
+
+/* 轮播激活时再让覆盖层显示 */
 .demo1-carousel-slide.active .demo1-overlay {
   opacity: 1;
   transform: translateY(0); /* 复位 */
 }
 
-    .demo1-text-top {
-      font-size: 1.1rem;
-      margin-bottom: 10px;
-      background: rgba(0,0,0,0.5);
-      display: inline-block;
-      padding: 5px 10px;
-      border-radius: 4px;
-    }
-    .demo1-title {
-      font-size: 3rem;
-      font-weight: bold;
-      margin-bottom:320px;
-      text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
-      transform: translateY(10px); */
-        color: white;
-white-space: nowrap; /* 禁止自动换行 */
+.demo1-text-top {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  background: rgba(0,0,0,0.5);
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.demo1-title {
+  font-size: 3rem;
+  font-weight: bold;
+  /* 之前这里有 margin-bottom:320px; 会导致上下跳动，去掉即可 */
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+  /* 之前这里的注释符号有误，多出了 */ 导致后续解析异常 */
+  color: white;
+  white-space: nowrap; /* 禁止自动换行 */
   display: inline-block; /* 建议配合 inline-block，效果更可控 */
-overflow: visible;
-      overflow: visible;
+  overflow: visible;
   /* 动画或渐入逻辑，如初始下移、active 时上移 */
   opacity: 0;
-  transform: translateY(40px);
+  transform: translateY(40px); /* 初始往下偏移 40px */
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
   z-index: 999;
-    }
-    .demo1-carousel-slide.active .demo1-title {
+}
+
+/* 轮播激活时文字上移、渐入 */
+.demo1-carousel-slide.active .demo1-title {
   opacity: 1;
   transform: translateY(0);
-  transition-delay: 0.4s; /* 按钮比文字慢 0.4s */
-   }
-    .demo1-explore-btn {
-      margin-top: 10px;
-      padding: 10px 20px;
-      border: none;
-      background-color: #007BFF;
-      color: #fff;
-      border-radius: 4px;
-      cursor: pointer;
-   z-index: 999;
-opacity: 0;
+  transition-delay: 0.4s; /* 按钮比文字慢 0.4s(可根据需要微调) */
+}
+
+.demo1-explore-btn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #007BFF;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 999;
+  opacity: 0;
   transform: translateY(60px); /* 初始往下偏移 60px */
   transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
-       position: absolute;
+  position: absolute;
 }
-    /* 按钮渐入 */
+
+/* 按钮渐入 */
 .demo1-carousel-slide.active .demo1-explore-btn {
   opacity: 1;
   transform: translateY(0);
   transition-delay: 0.4s; /* 按钮比文字慢 0.4s */
 }
-    .demo1-explore-btn:hover {
+
+.demo1-explore-btn:hover {
   background-color: #0056b3;
 }
-    .demo1-text-bottom {
-      font-size: 1rem;
-      margin-top: 10px;
-      background: rgba(0,0,0,0.5);
-      display: inline-block;
-      padding: 5px 10px;
-      border-radius: 4px;
-        flex-direction: column;
+
+.demo1-text-bottom {
+  font-size: 1rem;
+  margin-top: 10px;
+  background: rgba(0,0,0,0.5);
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 4px;
+  flex-direction: column;
   align-items: flex-start;
-      opacity: 1;
-        transform: translateY(40px);
+  opacity: 1;
+  transform: translateY(40px);
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
   z-index: 1000;
-    }
-  /* 文字渐入 */
+}
+
+/* 文字渐入 */
 .demo1-carousel-slide.active .demo1-text-top,
 .demo1-carousel-slide.active .demo1-text-bottom {
   opacity: 1;
@@ -155,66 +168,73 @@ opacity: 0;
   transition-delay: 0.2s; /* 文字比整体动画稍微慢 0.2s */
 }
 
+/* 小圆点容器：桌面端放在容器外 */
+.demo1-carousel-dots-container {
+  text-align: center;
+  margin-top: 10px;
+}
 
-    /* 小圆点容器：桌面端放在容器外 */
-    .demo1-carousel-dots-container {
-      text-align: center;
-      margin-top: 10px;
-    }
-    .demo1-carousel-dot {
-      width: 10px; height: 10px; background: #ccc;
-      border-radius: 50%; margin: 0 5px; display: inline-block;
-      cursor: pointer;
-    }
-    
+.demo1-carousel-dot {
+  width: 10px; 
+  height: 10px; 
+  background: #ccc;
+  border-radius: 50%; 
+  margin: 0 5px; 
+  display: inline-block;
+  cursor: pointer;
+}
+
 .demo1-carousel-dot.active {
   background: #007BFF;
 }
 
 /* ========== 轮播按钮 ========== */
-    .demo1-carousel-prev, .demo1-carousel-next {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 30px;
-      color: white;
-      border: none;
-      background: none;
-      cursor: pointer;
-      z-index: 100;
-      display: none; /* 默认隐藏，手机端显示 */
-    }
-    .demo1-carousel-prev { left: 10px; }
-    .demo1-carousel-next { right: 10px; }
+.demo1-carousel-prev, .demo1-carousel-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 30px;
+  color: white;
+  border: none;
+  background: none;
+  cursor: pointer;
+  z-index: 100;
+  display: none; /* 默认隐藏，手机端显示 */
+}
+
+.demo1-carousel-prev { left: 10px; }
+.demo1-carousel-next { right: 10px; }
+
 /* For PC: Hide the previous/next buttons */
 @media (min-width: 1024px) {
-    .demo1-carousel-prev,
-    .demo1-carousel-next {
-        display: none; /* Hide on large screens */
-    }
+  .demo1-carousel-prev,
+  .demo1-carousel-next {
+    display: none; /* Hide on large screens */
+  }
 
-    .demo1-carousel-dots {
-        display: block; /* Ensure the dots are visible on larger screens */
-        text-align: center;
-        margin-top: 15px;
-    }
+  .demo1-carousel-dots {
+    display: block; /* Ensure the dots are visible on larger screens */
+    text-align: center;
+    margin-top: 15px;
+  }
 
-    .demo1-carousel-dot {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        background: #ccc;
-        border-radius: 50%;
-        margin: 0 5px;
-        cursor: pointer;
-        transition: background 0.3s;
-    }
+  .demo1-carousel-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: #ccc;
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
 
-    .demo1-carousel-dot.active {
-        background: #007BFF;
-    }
+  .demo1-carousel-dot.active {
+    background: #007BFF;
+  }
 }
-    /* ========== 移动端适配 ========== */
+
+/* ========== 移动端适配 ========== */
 @media (max-width: 768px) {
   .demo1-carousel-container {
     display: flex;
@@ -257,83 +277,29 @@ opacity: 0;
     display: block; /* 避免 inline 属性影响高度 */
   }
 
- 
-.demo1-carousel-prev, .demo1-carousel-next {
-        display: block;
-      }
+  .demo1-carousel-prev, .demo1-carousel-next {
+    display: block;
+  }
 
- 
-
-      .demo1-carousel-dots-container {
-        position: absolute;
-        left: 0; right: 0; bottom: 10px;
-        margin: 0; z-index: 99;
-        display: flex; justify-content: center; align-items: center;
-      }
-      .demo1-carousel-dot {
-        width: 8px; height: 8px; margin: 0 4px;
-      }
-    }
-    /* ========== 移动端适配 ========== */
-@media (max-width: 768px) {
-  .demo1-carousel-container {
-    display: flex;
-    flex-direction: column;
+  .demo1-carousel-dots-container {
+    position: absolute;
+    left: 0; right: 0; bottom: 10px;
+    margin: 0; 
+    z-index: 99;
+    display: flex; 
+    justify-content: center; 
     align-items: center;
-    width: 85%; /* 手机端宽度减少 15% */
-    min-height: 495px;
-    height: 495px;
-    margin-top: 12px;
-    padding-bottom: 45px; /* 适当增加底部空间，以适应小圆点 */
   }
 
-  .demo1-carousel-track {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* 图片之间的间隔 */
-    align-items: center;
-    width: 100%;
-    height: 495px;
+  .demo1-carousel-dot {
+    width: 8px; 
+    height: 8px; 
+    margin: 0 4px;
   }
+}
 
-  .demo1-carousel-slide {
-    width: 100%;
-    min-height: 495px;
-    max-height: 495px;
-    height: 495px; /* 彻底固定高度 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
 
-  .demo1-carousel-slide img {
-    width: 100%;
-    min-width: 100%;
-    min-height: 495px;
-    height: 495px; /* 强制固定高度 */
-    object-fit: cover; /* 确保填充，不拉伸 */
-    border-radius: 10px;
-    display: block; /* 避免 inline 属性影响高度 */
-  }
 
- 
-.demo1-carousel-prev, .demo1-carousel-next {
-        display: block;
-      }
-
- 
-
-      .demo1-carousel-dots-container {
-        position: absolute;
-        left: 0; right: 0; bottom: 10px;
-        margin: 0; z-index: 99;
-        display: flex; justify-content: center; align-items: center;
-      }
-      .demo1-carousel-dot {
-        width: 8px; height: 8px; margin: 0 4px;
-      }
-    }
   </style>
 </head>
 <body>
