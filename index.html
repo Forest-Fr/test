@@ -16,287 +16,102 @@
     h2 { text-align: center; margin: 20px 0; }
 
     /* ========== 桌面端样式 ========== */
-.demo1-carousel-container {
-  position: relative;
-  width: 100%;
-  height: 495px;         /* 固定高度 */
-  margin: auto;
-  padding: 0 10%;        /* 桌面端左右留白10% */
-  box-sizing: border-box;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.demo1-carousel-track {
-  display: flex;
-  gap: 15px;             /* 幻灯片之间 15px 间距 */
-  transition: transform 0.5s ease-in-out;
-  align-items: center;
-}
-
-.demo1-carousel-slide {
-  flex: 0 0 auto;
-  width: 100%;          /* 脚本会将 slideWidth 视为 0.8 * containerWidth */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative; /* 若用 ::before 需要父级 position: relative */
-}
-
-.demo1-carousel-slide img {
-  width: 100%;
-  height: auto;         /* 桌面端保持原比例 */
-  border-radius: 10px;
-  display: block;
-}
-
-.demo1-carousel-slide.shadow {
-  /* 简单做法：让其整体变暗 */
-  filter: brightness(0.6);
-  transition: filter 0.3s;
-}
-
-/* 或者用半透明遮罩 (叠加在slide上) */
-.demo1-carousel-slide.shadow::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.2);
-  pointer-events: none;
-}
-
-/* ====== 覆盖层(桌面端) ====== */
-.demo1-overlay {
-  position: absolute;
-  left: 30px;  /* 桌面端：示例性地左上 */
-  bottom: 60px;
-  color: #fff;
-  opacity: 0; /* 初始隐藏，active时显示 */
-  white-space: nowrap; 
-  display: inline-block; /* 建议配合 inline-block，效果更可控 */
-  transform: translateY(50px); /* 初始位置在下方 */
-  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
-}
-
-/* 轮播激活时再让覆盖层显示 */
-.demo1-carousel-slide.active .demo1-overlay {
-  opacity: 1;
-  transform: translateY(0); /* 复位 */
-}
-
-.demo1-text-top {
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-  background: rgba(0,0,0,0.5);
-  display: inline-block;
-  padding: 5px 10px;
-  border-radius: 4px;
-}
-
-.demo1-title {
-  font-size: 3rem;
-  font-weight: bold;
-  /* 之前这里有 margin-bottom:320px; 会导致上下跳动，去掉即可 */
-  text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
-  /* 之前这里的注释符号有误，多出了 */ 导致后续解析异常 */
-  color: white;
-  white-space: nowrap; /* 禁止自动换行 */
-  display: inline-block; /* 建议配合 inline-block，效果更可控 */
-  overflow: visible;
-  /* 动画或渐入逻辑，如初始下移、active 时上移 */
-  opacity: 0;
-  transform: translateY(40px); /* 初始往下偏移 40px */
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
-  z-index: 999;
-}
-
-/* 轮播激活时文字上移、渐入 */
-.demo1-carousel-slide.active .demo1-title {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.4s; /* 按钮比文字慢 0.4s(可根据需要微调) */
-}
-
-.demo1-explore-btn {
-  margin-top: 10px;
-  padding: 10px 20px;
-  border: none;
-  background-color: #007BFF;
-  color: #fff;
-  border-radius: 4px;
-  cursor: pointer;
-  z-index: 999;
-  opacity: 0;
-  transform: translateY(60px); /* 初始往下偏移 60px */
-  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
-  position: absolute;
-}
-
-/* 按钮渐入 */
-.demo1-carousel-slide.active .demo1-explore-btn {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.4s; /* 按钮比文字慢 0.4s */
-}
-
-.demo1-explore-btn:hover {
-  background-color: #0056b3;
-}
-
-.demo1-text-bottom {
-  font-size: 1rem;
-  margin-top: 10px;
-  background: rgba(0,0,0,0.5);
-  display: inline-block;
-  padding: 5px 10px;
-  border-radius: 4px;
-  flex-direction: column;
-  align-items: flex-start;
-  opacity: 1;
-  transform: translateY(40px);
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
-  z-index: 1000;
-}
-
-/* 文字渐入 */
-.demo1-carousel-slide.active .demo1-text-top,
-.demo1-carousel-slide.active .demo1-text-bottom {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.2s; /* 文字比整体动画稍微慢 0.2s */
-}
-
-/* 小圆点容器：桌面端放在容器外 */
-.demo1-carousel-dots-container {
-  text-align: center;
-  margin-top: 10px;
-}
-
-.demo1-carousel-dot {
-  width: 10px; 
-  height: 10px; 
-  background: #ccc;
-  border-radius: 50%; 
-  margin: 0 5px; 
-  display: inline-block;
-  cursor: pointer;
-}
-
-.demo1-carousel-dot.active {
-  background: #007BFF;
-}
-
-/* ========== 轮播按钮 ========== */
-.demo1-carousel-prev, .demo1-carousel-next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 30px;
-  color: white;
-  border: none;
-  background: none;
-  cursor: pointer;
-  z-index: 100;
-  display: none; /* 默认隐藏，手机端显示 */
-}
-
-.demo1-carousel-prev { left: 10px; }
-.demo1-carousel-next { right: 10px; }
-
-/* For PC: Hide the previous/next buttons */
+/* ========== 轮播图片样式 (scroll-snap 版本) ========== */
 @media (min-width: 1024px) {
-  .demo1-carousel-prev,
-  .demo1-carousel-next {
-    display: none; /* Hide on large screens */
-  }
 
-  .demo1-carousel-dots {
-    display: block; /* Ensure the dots are visible on larger screens */
-    text-align: center;
-    margin-top: 15px;
-  }
-
-  .demo1-carousel-dot {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    background: #ccc;
-    border-radius: 50%;
-    margin: 0 5px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-
-  .demo1-carousel-dot.active {
-    background: #007BFF;
-  }
-}
-
-/* ========== 移动端适配 ========== */
-@media (max-width: 768px) {
-  .demo1-carousel-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 85%; /* 手机端宽度减少 15% */
-    min-height: 495px;
-    height: 495px;
-    margin-top: 12px;
-    padding-bottom: 45px; /* 适当增加底部空间，以适应小圆点 */
-  }
-
-  .demo1-carousel-track {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* 图片之间的间隔 */
-    align-items: center;
+  /* ===== 轮播容器：scroll-snap 设置 ===== */
+  .spec1-carousel-container {
+    position: relative;
     width: 100%;
-    height: 495px;
-  }
-
-  .demo1-carousel-slide {
-    width: 100%;
-    min-height: 495px;
-    max-height: 495px;
-    height: 495px; /* 彻底固定高度 */
+    height: 495px; /* 固定高度 */
+    overflow-x: auto; /* 启用横向滚动 */
+    scroll-snap-type: x mandatory; /* 强制对齐 */
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    padding: 0 10%;
+    scrollbar-width: none; /* 隐藏滚动条 (Firefox) */
+  }
+  
+  .spec1-carousel-container::-webkit-scrollbar {
+    display: none; /* 隐藏滚动条 (Chrome, Safari) */
   }
 
-  .demo1-carousel-slide img {
+  /* ===== 轮播轨道 ===== */
+  .spec1-carousel-track {
+    display: flex;
+    gap: 15px; /* 图片之间的间隔 */
+    justify-content: flex-start; /* 确保图片从左开始排列 */
+  }
+
+  /* ===== 轮播单个图片 ===== */
+  .spec1-carousel-slide {
+    flex: 0 0 auto;
     width: 100%;
-    min-width: 100%;
-    min-height: 495px;
-    height: 495px; /* 强制固定高度 */
-    object-fit: cover; /* 确保填充，不拉伸 */
-    border-radius: 10px;
-    display: block; /* 避免 inline 属性影响高度 */
-  }
-
-  .demo1-carousel-prev, .demo1-carousel-next {
-    display: block;
-  }
-
-  .demo1-carousel-dots-container {
-    position: absolute;
-    left: 0; right: 0; bottom: 10px;
-    margin: 0; 
-    z-index: 99;
-    display: flex; 
-    justify-content: center; 
+    position: relative;
+    opacity: 1 !important;
+    scroll-snap-align: center; /* 对齐到中心 */
+    transition: opacity 0.3s ease-in-out;
+    display: flex;
+    justify-content: center;
     align-items: center;
   }
 
-  .demo1-carousel-dot {
-    width: 8px; 
-    height: 8px; 
-    margin: 0 4px;
+  .spec1-carousel-slide img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+    filter: none !important;
+    opacity: 1 !important;
   }
 }
+
+/* ========== 移动端适配 (scroll-snap 版本) ========== */
+@media (max-width: 768px) {
+  
+  /* 轮播容器 */
+  .spec1-carousel-container {
+    width: 100vw;
+    padding-left: calc((100vw - 85vw) / 2);
+    padding-right: calc((100vw - 85vw) / 2);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    position: relative !important;
+  }
+  
+  .spec1-carousel-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 轮播轨道 */
+  .spec1-carousel-track {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+
+  /* 轮播单个图片 */
+  .spec1-carousel-slide {
+    flex: 0 0 auto;
+    width: 85vw;
+    max-width: 400px;
+    aspect-ratio: 1 / 0.7;
+    scroll-snap-align: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* 轮播图片 */
+  .spec1-carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
 
 
 
@@ -334,9 +149,7 @@
 <!-- 建议在底部或使用 <script defer> -->
 <script>
 (function () {
-  // =============================
-  // 等待轮播图的所有 <img> 加载后再初始化
-  // =============================
+  // 等待所有 <img> 加载完再初始化
   function waitImagesLoaded(images, callback) {
     let loadedCount = 0;
     const total = images.length;
@@ -357,75 +170,62 @@
     if (total === 0) callback();
   }
 
-  function initdemo1CarouselTrack() {
+  function initScrollSnapCarousel() {
     const container = document.querySelector(".demo1-carousel-container");
-    const track = document.querySelector(".demo1-carousel-track");
-    let slides = Array.from(document.querySelectorAll(".demo1-carousel-slide"));
+    const slides = Array.from(document.querySelectorAll(".demo1-carousel-slide"));
+    const dots = Array.from(document.querySelectorAll(".demo1-carousel-dot"));
     const prevBtn = document.querySelector(".demo1-carousel-prev");
     const nextBtn = document.querySelector(".demo1-carousel-next");
-    const dots = Array.from(document.querySelectorAll(".demo1-carousel-dot"));
 
-    if (!container || !track || slides.length === 0 || dots.length === 0) return;
+    if (!container || slides.length === 0 || dots.length === 0) return;
 
-    const totalReal = slides.length;
-    let isAnimating = false;
-    let currentIndex = 1;
-    let slideWidth = 0;
-
-    // 克隆首尾幻灯片
-    const firstClone = slides[0].cloneNode(true);
-    const lastClone = slides[totalReal - 1].cloneNode(true);
-    track.appendChild(firstClone);
-    track.insertBefore(lastClone, track.firstChild);
-
-    slides = Array.from(track.querySelectorAll(".demo1-carousel-slide"));
-    // ===========================================
-    // 1. 计算不同端的 slide 宽度 (含间隔 15px)
-    // ===========================================
-    function updateSlideWidth() {
-      if (window.innerWidth <= 768) {
-        const containerWidth = container.offsetWidth;
-        slides.forEach((slide) => {
-          slide.style.width = containerWidth + "px";
-        });
-        slideWidth = containerWidth + 15;
-      } else {
-        slides.forEach((slide) => {
-          slide.style.width = "";
-        });
-        slideWidth = slides[1].getBoundingClientRect().width + 15;
-      }
+    // 1) 测量每个slide相对于 container 的 offsetLeft (用于scrollTo)
+    //    若每张宽度不一致，需单独记录
+    let slideOffsets = [];
+    function measureSlidesOffset() {
+      slideOffsets = slides.map((slide) => slide.offsetLeft);
     }
 
-    // ===========================================
-    // 2. 更新轮播状态
-    // ===========================================
-    function updateCarousel(animated = true) {
-      updateSlideWidth(); 
-      track.style.transition = animated ? "transform 0.5s ease-in-out" : "none";
-      track.style.transform = `translateX(${-currentIndex * slideWidth}px)`;
+    measureSlidesOffset(); // 初次计算
+    window.addEventListener("resize", measureSlidesOffset); // 窗口变化时重测
 
-      let dotIndex =
-        currentIndex === 0
-          ? totalReal - 1
-          : currentIndex === slides.length - 1
-          ? 0
-          : currentIndex - 1;
+    // 2) 当前所在的slide索引
+    let currentIndex = 0;
+    let isAnimating = false;
 
-      dots.forEach((dot, i) => dot.classList.toggle("active", i === dotIndex));
-
-      slides.forEach((sl) => sl.classList.remove("active", "prev", "next", "shadow"));
-      slides[currentIndex].classList.add("active");
-
-      slides.forEach((slide) => {
-        const link = slide.querySelector("a");
-        if (link) {
-          link.style.pointerEvents = slide.classList.contains("active") ? "auto" : "none";
+    // 3) 实时监听滚动 -> 判断最接近中间的slide是谁
+    //    并更新 active / prev / next / shadow / dot
+    function onScroll() {
+      // 如果正在脚本动画滚动中，也可以照常检测
+      const scrollLeft = container.scrollLeft;
+      let closestIndex = 0;
+      let minDist = Infinity;
+      slides.forEach((slide, i) => {
+        const dist = Math.abs(scrollLeft - slideOffsets[i]);
+        if (dist < minDist) {
+          minDist = dist;
+          closestIndex = i;
         }
       });
+      if (closestIndex !== currentIndex) {
+        currentIndex = closestIndex;
+        updateClasses();
+      }
+    }
+    container.addEventListener("scroll", onScroll, { passive: true });
+
+    // 4) 根据 currentIndex 给对应 slide 添加 active / prev / next / shadow 等
+    function updateClasses() {
+      dots.forEach((dot, i) => dot.classList.toggle("active", i === currentIndex));
+
+      slides.forEach((slide) =>
+        slide.classList.remove("active", "prev", "next", "shadow")
+      );
+      slides[currentIndex].classList.add("active");
 
       const nextIndex = (currentIndex + 1) % slides.length;
       const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+      // 若你不想循环，就写: nextIndex = Math.min(currentIndex+1, slides.length-1) ...
       slides[nextIndex].classList.add("next");
       slides[prevIndex].classList.add("prev");
 
@@ -435,6 +235,15 @@
         }
       });
 
+      // active slide 内部链接可点击，其它禁止
+      slides.forEach((slide) => {
+        const link = slide.querySelector("a");
+        if (link) {
+          link.style.pointerEvents = slide.classList.contains("active") ? "auto" : "none";
+        }
+      });
+
+      // explore 按钮
       document.querySelectorAll(".demo1-explore-btn").forEach((btn) => {
         btn.style.opacity = "0";
         btn.style.pointerEvents = "none";
@@ -446,172 +255,98 @@
       }
     }
 
-    // ===========================================
-    // 3. 切换函数
-    // ===========================================
-    function nextSlide() {
-      if (isAnimating) return;
+    // 5) 滚动到指定slide
+    function scrollToSlide(index) {
+      if (index < 0 || index >= slides.length) return;
       isAnimating = true;
-      currentIndex++;
-      updateCarousel();
-      setTimeout(() => {
-        if (currentIndex === slides.length - 1) {
-          track.style.transition = "none";
-          currentIndex = 1;
-          updateCarousel(false);
-        }
-        isAnimating = false;
-      }, 500);
-    }
-
-    function prevSlide() {
-      if (isAnimating) return;
-      isAnimating = true;
-      currentIndex--;
-      updateCarousel();
-      setTimeout(() => {
-        if (currentIndex === 0) {
-          track.style.transition = "none";
-          currentIndex = slides.length - 2;
-          updateCarousel(false);
-        }
-        isAnimating = false;
-      }, 500);
-    }
-
-    function jumpToSlide(index) {
-      if (isAnimating) return;
-      isAnimating = true;
-      currentIndex = index + 1;
-      updateCarousel();
+      container.scrollTo({
+        left: slideOffsets[index],
+        behavior: "smooth",
+      });
+      // 等滚动结束(大约0.5s ~ 1s), scroll事件自己会捕捉到
       setTimeout(() => {
         isAnimating = false;
-      }, 500);
+      }, 700);
     }
 
-    // ===========================================
-    // 4. 自动播放
-    // ===========================================
+    // 6) 自动播放(每5秒滚到下一个)
     let interval = setInterval(nextSlide, 5000);
     function resetInterval() {
       clearInterval(interval);
       interval = setInterval(nextSlide, 5000);
     }
 
-    // ===========================================
-    // 5. 点击事件绑定
-    // ===========================================
-    prevBtn?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      prevSlide();
+    function nextSlide() {
+      if (isAnimating) return;
+      let targetIndex = currentIndex + 1;
+      if (targetIndex >= slides.length) {
+        // 不做无限循环就贴边即可
+        targetIndex = slides.length - 1;
+      }
+      scrollToSlide(targetIndex);
       resetInterval();
-    });
-    nextBtn?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      nextSlide();
-      resetInterval();
-    });
+    }
 
-    dots.forEach((dot, index) => {
-      dot.addEventListener("click", (e) => {
-        e.stopPropagation();
-        jumpToSlide(index);
+    function prevSlide() {
+      if (isAnimating) return;
+      let targetIndex = currentIndex - 1;
+      if (targetIndex < 0) {
+        targetIndex = 0;
+      }
+      scrollToSlide(targetIndex);
+      resetInterval();
+    }
+
+    // 7) 为 dot / slide / prev/next按钮 等绑定点击事件
+    dots.forEach((dot, i) => {
+      dot.addEventListener("click", () => {
+        scrollToSlide(i);
         resetInterval();
       });
     });
 
-    slides.forEach((slide) => {
+    slides.forEach((slide, i) => {
       slide.addEventListener("click", (e) => {
-        if (slide.classList.contains("active")) {
-          return; 
-        } else if (slide.classList.contains("next")) {
+        // 点击非 active 幻灯片 => 切换
+        if (i !== currentIndex) {
           e.preventDefault();
-          nextSlide();
-          resetInterval();
-        } else if (slide.classList.contains("prev")) {
-          e.preventDefault();
-          prevSlide();
+          scrollToSlide(i);
           resetInterval();
         }
       });
+      // 阻止 explore 按钮冒泡
+      const btn = slide.querySelector(".demo1-explore-btn");
+      if (btn) {
+        btn.addEventListener("click", (ev) => {
+          ev.stopPropagation();
+        });
+      }
     });
 
-    // ===========================================
-    // 6. 支持手机端左右滑动切换
-    // ===========================================
-    let startX = 0;
-    let isSwiping = false;
-
-    track.addEventListener(
-      "touchstart",
-      (e) => {
-        if (e.touches.length === 1) {
-          startX = e.touches[0].clientX;
-          isSwiping = true;
-        }
-      },
-      { passive: true }
-    );
-
-    track.addEventListener(
-      "touchmove",
-      (e) => {
-        if (!isSwiping) return;
-      },
-      { passive: true }
-    );
-
-    track.addEventListener(
-      "touchend",
-      (e) => {
-        if (!isSwiping) return;
-        isSwiping = false;
-        const endX = e.changedTouches[0].clientX;
-        const diff = endX - startX;
-        if (Math.abs(diff) > 50) {
-          if (diff < 0) {
-            nextSlide();
-          } else {
-            prevSlide();
-          }
-          resetInterval();
-        }
-      },
-      { passive: true }
-    );
-
-    // ===========================================
-    // 7. 初始化定位 + 按钮隐藏/显示
-    // ===========================================
-    track.style.transition = "none";
-    updateCarousel(false);
-    setTimeout(() => {
-      track.style.transition = "transform 0.5s ease-in-out";
-    }, 50);
-
-    if (window.innerWidth <= 768) {
-      prevBtn.style.display = "block";
-      nextBtn.style.display = "block";
-    } else {
-      prevBtn.style.display = "none";
-      nextBtn.style.display = "none";
-    }
-
-    track.addEventListener("transitionend", () => {
-      isAnimating = false;
+    nextBtn?.addEventListener("click", () => {
+      nextSlide();
     });
+    prevBtn?.addEventListener("click", () => {
+      prevSlide();
+    });
+
+    // 8) 初始化：先更新一次(给第0个slide打上active)
+    currentIndex = 0; // 默认第一张为初始
+    container.scrollLeft = 0; // 拉到最左
+    updateClasses();
+
+    // measureSlidesOffset 之后scrollLeft改变时，会自动触发onScroll?
+    // 先手动调用一下:
+    onScroll();
   }
 
+  // 启动
   const slideImgs = Array.from(document.querySelectorAll(".demo1-carousel-slide img"));
   waitImagesLoaded(slideImgs, () => {
-    initdemo1CarouselTrack();
+    initScrollSnapCarousel();
   });
 })();
-
-
-
-
-
 </script>
+
 </body>
 </html>
