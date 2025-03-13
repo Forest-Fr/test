@@ -18,56 +18,73 @@
     /* ========== 桌面端样式 ========== */
 /* ========== 轮播图片样式 (scroll-snap 版本) ========== */
 /* ========== 桌面端 (min-width: 1024px) ========== */
+/* ========== 轮播图片样式 (单张播放, 高度减少1/3，留白15px) ========== */
 @media (min-width: 1024px) {
 
-  /* 轮播容器 */
   .spec1-carousel-container {
     position: relative;
     width: 100%;
-    max-width: 1400px; /* 适配屏幕 */
-    height: 495px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding: 0 20%;
-    scrollbar-width: none;
+    height: 495px; /* 固定高度 */
+    overflow-x: auto; /* 修改: 启用横向滚动 */
+    scroll-snap-type: x mandatory; /* 强制对齐 */
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: auto;
-    padding: 0;
+    padding: 0 10%;
+    scrollbar-width: none; /* 隐藏滚动条 (Firefox) */
   }
-
+  
   .spec1-carousel-container::-webkit-scrollbar {
-    display: none;
+    display: none; /* 隐藏滚动条 (Chrome, Safari) */
   }
 
-  /* 轮播轨道 */
+  /* ===== 轮播轨道 ===== */
   .spec1-carousel-track {
     display: flex;
-    gap: 15px;
-    justify-content: center;
-    width: max-content;
+    gap: 15px; /* 图片之间的间隔 */
+    justify-content: center; /* 确保轮播居中 */
+    width: max-content; /* 修改: 确保横向滚动时轨道不会塌陷 */
   }
 
-  /* 轮播单张图片 */
+  /* ===== 轮播单个图片 ===== */
   .spec1-carousel-slide {
     flex: 0 0 auto;
-    width: 60vw; /* 适当调整宽度 */
-    max-width: 750px;
-    scroll-snap-align: center;
-    overflow: hidden;
+    width: 70vw; /* 修改: 确保主图占位合适，左右部分可见 */
+    max-width: 600px;
     position: relative;
+    opacity: 1 !important;
+    scroll-snap-align: center; /* 修改: 对齐到中心 */
+    transition: opacity 0.3s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-  /* 轮播图片 */
   .spec1-carousel-slide img {
     width: 100%;
     height: auto;
     display: block;
     border-radius: 10px;
+    filter: none !important;
+    opacity: 1 !important;
   }
 
-  /* 文字 & 按钮 */
+  .spec1-carousel-slide.shadow {
+    filter: brightness(0.6);
+    transition: filter 0.3s;
+  }
+
+  .spec1-carousel-slide.shadow::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.2);
+    pointer-events: none;
+  }
+  
+  /* 其他 CSS 原封不动 */
+  /* ========== 文字和按钮部分 ========== */
+
   .spec1-overlay {
     position: absolute;
     left: 10%;
@@ -86,7 +103,6 @@
     transform: translateY(0);
   }
 
-  /* 标题 */
   .spec1-title {
     position: absolute;
     left: 5px;
@@ -129,10 +145,9 @@
   }
 }
 
-/* ========== 移动端 (max-width: 768px) ========== */
+/* ========== 移动端适配 ========== */
 @media (max-width: 768px) {
 
-  /* 轮播容器 */
   .spec1-carousel-container {
     width: 100vw;
     overflow-x: auto;
@@ -148,30 +163,27 @@
     display: none;
   }
 
-  /* 轮播轨道 */
   .spec1-carousel-track {
     display: flex;
     gap: 15px;
     width: max-content;
   }
 
-  /* 轮播单张图片 */
   .spec1-carousel-slide {
     flex: 0 0 auto;
-    width: 80vw; /* 增加宽度，确保两侧可见 */
+    width: 80vw; /* 修改: 确保移动端可见部分 */
     max-width: 450px;
     scroll-snap-align: center;
     overflow: hidden;
   }
 
-  /* 轮播图片 */
   .spec1-carousel-slide img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
-  /* 文字/按钮 */
+  /* 文字部分 */
   .spec1-overlay {
     position: absolute;
     left: 50%;
@@ -186,7 +198,6 @@
     transform: translateY(0);
   }
 
-  /* 标题 */
   .spec1-title {
     font-size: 1.8rem;
     color: white;
@@ -199,16 +210,15 @@
     transform: translateY(0);
   }
 
-  /* 探索按钮 */
   .spec1-explore-btn {
     font-size: 1rem;
   }
 
-  /* 小圆点 */
   .spec1-carousel-dot.active {
     transform: scale(1.3);
   }
 }
+
 
   </style>
 </head>
