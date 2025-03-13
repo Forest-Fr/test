@@ -171,32 +171,33 @@
   }
 
   function initScrollSnapCarousel() {
+    console.log("🚀 正在初始化轮播...");
     const container = document.querySelector(".spec1-carousel-container");
     const slides = Array.from(document.querySelectorAll(".spec1-carousel-slide"));
     const dots = Array.from(document.querySelectorAll(".spec1-carousel-dot"));
     const prevBtn = document.querySelector(".spec1-carousel-prev");
     const nextBtn = document.querySelector(".spec1-carousel-next");
 
-    if (!container || slides.length === 0 || dots.length === 0) return;
-
-    // 1) 测量每个slide相对于 container 的 offsetLeft (用于scrollTo)
-    //    若每张宽度不一致，需单独记录
-    let slideOffsets = [];
-    function measureSlidesOffset() {
-      slideOffsets = slides.map((slide) => slide.offsetLeft);
+    if (!container || slides.length === 0 || dots.length === 0) {
+      console.error("❌ 轮播初始化失败，元素未找到");
+      return;
     }
 
-    measureSlidesOffset(); // 初次计算
-    window.addEventListener("resize", measureSlidesOffset); // 窗口变化时重测
+    console.log("✅ 找到轮播元素，正在测量偏移...");
+    let slideOffsets = [];
+    function measureSlidesOffset() {
+      slideOffsets = slides.map((slide) => 
+        slide.getBoundingClientRect().left - container.getBoundingClientRect().left
+      );
+      console.log("📏 计算的 slideOffsets:", slideOffsets);
+    }
+    measureSlidesOffset();
+    window.addEventListener("resize", measureSlidesOffset);
 
-    // 2) 当前所在的slide索引
     let currentIndex = 0;
     let isAnimating = false;
 
-    // 3) 实时监听滚动 -> 判断最接近中间的slide是谁
-    //    并更新 active / prev / next / shadow / dot
     function onScroll() {
-      // 如果正在脚本动画滚动中，也可以照常检测
       const scrollLeft = container.scrollLeft;
       let closestIndex = 0;
       let minDist = Infinity;
@@ -212,20 +213,21 @@
         updateClasses();
       }
     }
-    container.addEventListener("scroll", onScroll, { passive: true });
+    container.addEventListener("scroll", () => {
+      console.log("📌 正在滚动，scrollLeft:", container.scrollLeft);
+      onScroll();
+    }, { passive: true });
 
-    // 4) 根据 currentIndex 给对应 slide 添加 active / prev / next / shadow 等
     function updateClasses() {
+      if (!slides[currentIndex]) return;
+      console.log(`🎯 当前 slide: ${currentIndex}`);
       dots.forEach((dot, i) => dot.classList.toggle("active", i === currentIndex));
 
-      slides.forEach((slide) =>
-        slide.classList.remove("active", "prev", "next", "shadow")
-      );
+      slides.forEach((slide) => slide.classList.remove("active", "prev", "next", "shadow"));
       slides[currentIndex].classList.add("active");
 
       const nextIndex = (currentIndex + 1) % slides.length;
       const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
-      // 若你不想循环，就写: nextIndex = Math.min(currentIndex+1, slides.length-1) ...
       slides[nextIndex].classList.add("next");
       slides[prevIndex].classList.add("prev");
 
@@ -235,15 +237,6 @@
         }
       });
 
-      // active slide 内部链接可点击，其它禁止
-      slides.forEach((slide) => {
-        const link = slide.querySelector("a");
-        if (link) {
-          link.style.pointerEvents = slide.classList.contains("active") ? "auto" : "none";
-        }
-      });
-
-      // explore 按钮
       document.querySelectorAll(".spec1-explore-btn").forEach((btn) => {
         btn.style.opacity = "0";
         btn.style.pointerEvents = "none";
@@ -255,21 +248,19 @@
       }
     }
 
-    // 5) 滚动到指定slide
     function scrollToSlide(index) {
       if (index < 0 || index >= slides.length) return;
+      console.log(`📌 滚动到 slide ${index}`);
       isAnimating = true;
       container.scrollTo({
-        left: slideOffsets[index],
+        left: slideOffsets[index] ?? 0,
         behavior: "smooth",
       });
-      // 等滚动结束(大约0.5s ~ 1s), scroll事件自己会捕捉到
       setTimeout(() => {
         isAnimating = false;
       }, 700);
     }
 
-    // 6) 自动播放(每5秒滚到下一个)
     let interval = setInterval(nextSlide, 5000);
     function resetInterval() {
       clearInterval(interval);
@@ -278,74 +269,28 @@
 
     function nextSlide() {
       if (isAnimating) return;
-      let targetIndex = currentIndex + 1;
-      if (targetIndex >= slides.length) {
-        // 不做无限循环就贴边即可
-        targetIndex = slides.length - 1;
-      }
-      scrollToSlide(targetIndex);
+      scrollToSlide(currentIndex + 1 >= slides.length ? slides.length - 1 : currentIndex + 1);
       resetInterval();
     }
 
     function prevSlide() {
       if (isAnimating) return;
-      let targetIndex = currentIndex - 1;
-      if (targetIndex < 0) {
-        targetIndex = 0;
-      }
-      scrollToSlide(targetIndex);
+      scrollToSlide(currentIndex - 1 < 0 ? 0 : currentIndex - 1);
       resetInterval();
     }
 
-    // 7) 为 dot / slide / prev/next按钮 等绑定点击事件
-    dots.forEach((dot, i) => {
-      dot.addEventListener("click", () => {
-        scrollToSlide(i);
-        resetInterval();
-      });
-    });
-
-    slides.forEach((slide, i) => {
-      slide.addEventListener("click", (e) => {
-        // 点击非 active 幻灯片 => 切换
-        if (i !== currentIndex) {
-          e.preventDefault();
-          scrollToSlide(i);
-          resetInterval();
-        }
-      });
-      // 阻止 explore 按钮冒泡
-      const btn = slide.querySelector(".spec1-explore-btn");
-      if (btn) {
-        btn.addEventListener("click", (ev) => {
-          ev.stopPropagation();
-        });
-      }
-    });
-
-    nextBtn?.addEventListener("click", () => {
-      nextSlide();
-    });
-    prevBtn?.addEventListener("click", () => {
-      prevSlide();
-    });
-
-    // 8) 初始化：先更新一次(给第0个slide打上active)
-    currentIndex = 0; // 默认第一张为初始
-    container.scrollLeft = 0; // 拉到最左
+    prevBtn?.addEventListener("click", prevSlide);
+    nextBtn?.addEventListener("click", nextSlide);
+    
+    currentIndex = 0;
+    container.scrollLeft = 0;
     updateClasses();
-
-    // measureSlidesOffset 之后scrollLeft改变时，会自动触发onScroll?
-    // 先手动调用一下:
     onScroll();
   }
 
-  // 启动
-  const slideImgs = Array.from(document.querySelectorAll(".spec1-carousel-slide img"));
-  waitImagesLoaded(slideImgs, () => {
-    initScrollSnapCarousel();
-  });
+  waitImagesLoaded(document.querySelectorAll(".spec1-carousel-slide img"), initScrollSnapCarousel);
 })();
+
 </script>
 
 </body>
