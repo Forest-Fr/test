@@ -171,11 +171,11 @@
   }
 
   function initScrollSnapCarousel() {
-    const container = document.querySelector(".demo1-carousel-container");
-    const slides = Array.from(document.querySelectorAll(".demo1-carousel-slide"));
-    const dots = Array.from(document.querySelectorAll(".demo1-carousel-dot"));
-    const prevBtn = document.querySelector(".demo1-carousel-prev");
-    const nextBtn = document.querySelector(".demo1-carousel-next");
+    const container = document.querySelector(".spec1-carousel-container");
+    const slides = Array.from(document.querySelectorAll(".spec1-carousel-slide"));
+    const dots = Array.from(document.querySelectorAll(".spec1-carousel-dot"));
+    const prevBtn = document.querySelector(".spec1-carousel-prev");
+    const nextBtn = document.querySelector(".spec1-carousel-next");
 
     if (!container || slides.length === 0 || dots.length === 0) return;
 
@@ -244,11 +244,11 @@
       });
 
       // explore 按钮
-      document.querySelectorAll(".demo1-explore-btn").forEach((btn) => {
+      document.querySelectorAll(".spec1-explore-btn").forEach((btn) => {
         btn.style.opacity = "0";
         btn.style.pointerEvents = "none";
       });
-      const activeBtn = slides[currentIndex].querySelector(".demo1-explore-btn");
+      const activeBtn = slides[currentIndex].querySelector(".spec1-explore-btn");
       if (activeBtn) {
         activeBtn.style.opacity = "1";
         activeBtn.style.pointerEvents = "auto";
@@ -315,7 +315,7 @@
         }
       });
       // 阻止 explore 按钮冒泡
-      const btn = slide.querySelector(".demo1-explore-btn");
+      const btn = slide.querySelector(".spec1-explore-btn");
       if (btn) {
         btn.addEventListener("click", (ev) => {
           ev.stopPropagation();
@@ -341,7 +341,7 @@
   }
 
   // 启动
-  const slideImgs = Array.from(document.querySelectorAll(".demo1-carousel-slide img"));
+  const slideImgs = Array.from(document.querySelectorAll(".spec1-carousel-slide img"));
   waitImagesLoaded(slideImgs, () => {
     initScrollSnapCarousel();
   });
