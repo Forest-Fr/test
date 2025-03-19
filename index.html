@@ -16,13 +16,501 @@
     h2 { text-align: center; margin: 20px 0; }
 
     /* ========== 桌面端样式 ========== */
-
-@media (min-width: 1024px) {
-
   .spec1-carousel-container {
-    position: relative;
+   position: relative;
     width: 100%;
-    height: 495px; /* 固定高度 */
-    overflow-x: auto; /* 修改: 启用横向滚动 */
-    scroll-snap-type: x mandatory; /* 强制对齐 */
+    height: 450px; /* Ensure a fixed height for the carousel */
+top:12px;
+    overflow: hidden;
+    margin: auto;
+    display: flex;
+    justify-content: center; /* Ensure horizontal centering */
+    align-items: center; /* Ensure vertical centering */
+    padding: 0 10%; /* Adjust the left and right padding for appropriate image visibility */
+}
 
+.spec1-carousel-track {
+  display: flex; /* Use flex layout */
+    gap: 15px; /* Space between images */
+    transition: transform 0.5s ease-in-out;
+    justify-content: flex-start; /* Ensure that images start from the left */
+}
+
+.spec1-carousel-slide {
+  flex: 0 0 auto;
+  width: 100%;
+  position: relative;
+}
+
+.spec1-carousel-slide.active {
+    opacity: 1;
+}
+
+.spec1-carousel-slide img {
+   width: 100%; /* Ensure the image adapts to the container's width */
+    height: auto; /* Maintain the aspect ratio of the images */
+    display: block;
+    border-radius: 10px;
+}
+/* 覆盖层：绝对定位到轮播项内部，默认隐藏 */
+.spec1-overlay {
+  position: absolute;
+  left: 30px; /* 按钮和文字在左下角 */
+  bottom: 30px;
+  z-index: 200; /* 让其显示在轮播图上层 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  opacity: 0; /* 初始状态不可见 */
+  transform: translateY(80px); /* 初始位置往下 80px，模仿 Apple TV 的动画 */
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
+}
+
+
+/* 当轮播激活时再让覆盖层显示 */
+.spec1-carousel-slide.active .spec1-overlay {
+ opacity: 1; /* 使按钮和文字显示 */
+  transform: translateY(0); /* 让它从下方移动到正常位置 */
+}
+.spec1-text-top, .spec1-text-bottom {
+ opacity: 0;
+  transform: translateY(40px); /* 初始位置更低一点 */
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
+}
+/* 文字渐入 */
+.spec1-carousel-slide.active .spec1-text-top,
+.spec1-carousel-slide.active .spec1-text-bottom {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.2s; /* 文字比整体动画稍微慢 0.2s */
+}
+/* 按钮渐入 */
+.spec1-carousel-slide.active .spec1-explore-btn {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.4s; /* 按钮比文字慢 0.4s */
+}
+/* 上行文字，例如 "Stream now" */
+.spec1-text-top {
+ font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+/* 下行文字，例如 "Sci-Fi · New season" */
+.spec1-text-bottom {
+  font-size: 1rem;
+  margin-bottom: 15px;
+}
+
+/* 按钮样式 */
+.spec1-explore-btn {
+ opacity: 0;
+  transform: translateY(60px); /* 初始往下偏移 60px */
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
+}
+
+.spec1-explore-btn:hover {
+  background-color: #0056b3;
+}
+
+.spec1-title {
+ font-size: 2rem;
+  margin-top: 100px;
+  font-weight: bold;
+}
+/* 控制圆点的显示 */
+.spec1-carousel-dots {
+   display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+}
+
+.spec1-carousel-dot {
+    width: 10px;
+  height: 10px;
+  background: #ccc;
+  border-radius: 50%;
+  margin: 0 5px;
+  cursor: pointer;
+}
+.spec1-carousel-dot.active {
+  background: #007BFF;
+}
+/* 确保圆点、左右按钮等都位于较低层级 */
+.spec1-carousel-prev,
+.spec1-carousel-next,
+.spec1-carousel-dot {
+    z-index: 50;
+}
+/* 控制桌面端按钮位置 */
+@media (min-width: 1024px) {
+    .spec1-overlay {
+        bottom: 45px; /* 按钮离左下角的距离 */
+    }
+}
+/* For PC: Hide thespec1- previous/next buttons */
+@media (min-width: 1024px) {
+    .spec1-carousel-prev,
+    .spec1-carousel-next {
+        display: none; /* Hide on large screens */
+    }
+
+    .spec1-carousel-dots {
+        display: block; /* Ensure the dots are visible on larger screens */
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .spec1-carousel-dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background: #ccc;
+        border-radius: 50%;
+        margin: 0 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .spec1-carousel-dot.active {
+        background: #007BFF;
+    }
+}
+@media (max-width: 768px) {
+  .spec1-overlay {
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%) translateY(80px);
+    text-align: center;
+    align-items: center;
+  }
+
+  .spec1-text-top, .spec1-text-bottom {
+    text-align: center;
+  }
+
+  .spec1-explore-btn {
+    margin-top: 10px;
+  }
+
+/* Mobile adjustments */
+/* ===== 移动端：按钮和符号只在小屏时显示 ===== */
+/* 手机端样式：轮播图纵向排列 */
+@media (max-width: 768px) {
+  .spec1-carousel-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* 覆盖层的位置（按钮在正中，文字根据按钮位置调整） */
+  .spec1-overlay {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
+  .spec1-title {
+    margin-top: 30px;
+  }
+
+  .spec1-explore-btn {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .spec1-text-bottom {
+    margin-top: 15px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <h2>Carousel with Alpha Shift</h2>
+
+div class="spec1-carousel-container">
+    <button class="spec1-carousel-prev">&lt;</button>
+    <div class="spec1-carousel-track">
+      <div class="spec1-carousel-slide">
+      <a href="product-lite.html"><img src="MeFan Lite.png" alt="MeFan Lite"></a>
+      <div class="spec1-overlay">
+        <div class="spec1-text-bottom">New season.</div>
+        <button class="spec1-explore-btn">Explore now</button>
+        <div class="spec1-title">Lite</div>
+      </div>
+    </div>
+
+    <div class="spec1-carousel-slide">
+      <a href="product-x1.html"><img src="MeFan X1.png" alt="MeFan X1"></a>
+      <div class="spec1-overlay">
+        <div class="spec1-text-bottom">New season.</div>
+        <button class="spec1-explore-btn">Explore now</button>
+        <div class="spec1-title">X1</div>
+      </div>
+    </div>
+
+    <div class="spec1-carousel-slide">
+      <a href="product-pro.html"><img src="MeFan Pro.png" alt="MeFan Pro"></a>
+      <div class="spec1-overlay">
+        <div class="spec1-text-bottom">New season.</div>
+        <button class="spec1-explore-btn">Explore now</button>
+        <div class="spec1-title">Pro</div>
+      </div>
+    </div>
+
+    <div class="spec1-carousel-slide">
+      <a href="product-lite.html"><img src="MeFan Lite.png" alt="MeFan Lite"></a>
+      <div class="spec1-overlay">
+        <div class="spec1-text-bottom">New season.</div>
+        <button class="spec1-explore-btn">Explore now</button>
+        <div class="spec1-title">Lite</div>
+      </div>
+    </div>
+  </div>
+  <button class="spec1-carousel-next">&gt;</button>
+</div>
+
+<!-- 小圆点单独放到一个新的 div 中 -->
+<div class="spec1-carousel-dots-container">
+  <div class="spec1-carousel-dots">
+    <span class="spec1-carousel-dot"></span>
+    <span class="spec1-carousel-dot"></span>
+    <span class="spec1-carousel-dot"></span>
+  </div>
+</div>
+</section>
+
+
+<script>
+.spec1-carousel-container {
+   position: relative;
+    width: 100%;
+    height: 450px; /* Ensure a fixed height for the carousel */
+top:12px;
+    overflow: hidden;
+    margin: auto;
+    display: flex;
+    justify-content: center; /* Ensure horizontal centering */
+    align-items: center; /* Ensure vertical centering */
+    padding: 0 10%; /* Adjust the left and right padding for appropriate image visibility */
+}
+
+.spec1-carousel-track {
+  display: flex; /* Use flex layout */
+    gap: 15px; /* Space between images */
+    transition: transform 0.5s ease-in-out;
+    justify-content: flex-start; /* Ensure that images start from the left */
+}
+
+.spec1-carousel-slide {
+  flex: 0 0 auto;
+  width: 100%;
+  position: relative;
+}
+
+.spec1-carousel-slide.active {
+    opacity: 1;
+}
+
+.spec1-carousel-slide img {
+   width: 100%; /* Ensure the image adapts to the container's width */
+    height: auto; /* Maintain the aspect ratio of the images */
+    display: block;
+    border-radius: 10px;
+}
+/* 覆盖层：绝对定位到轮播项内部，默认隐藏 */
+.spec1-overlay {
+  position: absolute;
+  left: 30px; /* 按钮和文字在左下角 */
+  bottom: 30px;
+  z-index: 200; /* 让其显示在轮播图上层 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  opacity: 0; /* 初始状态不可见 */
+  transform: translateY(80px); /* 初始位置往下 80px，模仿 Apple TV 的动画 */
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
+}
+
+
+/* 当轮播激活时再让覆盖层显示 */
+.spec1-carousel-slide.active .spec1-overlay {
+ opacity: 1; /* 使按钮和文字显示 */
+  transform: translateY(0); /* 让它从下方移动到正常位置 */
+}
+.spec1-text-top, .spec1-text-bottom {
+ opacity: 0;
+  transform: translateY(40px); /* 初始位置更低一点 */
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
+}
+/* 文字渐入 */
+.spec1-carousel-slide.active .spec1-text-top,
+.spec1-carousel-slide.active .spec1-text-bottom {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.2s; /* 文字比整体动画稍微慢 0.2s */
+}
+/* 按钮渐入 */
+.spec1-carousel-slide.active .spec1-explore-btn {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.4s; /* 按钮比文字慢 0.4s */
+}
+/* 上行文字，例如 "Stream now" */
+.spec1-text-top {
+ font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+/* 下行文字，例如 "Sci-Fi · New season" */
+.spec1-text-bottom {
+  font-size: 1rem;
+  margin-bottom: 15px;
+}
+
+/* 按钮样式 */
+.spec1-explore-btn {
+ opacity: 0;
+  transform: translateY(60px); /* 初始往下偏移 60px */
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
+}
+
+.spec1-explore-btn:hover {
+  background-color: #0056b3;
+}
+
+.spec1-title {
+ font-size: 2rem;
+  margin-top: 100px;
+  font-weight: bold;
+}
+/* 控制圆点的显示 */
+.spec1-carousel-dots {
+   display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+}
+
+.spec1-carousel-dot {
+    width: 10px;
+  height: 10px;
+  background: #ccc;
+  border-radius: 50%;
+  margin: 0 5px;
+  cursor: pointer;
+}
+.spec1-carousel-dot.active {
+  background: #007BFF;
+}
+/* 确保圆点、左右按钮等都位于较低层级 */
+.spec1-carousel-prev,
+.spec1-carousel-next,
+.spec1-carousel-dot {
+    z-index: 50;
+}
+/* 控制桌面端按钮位置 */
+@media (min-width: 1024px) {
+    .spec1-overlay {
+        bottom: 45px; /* 按钮离左下角的距离 */
+    }
+}
+/* For PC: Hide thespec1- previous/next buttons */
+@media (min-width: 1024px) {
+    .spec1-carousel-prev,
+    .spec1-carousel-next {
+        display: none; /* Hide on large screens */
+    }
+
+    .spec1-carousel-dots {
+        display: block; /* Ensure the dots are visible on larger screens */
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .spec1-carousel-dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background: #ccc;
+        border-radius: 50%;
+        margin: 0 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .spec1-carousel-dot.active {
+        background: #007BFF;
+    }
+}
+@media (max-width: 768px) {
+  .spec1-overlay {
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%) translateY(80px);
+    text-align: center;
+    align-items: center;
+  }
+
+  .spec1-text-top, .spec1-text-bottom {
+    text-align: center;
+  }
+
+  .spec1-explore-btn {
+    margin-top: 10px;
+  }
+
+/* Mobile adjustments */
+/* ===== 移动端：按钮和符号只在小屏时显示 ===== */
+/* 手机端样式：轮播图纵向排列 */
+@media (max-width: 768px) {
+  .spec1-carousel-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* 覆盖层的位置（按钮在正中，文字根据按钮位置调整） */
+  .spec1-overlay {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
+  .spec1-title {
+    margin-top: 30px;
+  }
+
+  .spec1-explore-btn {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .spec1-text-bottom {
+    margin-top: 15px;
+  }
+}
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
