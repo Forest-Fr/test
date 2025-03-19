@@ -504,7 +504,60 @@ top:12px;
     margin-top: 15px;
   }
 }
+<div class="spec1-carousel-container">
+    <button class="spec1-carousel-prev">&lt;</button>
+    <div class="spec1-carousel-track">
+      <div class="spec1-carousel-slide">
+      <a href="product-lite.html"><img src="MeFan Lite.png" alt="MeFan Lite"></a>
+      <div class="spec1-overlay">
+        <div class="spec1-text-bottom">New season.</div>
+        <button class="spec1-explore-btn">Explore now</button>
+        <div class="spec1-title">Lite</div>
+      </div>
+    </div>
 
+    <div class="spec1-carousel-slide">
+      <a href="product-x1.html"><img src="MeFan X1.png" alt="MeFan X1"></a>
+      <div class="spec1-overlay">
+        <div class="spec1-text-bottom">New season.</div>
+        <button class="spec1-explore-btn">Explore now</button>
+        <div class="spec1-title">X1</div>
+      </div>
+    </div>
+
+    <div class="spec1-carousel-slide">
+      <a href="product-pro.html"><img src="MeFan Pro.png" alt="MeFan Pro"></a>
+      <div class="spec1-overlay">
+        <div class="spec1-text-bottom">New season.</div>
+        <button class="spec1-explore-btn">Explore now</button>
+        <div class="spec1-title">Pro</div>
+      </div>
+    </div>
+
+    <div class="spec1-carousel-slide">
+      <a href="product-lite.html"><img src="MeFan Lite.png" alt="MeFan Lite"></a>
+      <div class="spec1-overlay">
+        <div class="spec1-text-bottom">New season.</div>
+        <button class="spec1-explore-btn">Explore now</button>
+        <div class="spec1-title">Lite</div>
+      </div>
+    </div>
+  </div>
+  <button class="spec1-carousel-next">&gt;</button>
+</div>
+
+<!-- 小圆点单独放到一个新的 div 中 -->
+<div class="spec1-carousel-dots-container">
+  <div class="spec1-carousel-dots">
+    <span class="spec1-carousel-dot"></span>
+    <span class="spec1-carousel-dot"></span>
+    <span class="spec1-carousel-dot"></span>
+  </div>
+</div>
+</section>
+
+
+  <script>
 const initSpec1CarouselTrack = () => { 
     const track = document.querySelector(".spec1-carousel-track");
     const slides = document.querySelectorAll(".spec1-carousel-slide");
