@@ -65,19 +65,30 @@
       </ul>
     </nav>
   </header>
-  <!-- 新导航：section1-nav，默认隐藏，滚动超过 400px 后显示 -->
-  <nav id="section1Nav" class="section1-nav">
-    <ul class="nav-list">
-      <li><a href="index.html" class="active">Home</a></li>
-      <li><a href="products.html">Products</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="contact.html">Contact</a></li>
-      <!-- 新版桌面搜索图标 -->
-      <li>
-        <div class="search-icon" id="desktopSearchIconNew">🔍</div>
-      </li>
+     <!-- ========== 新增：横幅 Banner ========== -->
+  <div class="banner-promo">
+    Buy iPad Air starting at $549 with education savings:
+    <a href="sample.html" target="_blank">Shop &gt;</a>
+  </div>
+
+  <!-- ========== 新导航 (模拟苹果风格) ========== -->
+  <nav class="mefan-air-nav" id="section1Nav">
+    <div class="mefan-air-title">Mefan Air</div>
+    <ul class="mefan-air-list">
+      <li><a href="javascript:void(0);">Overview</a></li>
+      <li><a href="javascript:void(0);">Tech Specs</a></li>
+      <li><a href="javascript:void(0);">Compare</a></li>
+      <li><a href="javascript:void(0);">Why Mefan</a></li>
+      <!-- 点击 Buy 跳转到 sample.html -->
+      <li><a href="sample.html" target="_blank">Buy</a></li>
     </ul>
   </nav>
+  <!-- 这里放置页面主体内容（示例） -->
+  <main style="height: 2000px; padding: 20px;">
+    <h1>Welcome to Mefan</h1>
+    <p>向下滚动 400px 后可以看到导航切换效果。</p>
+  </main>
+
   <!-- 新增：移动端二级菜单面板（仅手机端有效） -->
   <div id="mobileNavLevel2Home" class="menu-panel menu-panel--level2">
     <div class="menu-panel__header">
@@ -561,30 +572,28 @@
   <!-- -------------------- 独立运行的其他脚本 -------------------- -->
 
 <script>
- <script>
+<!-- ========== 重点：控制导航切换的脚本 ========== -->
+  <script>
   document.addEventListener("DOMContentLoaded", function() {
-    const mainHeader = document.getElementById("mainHeader");
-    const section1Nav = document.getElementById("section1Nav");
+    const mainHeader  = document.getElementById("mainHeader");    // 主导航
+    const mefanAirNav = document.getElementById("section1Nav");  // 新导航
 
-    // 监听滚动事件，滚动超过 400px 时切换导航
+    // 监听滚动事件
     window.addEventListener("scroll", function() {
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       if (scrollTop > 400) {
-        // 隐藏主导航
+        // 超过 400px，隐藏主导航，显示新导航
         mainHeader.style.transform = "translateY(-100%)";
-        mainHeader.style.opacity = "0";
-        // 显示新导航
-        section1Nav.classList.add("active");
+        mainHeader.style.opacity   = "0";
+        mefanAirNav.classList.add("active");
       } else {
-        // 显示主导航
+        // 小于等于 400px，显示主导航，隐藏新导航
         mainHeader.style.transform = "translateY(0)";
-        mainHeader.style.opacity = "1";
-        // 隐藏新导航
-        section1Nav.classList.remove("active");
+        mainHeader.style.opacity   = "1";
+        mefanAirNav.classList.remove("active");
       }
     });
   });
-
 
 
 
