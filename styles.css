@@ -243,13 +243,14 @@ body {
 }
 
 /* ========== 移动端 Mefan Air 导航 (顶部条) ========== */
+/* ========== 移动端 Mefan Air 导航 (顶部条) ========== */
 .mobile-air-nav {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 5000;
-  display: none; /* 由JS控制 .active 时才显示 */
+  z-index: 5000; /* 高于主导航 */
+  display: none; /* 默认隐藏，滚动超过400px后用 .active 显示 */
   align-items: center;
   justify-content: space-between;
   background-color: #fff;
@@ -260,35 +261,45 @@ body {
 .mobile-air-nav.active {
   display: flex;
 }
+
+/* 左侧标题 */
 .mobile-air-left {
   font-size: 1rem;
   font-weight: 600;
+  color: #333;
+  line-height: 48px; /* 垂直居中 */
 }
+
+/* 右侧区域 */
 .mobile-air-right {
   display: flex;
   align-items: center;
   gap: 16px;
 }
-.mobile-air-nav.active {
-  display: flex;
-}
-.mobile-air-left {
-  font-size: 1rem;
-  font-weight: 600;
-}
+
+/* 箭头按钮，初始为“>”，展开后改为“<” */
 .mobile-air-toggle-btn {
   font-size: 1.2rem;
   cursor: pointer;
+  user-select: none;
 }
+
+/* Buy 按钮 */
 .mobile-air-buy {
+  display: inline-block;
   padding: 6px 12px;
-  background-color: #0071e3;
+  background-color: #0071e3; /* 蓝色 */
   color: #fff;
   text-decoration: none;
   border-radius: 4px;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+.mobile-air-buy:hover {
+  opacity: 0.8;
 }
 
-/* ========== 移动端下拉面板 + blur ========== */
+/* ========== 移动端 Mefan Air 二级面板 ========== */
 .mobile-air-panel {
   position: fixed;
   top: 0;
@@ -301,20 +312,30 @@ body {
   transition: height 0.3s ease;
 }
 .mobile-air-panel.active {
-  height: 100vh;
+  height: 100vh; /* 全屏 */
   overflow: auto;
 }
+
+/* 头部：Mefan Air 在左，关闭按钮在右 */
 .mobile-air-panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
   border-bottom: 1px solid #ddd;
+  background-color: #f8f8f8;
+}
+.mobile-air-panel-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
 }
 .mobile-air-close-btn {
   font-size: 1.5rem;
   cursor: pointer;
 }
+
+/* 菜单列表 */
 .mobile-air-panel-list {
   list-style: none;
   margin: 0;
@@ -329,6 +350,11 @@ body {
   text-decoration: none;
   color: #333;
 }
+.mobile-air-panel-list li a:hover {
+  background-color: #f2f2f2;
+}
+
+/* Blur 背景层 */
 .mobile-air-blur {
   position: fixed;
   top: 0;
@@ -346,8 +372,8 @@ body {
   opacity: 1;
 }
 
-/* 媒体查询：只在桌面端显示 .mefan-air-nav，不显示 .mobile-air-nav */
-@media (min-width: 1024px) {
+/* 只在小屏显示本导航，可选 */
+@media (min-width: 769px) {
   .mobile-air-nav,
   .mobile-air-panel,
   .mobile-air-blur {
@@ -355,12 +381,6 @@ body {
   }
 }
 
-/* 媒体查询：只在移动端显示 .mobile-air-nav，不显示 .mefan-air-nav */
-@media (max-width: 768px) {
-  .mefan-air-nav {
-    display: none !important;
-  }
-}
 /* ========== 其余原有或移动端样式省略 ========== */
 
 
