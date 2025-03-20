@@ -52,16 +52,77 @@
         background: white;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
+ /* 🔵 滚动后的导航栏 */
+    .scrolled {
+      background: white !important;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 🟢 滚动后显示新导航 */
+    .scrolled .nav-center {
+      display: flex !important;
+    }
+    
+    /* 🟢 默认隐藏滚动导航 */
+    .nav-center {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    /* 🟢 左侧 MeFan Air 标题 */
+    .nav-center .nav-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #000;
+    }
+
+    /* 🟢 右侧导航 */
+    .nav-center .nav-links {
+      display: flex;
+      gap: 40px;
+      margin-left: 450px;
+    }
+
+    .nav-center .nav-links a {
+      text-decoration: none;
+      color: #000;
+      font-size: 16px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-center .nav-links a:hover {
+      color: #0071e3;
+    }
+
+    /* 🟢 蓝色 Buy 按钮 */
+    .nav-center .buy-btn {
+      background: #0071e3;
+      color: white;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .nav-center .buy-btn:hover {
+      background: #005bb5;
+    }
 
     /* 主要内容区域 */
     .section1-hero {
-        height: 100vh;
-        background: url('MeFan X1.png') center/cover no-repeat;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        color: #000;
+        height: calc(100vh + 260px);
+      background: url('MeFan X1.png') center/cover no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: #000;
     }
 
     .section1-hero h1 {
@@ -870,7 +931,23 @@ list-style: none;
   <header class="header-gradient" id="mainHeader">
     <!-- 左侧 Logo -->
     <img src="MeFan Logo.png" alt="MeFan Logo" class="logo-img" />
+    </header>
+<!-- 🟢 滚动后才出现的新导航 -->
+<div class="nav-center" id="scrollNav">
+  <div class="nav-title">MeFan Air</div>
+  <div class="nav-links">
+    <a href="sample.html" target="_blank">Overview</a>
+    <a href="sample.html" target="_blank">Tech Specs</a>
+    <a href="sample.html" target="_blank">Compare</a>
+    <a href="sample.html" target="_blank">Why MeFan Air</a>
+    <a href="sample.html" target="_blank" class="buy-btn">Buy</a>
+  </div>
+</div>
 
+<!-- 🔥 主视觉区 -->
+<section class="section1-hero">
+  <h1>MeFan Air - 轻薄便携，强大性能</h1>
+</section>
     <!-- 桌面端导航列表，居中对齐，带 Home / Products / About / Contact / 搜索按钮 -->
     <nav class="desktop-nav">
       <ul class="nav-list">
@@ -1416,6 +1493,22 @@ document.addEventListener("DOMContentLoaded", function() {
 
         products.forEach(product => observer.observe(product));
     });
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+  const mainHeader = document.getElementById("mainHeader");
+  const scrollNav = document.getElementById("scrollNav");
+
+  window.addEventListener("scroll", function () {
+    if (window.scrollY > 300) {
+      mainHeader.classList.add("scrolled");
+      scrollNav.style.display = "flex"; // 显示新导航栏
+    } else {
+      mainHeader.classList.remove("scrolled");
+      scrollNav.style.display = "none"; // 隐藏新导航栏
+    }
+  });
+});
+</script>
   </script>
 
 </body>
