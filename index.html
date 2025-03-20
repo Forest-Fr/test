@@ -356,301 +356,363 @@
 
   <!-- -------------------- 主功能脚本 -------------------- -->
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function() {
+      // ====================== 1) 搜索逻辑 ======================
+      (function(){
+        const body          = document.body;
+        const mainHeader    = document.getElementById('mainHeader');
+        const desktopSearch = document.getElementById('desktopSearchIcon');
+        const mobileSearch  = document.getElementById('mobileSearchIcon');
+        const searchPanel   = document.getElementById('searchPanel');
+        const searchClose   = document.getElementById('searchClose');
+        const searchTitle   = document.getElementById('searchTitle');
+        const searchResults = document.getElementById('searchResults');
 
-  /**********************
-   * 1) 搜索逻辑 (原有)
-   **********************/
-  (function(){
-    const body          = document.body;
-    const mainHeader    = document.getElementById('mainHeader');
-    const desktopSearch = document.getElementById('desktopSearchIcon');
-    const mobileSearch  = document.getElementById('mobileSearchIcon');
-    const searchPanel   = document.getElementById('searchPanel');
-    const searchClose   = document.getElementById('searchClose');
-    const searchTitle   = document.getElementById('searchTitle');
-    const searchResults = document.getElementById('searchResults');
+        // 模拟本网站可搜索内容 (示例)
+        const siteContents = [
+          { text: "About MeFan", url: "about.html" },
+          { text: "MeFan Lite - Wireless Earbuds", url: "product-lite.html" },
+          { text: "MeFan X1 - Noise Canceling Headphones", url: "product-x1.html" },
+          { text: "MeFan Pro - Premium Audio", url: "product-pro.html" },
+          { text: "Earbud Tips & Support", url: "support.html" },
+          { text: "Contact Us", url: "contact.html" },
+          { text: "Products Overview", url: "products.html" }
+          // ...更多...
+        ];
 
-    // 模拟可搜索内容
-    const siteContents = [
-      { text: "About MeFan", url: "about.html" },
-      { text: "MeFan Lite - Wireless Earbuds", url: "product-lite.html" },
-      { text: "MeFan X1 - Noise Canceling Headphones", url: "product-x1.html" },
-      { text: "MeFan Pro - Premium Audio", url: "product-pro.html" },
-      { text: "Earbud Tips & Support", url: "support.html" },
-      { text: "Contact Us", url: "contact.html" },
-      { text: "Products Overview", url: "products.html" }
-    ];
-
-    function openSearch() {
-      body.classList.add('search-open');
-      searchTitle.textContent = "";
-      searchResults.innerHTML = "";
-    }
-    function closeSearch() {
-      body.classList.remove('search-open');
-    }
-    if (desktopSearch) desktopSearch.addEventListener('click', openSearch);
-    if (mobileSearch)  mobileSearch.addEventListener('click', openSearch);
-    if (searchClose)   searchClose.addEventListener('click', closeSearch);
-    document.addEventListener('keydown', function(e){
-      if (e.key === "Escape") { closeSearch(); }
-    });
-    document.addEventListener('click', function(e){
-      if (!searchPanel.contains(e.target)
-          && e.target !== desktopSearch
-          && e.target !== mobileSearch) {
-        closeSearch();
-      }
-    });
-    if (searchTitle && searchResults) {
-      searchTitle.addEventListener('input', function(){
-        const query = searchTitle.innerText.trim().toLowerCase();
-        if (!query) { searchResults.innerHTML = ""; return; }
-        const matched = siteContents.filter(item =>
-          item.text.toLowerCase().includes(query)
-        );
-        searchResults.innerHTML = "";
-        if (matched.length > 0) {
-          matched.forEach(obj => {
-            const div = document.createElement('div');
-            div.classList.add('search-item');
-            const link = document.createElement('a');
-            link.href = obj.url;
-            link.textContent = obj.text;
-            link.style.textDecoration = "none";
-            link.style.color = "#333";
-            link.target = "_self";
-            div.appendChild(link);
-            searchResults.appendChild(div);
-          });
-        } else {
-          const noRes = document.createElement('div');
-          noRes.classList.add('no-result');
-          noRes.textContent = "Sorry, no results found.";
-          searchResults.appendChild(noRes);
+        function openSearch() {
+          body.classList.add('search-open');
+          searchTitle.textContent = "";
+          searchResults.innerHTML = "";
         }
-      });
-    }
-  })();
+        function closeSearch() {
+          body.classList.remove('search-open');
+        }
 
+        if (desktopSearch) desktopSearch.addEventListener('click', openSearch);
+        if (mobileSearch)  mobileSearch.addEventListener('click', openSearch);
+        if (searchClose)   searchClose.addEventListener('click', closeSearch);
+
+        document.addEventListener('keydown', function(e){
+          if (e.key === "Escape") {
+            closeSearch();
+          }
+        });
+
+        document.addEventListener('click', function(e){
+          // 若点击在 searchPanel 外部，且不是搜索图标，就关闭
+          if (!searchPanel.contains(e.target)
+              && e.target !== desktopSearch
+              && e.target !== mobileSearch) {
+            closeSearch();
+          }
+        });
+
+        // 当用户输入时，动态生成搜索结果
+        if (searchTitle && searchResults) {
+          searchTitle.addEventListener('input', function(){
+            const query = searchTitle.innerText.trim().toLowerCase();
+            if (!query) {
+              searchResults.innerHTML = "";
+              return;
+            }
+            const matched = siteContents.filter(item =>
+              item.text.toLowerCase().includes(query)
+            );
+            searchResults.innerHTML = "";
+            if (matched.length > 0) {
+              matched.forEach(obj => {
+                const div = document.createElement('div');
+                div.classList.add('search-item');
+                // 用 <a> 链接实现真实跳转
+                const link = document.createElement('a');
+                link.href = obj.url;
+                link.textContent = obj.text;
+                link.style.textDecoration = "none";
+                link.style.color = "#333";
+                link.target = "_self";  // 同窗跳转
+                div.appendChild(link);
+                searchResults.appendChild(div);
+              });
+            } else {
+              const noRes = document.createElement('div');
+              noRes.classList.add('no-result');
+              noRes.textContent = "Sorry, no results found.";
+              searchResults.appendChild(noRes);
+            }
+          });
+        }
+      })();
+
+      // ====================== 2) 移动端菜单逻辑 (基础) ======================
+      (function () {
+        const menuIcon  = document.getElementById('menuIcon');
+        const closeBtn  = document.getElementById('closeBtn');
+        const mobileNav = document.getElementById('mobileNav');
+
+        if (menuIcon && closeBtn && mobileNav) {
+          menuIcon.addEventListener('click', () => {
+            mobileNav.classList.add('active');
+          });
+          closeBtn.addEventListener('click', () => {
+            mobileNav.classList.remove('active');
+          });
+          document.querySelectorAll('#mobileNav ul li a').forEach(link => {
+            link.addEventListener('click', () => {
+              // 点击任意链接后关闭菜单
+              mobileNav.classList.remove('active');
+            });
+          });
+        }
+      })();
+
+      // ====================== 5) 桌面导航栏悬停 (Desktop Nav Hover) ======================
+      (function(){
+        const header         = document.getElementById('mainHeader');
+        const navLinks       = document.querySelectorAll('.desktop-nav .nav-list > li > a');
+        const hoverOverlay   = document.getElementById('hover1Overlay');
+        const hoverContent   = document.getElementById('hover1Content');
+        const blurBg         = document.getElementById('blur1Bg'); // 模糊背景层
+
+        const sectionsMap = {
+          'Home':     document.getElementById('hover1Home'),
+          'Products': document.getElementById('hover1Products'),
+          'About':    document.getElementById('hover1About'),
+          'Contact':  document.getElementById('hover1Contact')
+        };
+
+        function hideAllSections() {
+          Object.values(sectionsMap).forEach(sec => sec && sec.classList.remove('active'));
+        }
+
+        function showHover() {
+          hoverOverlay.classList.add('active');
+          hoverContent.classList.add('active');
+          header.classList.add('nav-white'); // 导航变白
+          if (blurBg) blurBg.classList.add('active'); // 显示模糊背景
+        }
+
+        function hideHover() {
+          hoverOverlay.classList.remove('active');
+          hoverContent.classList.remove('active');
+          header.classList.remove('nav-white');
+          if (blurBg) blurBg.classList.remove('active'); // 隐藏模糊背景
+          hideAllSections();
+        }
+
+        // 鼠标移到导航链接 => 显示对应悬停面板
+        navLinks.forEach(link => {
+          link.addEventListener('mouseenter', () => {
+            const text = link.textContent.trim();
+            hideAllSections();
+            if (sectionsMap[text]) {
+              sectionsMap[text].classList.add('active');
+              showHover();
+            } else {
+              hideHover();
+            }
+          });
+        });
+
+        // 鼠标离开悬停面板 => 关闭
+        hoverContent.addEventListener('mouseleave', () => {
+          hideHover();
+        });
+
+        // 鼠标移动到遮罩层 => 关闭
+        hoverOverlay.addEventListener('mousemove', () => {
+          hideHover();
+        });
+
+        // 鼠标离开模糊背景层 => 关闭
+        if (blurBg) {
+          blurBg.addEventListener('mousemove', () => {
+            hideHover();
+          });
+        }
+      })();
+
+      // ====================== 6) 移动端多级菜单 (若需要) ======================
+      (function(){
+        const mobileNav     = document.getElementById('mobileNav');
+        const homePanel     = document.getElementById('mobileNavLevel2Home');
+        const productsPanel = document.getElementById('mobileNavLevel2Products');
+        const aboutPanel    = document.getElementById('mobileNavLevel2About');
+        const contactPanel  = document.getElementById('mobileNavLevel2Contact');
+
+        // 若这些面板不存在，就跳过
+        if (!mobileNav || !homePanel || !productsPanel || !aboutPanel || !contactPanel) {
+          console.log("多级菜单面板未找到，若不需要此功能可删除本脚本。");
+          return;
+        }
+
+        function showSubPanel(panel){
+          mobileNav.classList.remove('active');
+          homePanel.classList.remove('active');
+          productsPanel.classList.remove('active');
+          aboutPanel.classList.remove('active');
+          contactPanel.classList.remove('active');
+          panel.classList.add('active');
+        }
+        function showMainNav(){
+          homePanel.classList.remove('active');
+          productsPanel.classList.remove('active');
+          aboutPanel.classList.remove('active');
+          contactPanel.classList.remove('active');
+          mobileNav.classList.add('active');
+        }
+        const navLinks = mobileNav.querySelectorAll('ul li a');
+        navLinks.forEach(link => {
+          const level = link.getAttribute('data-level');
+          if(level === 'home'){
+            link.addEventListener('click', function(e){
+              e.preventDefault();
+              showSubPanel(homePanel);
+            });
+          } else if(level === 'products'){
+            link.addEventListener('click', function(e){
+              e.preventDefault();
+              showSubPanel(productsPanel);
+            });
+          } else if(level === 'about'){
+            link.addEventListener('click', function(e){
+              e.preventDefault();
+              showSubPanel(aboutPanel);
+            });
+          } else if(level === 'contact'){
+            link.addEventListener('click', function(e){
+              e.preventDefault();
+              showSubPanel(contactPanel);
+            });
+          }
+        });
+        const backButtons = document.querySelectorAll('.menu-panel__back');
+        backButtons.forEach(btn => {
+          btn.addEventListener('click', function(e){
+            e.preventDefault();
+            showMainNav();
+          });
+        });
+        const subCloseButtons = document.querySelectorAll('.menu-panel__close');
+        subCloseButtons.forEach(btn => {
+          btn.addEventListener('click', function(e){
+            e.preventDefault();
+            mobileNav.classList.remove('active');
+            homePanel.classList.remove('active');
+            productsPanel.classList.remove('active');
+            aboutPanel.classList.remove('active');
+            contactPanel.classList.remove('active');
+          });
+        });
+      })();
+    });
+  </script>
+
+  <!-- -------------------- 独立运行的其他脚本 -------------------- -->
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
   /**********************
-   * 2) 原汉堡菜单逻辑 (移动端)
+   * 0) 原汉堡菜单功能
    **********************/
   (function(){
     const menuIcon  = document.getElementById('menuIcon');
     const closeBtn  = document.getElementById('closeBtn');
     const mobileNav = document.getElementById('mobileNav');
     if (menuIcon && closeBtn && mobileNav) {
-      menuIcon.addEventListener('click', () => { mobileNav.classList.add('active'); });
-      closeBtn.addEventListener('click', () => { mobileNav.classList.remove('active'); });
-      document.querySelectorAll('#mobileNav ul li a').forEach(link => {
-        link.addEventListener('click', () => { mobileNav.classList.remove('active'); });
+      menuIcon.addEventListener('click', () => {
+        mobileNav.classList.add('active');
       });
-    }
-  })();
-
-  /**********************
-   * 3) 桌面导航栏悬停 (Desktop Nav Hover)
-   **********************/
-  (function(){
-    const header         = document.getElementById('mainHeader');
-    const navLinks       = document.querySelectorAll('.desktop-nav .nav-list > li > a');
-    const hoverOverlay   = document.getElementById('hover1Overlay');
-    const hoverContent   = document.getElementById('hover1Content');
-    const blurBg         = document.getElementById('blur1Bg');
-
-    const sectionsMap = {
-      'Home':     document.getElementById('hover1Home'),
-      'Products': document.getElementById('hover1Products'),
-      'About':    document.getElementById('hover1About'),
-      'Contact':  document.getElementById('hover1Contact')
-    };
-
-    function hideAllSections() {
-      Object.values(sectionsMap).forEach(sec => sec && sec.classList.remove('active'));
-    }
-    function showHover() {
-      hoverOverlay.classList.add('active');
-      hoverContent.classList.add('active');
-      header.classList.add('nav-white');
-      if (blurBg) blurBg.classList.add('active');
-    }
-    function hideHover() {
-      hoverOverlay.classList.remove('active');
-      hoverContent.classList.remove('active');
-      header.classList.remove('nav-white');
-      if (blurBg) blurBg.classList.remove('active');
-      hideAllSections();
-    }
-    navLinks.forEach(link => {
-      link.addEventListener('mouseenter', () => {
-        const text = link.textContent.trim();
-        hideAllSections();
-        if (sectionsMap[text]) {
-          sectionsMap[text].classList.add('active');
-          showHover();
-        } else {
-          hideHover();
-        }
-      });
-    });
-    hoverContent.addEventListener('mouseleave', hideHover);
-    hoverOverlay.addEventListener('mousemove', hideHover);
-    if (blurBg) { blurBg.addEventListener('mousemove', hideHover); }
-  })();
-
-  /**********************
-   * 4) 移动端多级菜单逻辑 (原有)
-   **********************/
-  (function(){
-    const mobileNav     = document.getElementById('mobileNav');
-    const homePanel     = document.getElementById('mobileNavLevel2Home');
-    const productsPanel = document.getElementById('mobileNavLevel2Products');
-    const aboutPanel    = document.getElementById('mobileNavLevel2About');
-    const contactPanel  = document.getElementById('mobileNavLevel2Contact');
-
-    if (!mobileNav || !homePanel || !productsPanel || !aboutPanel || !contactPanel) {
-      console.log("多级菜单面板未找到");
-      return;
-    }
-
-    function showSubPanel(panel){
-      mobileNav.classList.remove('active');
-      homePanel.classList.remove('active');
-      productsPanel.classList.remove('active');
-      aboutPanel.classList.remove('active');
-      contactPanel.classList.remove('active');
-      panel.classList.add('active');
-    }
-    function showMainNav(){
-      homePanel.classList.remove('active');
-      productsPanel.classList.remove('active');
-      aboutPanel.classList.remove('active');
-      contactPanel.classList.remove('active');
-      mobileNav.classList.add('active');
-    }
-    const navLinks = mobileNav.querySelectorAll('ul li a');
-    navLinks.forEach(link => {
-      const level = link.getAttribute('data-level');
-      if(level === 'home'){
-        link.addEventListener('click', function(e){
-          e.preventDefault();
-          showSubPanel(homePanel);
-        });
-      } else if(level === 'products'){
-        link.addEventListener('click', function(e){
-          e.preventDefault();
-          showSubPanel(productsPanel);
-        });
-      } else if(level === 'about'){
-        link.addEventListener('click', function(e){
-          e.preventDefault();
-          showSubPanel(aboutPanel);
-        });
-      } else if(level === 'contact'){
-        link.addEventListener('click', function(e){
-          e.preventDefault();
-          showSubPanel(contactPanel);
-        });
-      }
-    });
-    const backButtons = document.querySelectorAll('.menu-panel__back');
-    backButtons.forEach(btn => {
-      btn.addEventListener('click', function(e){
-        e.preventDefault();
-        showMainNav();
-      });
-    });
-    const subCloseButtons = document.querySelectorAll('.menu-panel__close');
-    subCloseButtons.forEach(btn => {
-      btn.addEventListener('click', function(e){
-        e.preventDefault();
+      closeBtn.addEventListener('click', () => {
         mobileNav.classList.remove('active');
-        homePanel.classList.remove('active');
-        productsPanel.classList.remove('active');
-        aboutPanel.classList.remove('active');
-        contactPanel.classList.remove('active');
       });
-    });
+    }
   })();
 
   /**********************
-   * 5) 新增：桌面端 & 移动端 Mefan Air 导航滚动切换及移动端下拉面板
-   *     桌面端：滚动 >400px 显示桌面新导航（无上下翻）
-   *     移动端：滚动 >200px 显示移动新导航（含上下翻按钮控制下拉面板）
+   * 1) 获取原主导航
    **********************/
-  const mainHeader2   = document.getElementById("mainHeader");    // 原主导航(带logo)
-  const mefanAirNav2  = document.getElementById("mefanAirNav");     // 桌面端新导航
-  const mobileAirNav2 = document.getElementById("mobileAirNav");    // 移动端新导航
-
-  window.addEventListener("scroll", function() {
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const isMobile = window.innerWidth <= 768;
-    if (!isMobile) {
-      // 桌面端逻辑：滚动 >400px 显示桌面新导航
-      if (scrollTop > 400) {
-        mainHeader2.style.transform = "translateY(-100%)";
-        mainHeader2.style.opacity   = "0";
-        if (mefanAirNav2) mefanAirNav2.classList.add("active");
-      } else {
-        mainHeader2.style.transform = "translateY(0)";
-        mainHeader2.style.opacity   = "1";
-        if (mefanAirNav2) mefanAirNav2.classList.remove("active");
-      }
-    } else {
-      // 移动端逻辑：滚动 >200px 显示移动新导航
-      if (scrollTop > 200) {
-        mainHeader2.style.transform = "translateY(-100%)";
-        mainHeader2.style.opacity   = "0";
-        if (mobileAirNav2) mobileAirNav2.classList.add("active");
-      } else {
-        mainHeader2.style.transform = "translateY(0)";
-        mainHeader2.style.opacity   = "1";
-        if (mobileAirNav2) mobileAirNav2.classList.remove("active");
-      }
-    }
-  });
-
+  const mainHeader  = document.getElementById("mainHeader");   // 原主导航(带logo)
+  
   /**********************
-   * 6) 新增：移动端二级面板上下翻控制（仅手机端）
-   *     初始状态：切换按钮显示下箭头 (⌄, U+2304)
-   *     展开后：切换按钮显示上箭头 (⌃, U+2303)
+   * 2) 获取新导航
    **********************/
+  const mefanAirNav = document.getElementById("mefanAirNav");  // 桌面端
+  const mobileAirNav = document.getElementById("mobileAirNav");// 移动端
+
+  // 移动端下拉面板
+  const mobileAirToggleBtn = document.getElementById("mobileAirToggleBtn");
+  const mobileAirPanel     = document.getElementById("mobileAirPanel");
+  const mobileAirCloseBtn  = document.getElementById("mobileAirCloseBtn");
+  const mobileAirBlur      = document.getElementById("mobileAirBlur");
+
+  // 面板状态
   let panelOpen = false;
+
   function openPanel() {
     panelOpen = true;
     if (mobileAirToggleBtn) {
-      mobileAirToggleBtn.textContent = "\u2303"; // 上箭头 (⌃)
+      mobileAirToggleBtn.textContent = "\u2303"; // 上箭头(⌃)
     }
-    if (mobileAirPanel) mobileAirPanel.classList.add("active");
-    if (mobileAirBlur) mobileAirBlur.classList.add("active");
+    mobileAirPanel?.classList.add("active");
+    mobileAirBlur?.classList.add("active");
   }
   function closePanel() {
     panelOpen = false;
     if (mobileAirToggleBtn) {
-      mobileAirToggleBtn.textContent = "\u2304"; // 下箭头 (⌄)
+      mobileAirToggleBtn.textContent = "\u2304"; // 下箭头(⌄)
     }
-    if (mobileAirPanel) mobileAirPanel.classList.remove("active");
-    if (mobileAirBlur) mobileAirBlur.classList.remove("active");
+    mobileAirPanel?.classList.remove("active");
+    mobileAirBlur?.classList.remove("active");
   }
+
   if (mobileAirToggleBtn) {
-    mobileAirToggleBtn.addEventListener("click", function() {
+    mobileAirToggleBtn.addEventListener("click", () => {
       panelOpen ? closePanel() : openPanel();
     });
   }
-  if (mobileAirCloseBtn) {
-    mobileAirCloseBtn.addEventListener("click", closePanel);
-  }
-  if (mobileAirBlur) {
-    mobileAirBlur.addEventListener("click", closePanel);
-  }
+  mobileAirCloseBtn?.addEventListener("click", closePanel);
+  mobileAirBlur?.addEventListener("click", closePanel);
+
+  /**********************
+   * 3) 滚动时隐藏原导航，显示新导航(逻辑示例)
+   **********************/
+  window.addEventListener("scroll", function() {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const isMobile = window.innerWidth <= 768;
+
+    if (!isMobile) {
+      // 桌面端逻辑
+      if (scrollTop > 400) {
+        // 隐藏原导航
+        mainHeader.style.transform = "translateY(-100%)";
+        mainHeader.style.opacity   = "0";
+        // 显示 Mefan Air (桌面)
+        mefanAirNav?.classList.add("active");
+      } else {
+        // 恢复原导航
+        mainHeader.style.transform = "translateY(0)";
+        mainHeader.style.opacity   = "1";
+        // 隐藏 Mefan Air
+        mefanAirNav?.classList.remove("active");
+      }
+    } else {
+      // 移动端逻辑
+      if (scrollTop > 200) {
+        mainHeader.style.transform = "translateY(-100%)";
+        mainHeader.style.opacity   = "0";
+        mobileAirNav?.classList.add("active");
+      } else {
+        mainHeader.style.transform = "translateY(0)";
+        mainHeader.style.opacity   = "1";
+        mobileAirNav?.classList.remove("active");
+      }
+    }
+  });
 
   // 其余搜索功能等脚本保持不变
 });
-</script>
-
-
 
 
 
