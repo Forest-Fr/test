@@ -46,19 +46,13 @@
     }
 
 
-
-    /* 滚动后变白 */
+   /* 🔵 滚动后变白 */
     .scrolled .header-gradient {
-        background: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
- /* 🔵 滚动后的导航栏 */
-    .scrolled {
-      background: white !important;
+      background: white;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
-    /* 🟢 滚动后显示新导航 */
+    /* 🔵 滚动后显示新导航 */
     .scrolled .nav-center {
       display: flex !important;
     }
@@ -73,6 +67,7 @@
       margin: 0 auto;
       padding: 0 20px;
     }
+
     /* 🟢 左侧 MeFan Air 标题 */
     .nav-center .nav-title {
       font-size: 20px;
@@ -112,6 +107,49 @@
 
     .nav-center .buy-btn:hover {
       background: #005bb5;
+    }
+
+    /* 🔥 页面 Banner */
+    .banner-container {
+      width: 100vw;
+      background-color: #f5f5f7;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 16px;
+      font-weight: 500;
+      position: relative;
+      top: 40px;
+    }
+
+    /* 🔥 Banner Shop 按钮 */
+    .banner-shop-link {
+      color: #0071e3;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      margin-left: 8px;
+    }
+
+    .banner-shop-link .arrow {
+      font-size: 16px;
+      margin-left: 4px;
+    }
+
+    /* 🔥 页面 Hero 图片高度增加 260px */
+    .section1-hero {
+      height: calc(100vh + 260px);
+      background: url('MeFan X1.png') center/cover no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: #000;
+    }
+
+    .section1-hero h1 {
+      font-size: 4rem;
+      font-weight: bold;
     }
 
     /* 主要内容区域 */
@@ -918,20 +956,19 @@ list-style: none;
 </head>
 <body>
 
-<!-- Banner（优化后） -->
+<!-- 🔥 Banner -->
 <div class="banner-container">
-  Buy MeFan Air starting at $549 with education savings.  
+  Buy MeFan Air starting at $549 with education savings.
   <a href="sample.html" target="_blank" class="banner-shop-link">
     Shop <span class="arrow">&gt;</span>
   </a>
 </div>
 
+<!-- 🔵 主要导航栏 -->
+<header class="header-gradient" id="mainHeader">
+  <img src="MeFan Logo.png" alt="MeFan Logo" class="logo-img" />
+</header>
 
-  <!-- 顶部：淡色背景/渐变（默认示例：浅蓝渐变） -->
-  <header class="header-gradient" id="mainHeader">
-    <!-- 左侧 Logo -->
-    <img src="MeFan Logo.png" alt="MeFan Logo" class="logo-img" />
-    </header>
 <!-- 🟢 滚动后才出现的新导航 -->
 <div class="nav-center" id="scrollNav">
   <div class="nav-title">MeFan Air</div>
@@ -947,7 +984,7 @@ list-style: none;
 <!-- 🔥 主视觉区 -->
 <section class="section1-hero">
   <h1>MeFan Air - 轻薄便携，强大性能</h1>
-
+</section>
     <!-- 桌面端导航列表，居中对齐，带 Home / Products / About / Contact / 搜索按钮 -->
     <nav class="desktop-nav">
       <ul class="nav-list">
