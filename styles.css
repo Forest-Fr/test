@@ -77,16 +77,18 @@ body {
 
 /* ========== 横幅 Banner ========== */
 .banner-promo {
+  /* 让横幅整体向下移动 40px */
+  margin-top: 40px;
   background-color: #EFF7FF; /* 浅蓝背景，可自行调整 */
-  border-top: 1px solid #CBD5E1;    /* 上边线 */
-  border-bottom: 1px solid #CBD5E1; /* 下边线 */
+  border-top: 1px solid #CBD5E1;
+  border-bottom: 1px solid #CBD5E1;
   padding: 10px 0;
   text-align: center;
   font-size: 14px;
   color: #333;
 }
 .banner-promo a {
-  color: #0071e3;      /* 苹果官网常见蓝色 */
+  color: #0071e3; /* 苹果常见蓝色 */
   text-decoration: none;
   font-weight: 500;
 }
@@ -94,7 +96,7 @@ body {
   text-decoration: underline;
 }
 
-/* ========== 新导航 (模拟苹果风格) ========== */
+/* ========== 新导航：Mefan Air ========== */
 .mefan-air-nav {
   position: fixed;
   top: 0;
@@ -112,14 +114,13 @@ body {
   opacity: 0;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
-
-/* 新导航激活态：向下移入、完全可见 */
+/* 当添加 .active 类时，导航下移并显示 */
 .mefan-air-nav.active {
   transform: translateY(0);
   opacity: 1;
 }
 
-/* 左侧标题（如 iPad Air） */
+/* 左侧标题（模拟“iPad Air”样式） */
 .mefan-air-title {
   font-size: 1.2rem;
   font-weight: 600;
