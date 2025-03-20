@@ -336,9 +336,10 @@
   <!-- -------------------- 主功能脚本 -------------------- -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  /************************************************************
-   * 0) 原搜索逻辑（保持不变）
-   ************************************************************/
+
+  /**********************
+   * 1) 搜索逻辑 (原有)
+   **********************/
   (function(){
     const body          = document.body;
     const mainHeader    = document.getElementById('mainHeader');
@@ -349,6 +350,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const searchTitle   = document.getElementById('searchTitle');
     const searchResults = document.getElementById('searchResults');
 
+    // 模拟可搜索内容
     const siteContents = [
       { text: "About MeFan", url: "about.html" },
       { text: "MeFan Lite - Wireless Earbuds", url: "product-lite.html" },
@@ -367,17 +369,12 @@ document.addEventListener("DOMContentLoaded", function() {
     function closeSearch() {
       body.classList.remove('search-open');
     }
-
     if (desktopSearch) desktopSearch.addEventListener('click', openSearch);
     if (mobileSearch)  mobileSearch.addEventListener('click', openSearch);
     if (searchClose)   searchClose.addEventListener('click', closeSearch);
-
     document.addEventListener('keydown', function(e){
-      if (e.key === "Escape") {
-        closeSearch();
-      }
+      if (e.key === "Escape") { closeSearch(); }
     });
-
     document.addEventListener('click', function(e){
       if (!searchPanel.contains(e.target)
           && e.target !== desktopSearch
@@ -385,14 +382,10 @@ document.addEventListener("DOMContentLoaded", function() {
         closeSearch();
       }
     });
-
     if (searchTitle && searchResults) {
       searchTitle.addEventListener('input', function(){
         const query = searchTitle.innerText.trim().toLowerCase();
-        if (!query) {
-          searchResults.innerHTML = "";
-          return;
-        }
+        if (!query) { searchResults.innerHTML = ""; return; }
         const matched = siteContents.filter(item =>
           item.text.toLowerCase().includes(query)
         );
@@ -420,31 +413,25 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   })();
 
-  /************************************************************
-   * 1) 原汉堡菜单功能（保持不变）
-   ************************************************************/
+  /**********************
+   * 2) 原汉堡菜单逻辑 (移动端)
+   **********************/
   (function(){
     const menuIcon  = document.getElementById('menuIcon');
     const closeBtn  = document.getElementById('closeBtn');
     const mobileNav = document.getElementById('mobileNav');
     if (menuIcon && closeBtn && mobileNav) {
-      menuIcon.addEventListener('click', () => {
-        mobileNav.classList.add('active');
-      });
-      closeBtn.addEventListener('click', () => {
-        mobileNav.classList.remove('active');
-      });
+      menuIcon.addEventListener('click', () => { mobileNav.classList.add('active'); });
+      closeBtn.addEventListener('click', () => { mobileNav.classList.remove('active'); });
       document.querySelectorAll('#mobileNav ul li a').forEach(link => {
-        link.addEventListener('click', () => {
-          mobileNav.classList.remove('active');
-        });
+        link.addEventListener('click', () => { mobileNav.classList.remove('active'); });
       });
     }
   })();
 
-  /************************************************************
-   * 2) 桌面导航悬停（保持不变）
-   ************************************************************/
+  /**********************
+   * 3) 桌面导航栏悬停 (Desktop Nav Hover)
+   **********************/
   (function(){
     const header         = document.getElementById('mainHeader');
     const navLinks       = document.querySelectorAll('.desktop-nav .nav-list > li > a');
@@ -489,14 +476,12 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     hoverContent.addEventListener('mouseleave', hideHover);
     hoverOverlay.addEventListener('mousemove', hideHover);
-    if (blurBg) {
-      blurBg.addEventListener('mousemove', hideHover);
-    }
+    if (blurBg) { blurBg.addEventListener('mousemove', hideHover); }
   })();
 
-  /************************************************************
-   * 3) 移动端多级菜单（保持不变）
-   ************************************************************/
+  /**********************
+   * 4) 移动端多级菜单逻辑 (原有)
+   **********************/
   (function(){
     const mobileNav     = document.getElementById('mobileNav');
     const homePanel     = document.getElementById('mobileNavLevel2Home');
@@ -569,11 +554,11 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   })();
 
-  /************************************************************
-   * 4) 新增：桌面端 & 移动端 Mefan Air 导航滚动切换逻辑
+  /**********************
+   * 5) 新增：桌面端 & 移动端 Mefan Air 导航滚动切换及移动端下拉面板
    *     桌面端：滚动 >400px 显示桌面新导航（无上下翻）
-   *     移动端：滚动 >200px 显示移动新导航（含上下翻按钮）
-   ************************************************************/
+   *     移动端：滚动 >200px 显示移动新导航（含上下翻按钮控制下拉面板）
+   **********************/
   const mainHeader2   = document.getElementById("mainHeader");    // 原主导航(带logo)
   const mefanAirNav2  = document.getElementById("mefanAirNav");     // 桌面端新导航
   const mobileAirNav2 = document.getElementById("mobileAirNav");    // 移动端新导航
@@ -581,53 +566,53 @@ document.addEventListener("DOMContentLoaded", function() {
   window.addEventListener("scroll", function() {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
     const isMobile = window.innerWidth <= 768;
-
     if (!isMobile) {
-      // 桌面端逻辑：滚动 >400px 显示桌面端新导航
+      // 桌面端逻辑：滚动 >400px 显示桌面新导航
       if (scrollTop > 400) {
         mainHeader2.style.transform = "translateY(-100%)";
         mainHeader2.style.opacity   = "0";
-        mefanAirNav2 && mefanAirNav2.classList.add("active");
+        if (mefanAirNav2) mefanAirNav2.classList.add("active");
       } else {
         mainHeader2.style.transform = "translateY(0)";
         mainHeader2.style.opacity   = "1";
-        mefanAirNav2 && mefanAirNav2.classList.remove("active");
+        if (mefanAirNav2) mefanAirNav2.classList.remove("active");
       }
     } else {
-      // 移动端逻辑：滚动 >200px 显示移动端新导航
+      // 移动端逻辑：滚动 >200px 显示移动新导航
       if (scrollTop > 200) {
         mainHeader2.style.transform = "translateY(-100%)";
         mainHeader2.style.opacity   = "0";
-        mobileAirNav2 && mobileAirNav2.classList.add("active");
+        if (mobileAirNav2) mobileAirNav2.classList.add("active");
       } else {
         mainHeader2.style.transform = "translateY(0)";
         mainHeader2.style.opacity   = "1";
-        mobileAirNav2 && mobileAirNav2.classList.remove("active");
+        if (mobileAirNav2) mobileAirNav2.classList.remove("active");
       }
     }
   });
 
-  /************************************************************
-   * 5) 新增：移动端二级面板上下翻控制（仅手机端）
-   ************************************************************/
+  /**********************
+   * 6) 新增：移动端二级面板上下翻控制（仅手机端）
+   *     初始状态：切换按钮显示下箭头 (⌄, U+2304)
+   *     展开后：切换按钮显示上箭头 (⌃, U+2303)
+   **********************/
   let panelOpen = false;
   function openPanel() {
     panelOpen = true;
     if (mobileAirToggleBtn) {
       mobileAirToggleBtn.textContent = "\u2303"; // 上箭头 (⌃)
     }
-    mobileAirPanel && mobileAirPanel.classList.add("active");
-    mobileAirBlur && mobileAirBlur.classList.add("active");
+    if (mobileAirPanel) mobileAirPanel.classList.add("active");
+    if (mobileAirBlur) mobileAirBlur.classList.add("active");
   }
   function closePanel() {
     panelOpen = false;
     if (mobileAirToggleBtn) {
       mobileAirToggleBtn.textContent = "\u2304"; // 下箭头 (⌄)
     }
-    mobileAirPanel && mobileAirPanel.classList.remove("active");
-    mobileAirBlur && mobileAirBlur.classList.remove("active");
+    if (mobileAirPanel) mobileAirPanel.classList.remove("active");
+    if (mobileAirBlur) mobileAirBlur.classList.remove("active");
   }
-
   if (mobileAirToggleBtn) {
     mobileAirToggleBtn.addEventListener("click", function() {
       panelOpen ? closePanel() : openPanel();
@@ -643,6 +628,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // 其余搜索功能等脚本保持不变
 });
 </script>
+
 
 
 
