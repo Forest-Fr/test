@@ -1,4 +1,5 @@
 /* ========== Reset & 基础 ========== */
+/* ========== Reset & 基础 ========== */
 * {
   margin: 0;
   padding: 0;
@@ -6,10 +7,10 @@
 }
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: #fff; /* 保持整体背景 */
+  background-color: #fff;
   color: #333;
   line-height: 1.6;
-  padding-top: 40px; /* 确保内容不会被导航栏挡住 */
+  padding-top: 40px; /* 确保内容不被导航栏遮挡 */
 }
 
 /* ========== 原主导航 ========== */
@@ -18,7 +19,7 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 3000; /* 原没有blur之前是1000 */
+  z-index: 3000;
   padding: 10px 20px;
   display: flex;
   align-items: center;
@@ -26,11 +27,9 @@ body {
   background: linear-gradient(to right, #DEEFFF, #B2D8FF);
   transition: background 0.2s ease, transform 0.3s ease, opacity 0.3s ease;
 }
-/* 鼠标进入时，将导航栏背景改为白色 */
 .header-gradient.nav-white {
   background: #fff !important;
 }
-/* LOGO */
 .logo-img {
   width: 60px;
   margin-right: 20px;
@@ -38,8 +37,8 @@ body {
 
 /* ========== 横幅 Banner ========== */
 .banner-promo {
-  margin-top: 40px; /* 整体向下移动 40px */
-  background-color: #EFF7FF; /* 浅蓝背景 */
+  margin-top: 40px;
+  background-color: #EFF7FF;
   border-top: 1px solid #CBD5E1;
   border-bottom: 1px solid #CBD5E1;
   padding: 10px 0;
@@ -48,7 +47,7 @@ body {
   color: #333;
 }
 .banner-promo a {
-  color: #0071e3; /* 苹果常见蓝色 */
+  color: #0071e3;
   text-decoration: none;
   font-weight: 500;
 }
@@ -99,7 +98,7 @@ body {
   left: 0;
   width: 100%;
   z-index: 5000;
-  display: none; /* 由JS控制 .active 时显示 */
+  display: none; /* JS添加active时显示 */
   align-items: center;
   justify-content: space-between;
   background-color: #fff;
@@ -154,6 +153,10 @@ body {
   padding: 12px 16px;
   border-bottom: 1px solid #ddd;
 }
+.mobile-air-panel-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
 .mobile-air-close-btn {
   font-size: 1.5rem;
   cursor: pointer;
@@ -190,7 +193,7 @@ body {
 }
 
 /* ========== 媒体查询 ========== */
-/* 桌面端：屏幕宽度 ≥1024px 时，仅显示桌面端 Mefan Air 导航 */
+/* 桌面端：屏幕宽度 ≥1024px 只显示桌面端新导航 */
 @media (min-width: 1024px) {
   .mobile-air-nav,
   .mobile-air-panel,
@@ -198,8 +201,7 @@ body {
     display: none !important;
   }
 }
-
-/* 移动端：屏幕宽度 ≤768px 时，仅显示移动端 Mefan Air 导航 */
+/* 移动端：屏幕宽度 ≤768px 只显示移动端新导航 */
 @media (max-width: 768px) {
   .mefan-air-nav {
     display: none !important;
