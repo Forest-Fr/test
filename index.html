@@ -605,34 +605,12 @@
 
   <!-- -------------------- 独立运行的其他脚本 -------------------- -->
 
- <!-- ========== 控制导航切换的脚本 ========== -->
-  <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const mainHeader  = document.getElementById("mainHeader");   // 主导航
-    const mefanAirNav = document.getElementById("mefanAirNav");  // 新导航
-
-    // 监听滚动事件
-    window.addEventListener("scroll", function() {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      if (scrollTop > 400) {
-        // 超过 400px，隐藏主导航，显示 Mefan Air 导航
-        mainHeader.style.transform = "translateY(-100%)";
-        mainHeader.style.opacity   = "0";
-        mefanAirNav.classList.add("active");
-      } else {
-        // 小于等于 400px，显示主导航，隐藏 Mefan Air 导航
-        mainHeader.style.transform = "translateY(0)";
-        mainHeader.style.opacity   = "1";
-        mefanAirNav.classList.remove("active");
-      }
-    });
-  });
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   // ========== 1) 获取关键 DOM 元素 ==========
-  const mainHeader    = document.getElementById("mainHeader");   // 原主导航
-  const mefanAirNav   = document.getElementById("mefanAirNav");  // 桌面端 Mefan Air 导航
-  const mobileAirNav  = document.getElementById("mobileAirNav"); // 移动端 Mefan Air 导航
+  const mainHeader    = document.getElementById("mainHeader");    // 原主导航
+  const mefanAirNav   = document.getElementById("mefanAirNav");   // 桌面端 Mefan Air 导航
+  const mobileAirNav  = document.getElementById("mobileAirNav");  // 移动端 Mefan Air 导航
 
   // 移动端二级菜单元素
   const mobileAirExpandBtn = document.getElementById("mobileAirExpandBtn"); 
@@ -698,7 +676,6 @@ document.addEventListener("DOMContentLoaded", function() {
   // ========== 4) 保留其它原有脚本逻辑不变 ==========
   // 这里如果你有原本移动端菜单 (#mobileNav) 或搜索功能等脚本，请继续保留它们。
 });
-</script>
 
 
   </script>
