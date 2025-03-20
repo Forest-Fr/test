@@ -56,7 +56,43 @@
     .scrolled .nav-center {
       display: flex !important;
     }
-    
+    /* 🟢 滚动后导航栏 */
+.scrolled .nav-center {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+  transition: all 0.3s ease-in-out;
+}
+
+/* 🟢 保持菜单居中 */
+.nav-center .nav-links {
+  display: flex;
+  gap: 40px;
+  margin-left: auto; 
+  margin-right: auto;
+}
+
+/* 🟢 让 Buy 按钮不偏移 */
+.nav-center .buy-btn {
+  background: #0071e3;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
     /* 🟢 默认隐藏滚动导航 */
     .nav-center {
       display: none;
@@ -1537,23 +1573,34 @@ list-style: none;
 
  <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const mainHeader = document.getElementById("mainHeader");
-    const scrollNav = document.getElementById("scrollNav");
-    const desktopNav = document.querySelector(".desktop-nav");
+    const mainHeader = document.getElementById("mainHeader");  // 原始导航
+    const scrollNav = document.getElementById("scrollNav");    // 滚动后的导航
+    const desktopNav = document.querySelector(".desktop-nav"); // 桌面导航栏
+    let lastScrollTop = 0;  // 记录上次滚动位置
 
-    // 滚动监听
+    // 确保初始状态
+    scrollNav.style.display = "none";
+
     window.addEventListener("scroll", function () {
-      if (window.scrollY > 80) {
+      let currentScroll = window.scrollY;
+
+      if (currentScroll > 120) { 
+        // 超过 120px，显示滚动导航，隐藏原导航
         mainHeader.classList.add("scrolled");
-        scrollNav.style.display = "flex"; // 显示滚动导航
-        desktopNav.style.opacity = "0"; // 渐隐桌面导航
+        scrollNav.style.display = "flex";
+        desktopNav.style.opacity = "0";  // 让主导航渐隐（避免闪烁）
       } else {
+        // 回到顶部，恢复原始导航
         mainHeader.classList.remove("scrolled");
-        scrollNav.style.display = "none"; // 隐藏滚动导航
-        desktopNav.style.opacity = "1"; // 恢复桌面导航
+        scrollNav.style.display = "none";
+        desktopNav.style.opacity = "1";  // 让主导航渐显
       }
+
+      lastScrollTop = currentScroll; // 更新滚动位置
     });
   });
+</script>
+
 
 
   </script>
