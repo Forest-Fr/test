@@ -65,57 +65,48 @@
       </ul>
     </nav>
   </header>
-    <!-- ========== 横幅 Banner（整体下移 40px） ========== -->
-  <div class="banner-promo">
-    Buy iPad Air starting at $549 with education savings:
-    <a href="sample.html" target="_blank">Shop &gt;</a>
-  </div>
-
-  <!-- ========== 新导航：Mefan Air（滚动 400px 后出现） ========== -->
-  <nav class="mefan-air-nav" id="mefanAirNav">
+  <!-- 新增：桌面端 Mefan Air 导航（与原导航平级，放在 mainHeader 之后） -->
+<nav id="mefanAirNav" class="mefan-air-nav">
   <div class="mefan-air-title">Mefan Air</div>
   <ul class="mefan-air-list">
-    <li><a href="sample.html" target="_blank">Overview</a></li>
-    <li><a href="sample.html" target="_blank">Tech Specs</a></li>
-    <li><a href="sample.html" target="_blank">Compare</a></li>
-    <li><a href="sample.html" target="_blank">Why mefan</a></li>
-    <li><a href="sample.html" target="_blank">Buy</a></li>
+    <li><a href="sample.html">Overview</a></li>
+    <li><a href="sample.html">Tech Specs</a></li>
+    <li><a href="sample.html">Compare</a></li>
+    <li><a href="sample.html">Why mefan</a></li>
+    <li><a href="sample.html">Buy</a></li>
   </ul>
 </nav>
-   <!-- 其余页面主体内容 -->
-  <main style="height: 2000px; padding: 20px;">
-    <h1>Welcome to Mefan</h1>
-    <p>向下滚动 400px 后可以看到导航切换效果：主导航淡出隐藏，Mefan Air 导航出现。</p>
-  </main>
-<!-- ========== 新增：手机端 Mefan Air 导航（滚动400px后出现） ========== -->
+
+<!-- 新增：移动端 Mefan Air 导航 -->
 <nav id="mobileAirNav" class="mobile-air-nav">
-  <!-- 左侧：Mefan Air -->
   <div class="mobile-air-left">Mefan Air</div>
-  
-  <!-- 右侧：箭头 + Buy按钮 -->
   <div class="mobile-air-right">
-    <!-- 初始箭头为“>” -->
+    <!-- 初始下箭头 (⌄, U+2304) -->
     <span id="mobileAirToggleBtn" class="mobile-air-toggle-btn">&#x2304;</span>
-    <a href="sample.html" target="_blank" class="mobile-air-buy">Buy</a>
+    <a href="sample.html" class="mobile-air-buy">Buy</a>
   </div>
 </nav>
 
-<!-- ========== 新增：Mefan Air 手机端二级菜单 + blur 背景 ========== -->
+<!-- 移动端下拉面板 + blur -->
 <div id="mobileAirPanel" class="mobile-air-panel">
-  <!-- 头部：Mefan Air 在左，关闭按钮在右 -->
   <div class="mobile-air-panel-header">
     <div class="mobile-air-panel-title">Mefan Air</div>
-    <div id="mobileAirCloseBtn" class="mobile-air-close-btn">&#x2303;</div>
+    <div id="mobileAirCloseBtn" class="mobile-air-close-btn">&times;</div>
   </div>
-  <!-- 菜单列表 -->
   <ul class="mobile-air-panel-list">
-    <li><a href="sample.html" target="_blank">Overview</a></li>
-    <li><a href="sample.html" target="_blank">Tech Specs</a></li>
-    <li><a href="sample.html" target="_blank">Compare</a></li>
-    <li><a href="sample.html" target="_blank">Why mefan</a></li>
+    <li><a href="sample.html">Overview</a></li>
+    <li><a href="sample.html">Tech Specs</a></li>
+    <li><a href="sample.html">Compare</a></li>
+    <li><a href="sample.html">Why mefan</a></li>
   </ul>
 </div>
 <div id="mobileAirBlur" class="mobile-air-blur"></div>
+
+<!-- 其余页面内容... -->
+<main>
+  <h1>Welcome to Mefan</h1>
+  ...
+</main>
 
   <!-- 新增：移动端二级菜单面板（仅手机端有效） -->
   <div id="mobileNavLevel2Home" class="menu-panel menu-panel--level2">
@@ -319,7 +310,6 @@
       </ul>
     </div>
   </div>
-
 
 
 
@@ -602,13 +592,13 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  /************************************************************
-   * 0) 保留原有汉堡菜单 (Home/Products/About/Contact) 功能
-   ************************************************************/
+  /**********************
+   * 0) 原汉堡菜单功能
+   **********************/
   (function(){
     const menuIcon  = document.getElementById('menuIcon');
     const closeBtn  = document.getElementById('closeBtn');
-    const mobileNav = document.getElementById('mobileNav'); // 原汉堡菜单容器
+    const mobileNav = document.getElementById('mobileNav');
     if (menuIcon && closeBtn && mobileNav) {
       menuIcon.addEventListener('click', () => {
         mobileNav.classList.add('active');
@@ -619,109 +609,91 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   })();
 
-  /************************************************************
-   * 1) 获取关键 DOM 元素
-   ************************************************************/
-  const mainHeader  = document.getElementById("mainHeader");   // 原主导航(带logo等)
-  const mefanAirNav = document.getElementById("mefanAirNav");  // 桌面端 Mefan Air 导航
-  const mobileAirNav = document.getElementById("mobileAirNav"); // 移动端 Mefan Air 导航
+  /**********************
+   * 1) 获取原主导航
+   **********************/
+  const mainHeader  = document.getElementById("mainHeader");   // 原主导航(带logo)
+  
+  /**********************
+   * 2) 获取新导航
+   **********************/
+  const mefanAirNav = document.getElementById("mefanAirNav");  // 桌面端
+  const mobileAirNav = document.getElementById("mobileAirNav");// 移动端
 
-  // 移动端二级面板相关元素
-  const mobileAirToggleBtn = document.getElementById("mobileAirToggleBtn"); // 上下翻按钮
-  const mobileAirPanel     = document.getElementById("mobileAirPanel");     // 下拉面板
-  const mobileAirCloseBtn  = document.getElementById("mobileAirCloseBtn");  // 面板关闭按钮
-  const mobileAirBlur      = document.getElementById("mobileAirBlur");      // blur 背景
+  // 移动端下拉面板
+  const mobileAirToggleBtn = document.getElementById("mobileAirToggleBtn");
+  const mobileAirPanel     = document.getElementById("mobileAirPanel");
+  const mobileAirCloseBtn  = document.getElementById("mobileAirCloseBtn");
+  const mobileAirBlur      = document.getElementById("mobileAirBlur");
 
-  /************************************************************
-   * 2) 监听滚动事件，根据屏幕宽度采用不同的阈值
-   *    桌面端：滚动 > 400px 显示桌面版 Mefan Air 导航
-   *    移动端：滚动 > 200px 显示移动版 Mefan Air 导航
-   ************************************************************/
-  window.addEventListener("scroll", function() {
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const isMobile = window.innerWidth <= 768; // 定义手机端条件
-
-    if (!isMobile) {
-      // 桌面端逻辑（阈值400px）
-      if (scrollTop > 400) {
-        mainHeader.style.transform = "translateY(-100%)";
-        mainHeader.style.opacity   = "0";
-        if (mefanAirNav) {
-          mefanAirNav.classList.add("active");
-        }
-      } else {
-        mainHeader.style.transform = "translateY(0)";
-        mainHeader.style.opacity   = "1";
-        if (mefanAirNav) {
-          mefanAirNav.classList.remove("active");
-        }
-      }
-    } else {
-      // 移动端逻辑（阈值200px）
-      if (scrollTop > 200) {
-        mainHeader.style.transform = "translateY(-100%)";
-        mainHeader.style.opacity   = "0";
-        if (mobileAirNav) {
-          mobileAirNav.classList.add("active");
-        }
-      } else {
-        mainHeader.style.transform = "translateY(0)";
-        mainHeader.style.opacity   = "1";
-        if (mobileAirNav) {
-          mobileAirNav.classList.remove("active");
-        }
-      }
-    }
-  });
-
-  /************************************************************
-   * 3) 移动端二级面板：上下箭头 (上下翻) + blur + 关闭按钮
-   *    - 初始状态显示下箭头 (⌄, U+2304) 表示面板未展开
-   *    - 展开后按钮显示上箭头 (⌃, U+2303)
-   ************************************************************/
-  let panelOpen = false; // 二级面板是否展开
+  // 面板状态
+  let panelOpen = false;
 
   function openPanel() {
     panelOpen = true;
     if (mobileAirToggleBtn) {
-      mobileAirToggleBtn.textContent = "\u2303"; // 上箭头 (⌃)
+      mobileAirToggleBtn.textContent = "\u2303"; // 上箭头(⌃)
     }
-    if (mobileAirPanel) mobileAirPanel.classList.add("active");
-    if (mobileAirBlur)  mobileAirBlur.classList.add("active");
+    mobileAirPanel?.classList.add("active");
+    mobileAirBlur?.classList.add("active");
   }
-
   function closePanel() {
     panelOpen = false;
     if (mobileAirToggleBtn) {
-      mobileAirToggleBtn.textContent = "\u2304"; // 下箭头 (⌄)
+      mobileAirToggleBtn.textContent = "\u2304"; // 下箭头(⌄)
     }
-    if (mobileAirPanel) mobileAirPanel.classList.remove("active");
-    if (mobileAirBlur)  mobileAirBlur.classList.remove("active");
+    mobileAirPanel?.classList.remove("active");
+    mobileAirBlur?.classList.remove("active");
   }
 
   if (mobileAirToggleBtn) {
-    mobileAirToggleBtn.addEventListener("click", function() {
-      if (!panelOpen) {
-        openPanel();
-      } else {
-        closePanel();
-      }
+    mobileAirToggleBtn.addEventListener("click", () => {
+      panelOpen ? closePanel() : openPanel();
     });
   }
+  mobileAirCloseBtn?.addEventListener("click", closePanel);
+  mobileAirBlur?.addEventListener("click", closePanel);
 
-  if (mobileAirCloseBtn) {
-    mobileAirCloseBtn.addEventListener("click", closePanel);
-  }
+  /**********************
+   * 3) 滚动时隐藏原导航，显示新导航(逻辑示例)
+   **********************/
+  window.addEventListener("scroll", function() {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const isMobile = window.innerWidth <= 768;
 
-  if (mobileAirBlur) {
-    mobileAirBlur.addEventListener("click", closePanel);
-  }
+    if (!isMobile) {
+      // 桌面端逻辑
+      if (scrollTop > 400) {
+        // 隐藏原导航
+        mainHeader.style.transform = "translateY(-100%)";
+        mainHeader.style.opacity   = "0";
+        // 显示 Mefan Air (桌面)
+        mefanAirNav?.classList.add("active");
+      } else {
+        // 恢复原导航
+        mainHeader.style.transform = "translateY(0)";
+        mainHeader.style.opacity   = "1";
+        // 隐藏 Mefan Air
+        mefanAirNav?.classList.remove("active");
+      }
+    } else {
+      // 移动端逻辑
+      if (scrollTop > 200) {
+        mainHeader.style.transform = "translateY(-100%)";
+        mainHeader.style.opacity   = "0";
+        mobileAirNav?.classList.add("active");
+      } else {
+        mainHeader.style.transform = "translateY(0)";
+        mainHeader.style.opacity   = "1";
+        mobileAirNav?.classList.remove("active");
+      }
+    }
+  });
 
-  /************************************************************
-   * 4) 保留其它原有脚本逻辑(搜索功能、二级面板)保持不变
-   ************************************************************/
+  // 其余搜索功能等脚本保持不变
 });
 </script>
+
 
 
 
