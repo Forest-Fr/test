@@ -45,7 +45,19 @@
         font-weight: 600;
     }
 
+/* 滚动后背景变白 */
+.header-gradient.nav-white {
+    background: white !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
+/* 确保 `desktop-nav` 仍然可见 */
+.desktop-nav .nav-list > li > a {
+    text-decoration: none;
+    color: #333; /* 保持可见 */
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
    /* 🔵 滚动后变白 */
     .scrolled .header-gradient {
       background: white;
@@ -1544,31 +1556,19 @@ list-style: none;
 
   <!-- -------------------- 独立运行的其他脚本 -------------------- -->
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // 滚动时改变导航栏背景
-      window.addEventListener("scroll", function () {
-        const header = document.getElementById("mainHeader");
-        if (window.scrollY > 50) {
-          header.classList.add("scrolled");
+    document.addEventListener("DOMContentLoaded", function() {
+    const mainHeader = document.getElementById("mainHeader");
+    const scrollThreshold = 200; // 滚动多少 px 触发导航变化
+
+    window.addEventListener("scroll", function() {
+        if (window.scrollY > scrollThreshold) {
+            mainHeader.classList.add("nav-white");
         } else {
-          header.classList.remove("scrolled");
+            mainHeader.classList.remove("nav-white");
         }
-      });
-
-      // 滚动时触发动画
-      const products = document.querySelectorAll(".section1-product");
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.style.animationDelay = "0.3s";
-            entry.target.style.opacity = "1";
-            entry.target.style.transform = "translateY(0)";
-          }
-        });
-      }, { threshold: 0.3 });
-
-      products.forEach(product => observer.observe(product));
     });
+});
+
   </script>
 
   document.addEventListener("DOMContentLoaded", function () {
