@@ -65,28 +65,26 @@
       </ul>
     </nav>
   </header>
-     <!-- ========== 新增：横幅 Banner ========== -->
+    <!-- ========== 横幅 Banner（整体下移 40px） ========== -->
   <div class="banner-promo">
     Buy iPad Air starting at $549 with education savings:
     <a href="sample.html" target="_blank">Shop &gt;</a>
   </div>
 
-  <!-- ========== 新导航 (模拟苹果风格) ========== -->
-  <nav class="mefan-air-nav" id="section1Nav">
+  <!-- ========== 新导航：Mefan Air（滚动 400px 后出现） ========== -->
+  <nav class="mefan-air-nav" id="mefanAirNav">
+    <!-- 左侧标题（模拟苹果“iPad Air”样式） -->
     <div class="mefan-air-title">Mefan Air</div>
+    <!-- 右侧菜单：Overview, Tech Specs, Compare, Why mefan, Buy -->
     <ul class="mefan-air-list">
-      <li><a href="javascript:void(0);">Overview</a></li>
-      <li><a href="javascript:void(0);">Tech Specs</a></li>
-      <li><a href="javascript:void(0);">Compare</a></li>
-      <li><a href="javascript:void(0);">Why Mefan</a></li>
-      <!-- 点击 Buy 跳转到 sample.html -->
+      <!-- 点击后都跳转 sample.html，新窗口打开 -->
+      <li><a href="sample.html" target="_blank">Overview</a></li>
+      <li><a href="sample.html" target="_blank">Tech Specs</a></li>
+      <li><a href="sample.html" target="_blank">Compare</a></li>
+      <li><a href="sample.html" target="_blank">Why mefan</a></li>
       <li><a href="sample.html" target="_blank">Buy</a></li>
     </ul>
   </nav>
-  <!-- 这里放置页面主体内容（示例） -->
-  <main style="height: 2000px; padding: 20px;">
-    <h1>Welcome to Mefan</h1>
-    <p>向下滚动 400px 后可以看到导航切换效果。</p>
   </main>
 
   <!-- 新增：移动端二级菜单面板（仅手机端有效） -->
@@ -571,23 +569,22 @@
 
   <!-- -------------------- 独立运行的其他脚本 -------------------- -->
 
-<script>
-<!-- ========== 重点：控制导航切换的脚本 ========== -->
+ <!-- ========== 控制导航切换的脚本 ========== -->
   <script>
   document.addEventListener("DOMContentLoaded", function() {
-    const mainHeader  = document.getElementById("mainHeader");    // 主导航
-    const mefanAirNav = document.getElementById("section1Nav");  // 新导航
+    const mainHeader  = document.getElementById("mainHeader");   // 主导航
+    const mefanAirNav = document.getElementById("mefanAirNav");  // 新导航
 
     // 监听滚动事件
     window.addEventListener("scroll", function() {
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       if (scrollTop > 400) {
-        // 超过 400px，隐藏主导航，显示新导航
+        // 超过 400px，隐藏主导航，显示 Mefan Air 导航
         mainHeader.style.transform = "translateY(-100%)";
         mainHeader.style.opacity   = "0";
         mefanAirNav.classList.add("active");
       } else {
-        // 小于等于 400px，显示主导航，隐藏新导航
+        // 小于等于 400px，显示主导航，隐藏 Mefan Air 导航
         mainHeader.style.transform = "translateY(0)";
         mainHeader.style.opacity   = "1";
         mefanAirNav.classList.remove("active");
