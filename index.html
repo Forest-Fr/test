@@ -14,17 +14,31 @@
   <!-- 内联 CSS（确保 MeFan UI 完全仿照 iPad Air） -->
   <style>
     /* 确保 Banner 背景颜色与 iPad Air 页面一致 */
-    .banner-container {
-        width: 100vw;
-        background-color: #f5f5f7; /* iPad Air 页面风格 */
-        text-align: center;
-        padding: 15px 0;
-        font-size: 16px;
-        font-weight: 500;
-        position: relative;
-        top: 40px; /* 向下移动 40px 适配导航栏 */
-    }
-
+   /* Banner 样式优化 */
+.banner-container {
+    width: 100vw;
+    background-color: #f5f5f7;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 16px;
+    font-weight: 500;
+    position: relative;
+    top: 40px;
+}
+/* Shop 按钮样式 */
+.banner-shop-link {
+    color: #0071e3;
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+}
+    /* 大于号 `>` 样式 */
+.banner-shop-link .arrow {
+    font-size: 16px;
+    margin-left: 4px;
+}
     .banner-container a {
         color: #0071e3;
         text-decoration: none;
@@ -843,10 +857,14 @@ list-style: none;
 </head>
 <body>
 
-  <!-- Banner（确保与 iPad Air 设计一致） -->
-  <div class="banner-container">
-    Buy MeFan Air starting at $549 with education savings. △ <a href="#">Shop</a>
-  </div>
+<!-- Banner（优化后） -->
+<div class="banner-container">
+  Buy MeFan Air starting at $549 with education savings.  
+  <a href="sample.html" target="_blank" class="banner-shop-link">
+    Shop <span class="arrow">&gt;</span>
+  </a>
+</div>
+
 
   <!-- 顶部：淡色背景/渐变（默认示例：浅蓝渐变） -->
   <header class="header-gradient" id="mainHeader">
