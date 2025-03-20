@@ -1571,32 +1571,36 @@ list-style: none;
     });
   </script>
 
- <script>
   document.addEventListener("DOMContentLoaded", function () {
     const mainHeader = document.getElementById("mainHeader");  // 原始导航
     const scrollNav = document.getElementById("scrollNav");    // 滚动后的导航
-    const desktopNav = document.querySelector(".desktop-nav"); // 桌面导航栏
-    let lastScrollTop = 0;  // 记录上次滚动位置
+    const desktopNav = document.querySelector(".desktop-nav"); // 桌面导航
+    let lastScrollTop = 0;
 
-    // 确保初始状态
+    // 初始状态
+    scrollNav.style.opacity = "0";
     scrollNav.style.display = "none";
 
     window.addEventListener("scroll", function () {
       let currentScroll = window.scrollY;
 
       if (currentScroll > 120) { 
-        // 超过 120px，显示滚动导航，隐藏原导航
-        mainHeader.classList.add("scrolled");
+        // 滚动超过 120px，渐入 `scrollNav`
         scrollNav.style.display = "flex";
-        desktopNav.style.opacity = "0";  // 让主导航渐隐（避免闪烁）
+        setTimeout(() => { scrollNav.style.opacity = "1"; }, 50);
+        
+        // `desktop-nav` 渐隐，但不完全 `display: none`
+        desktopNav.style.opacity = "0";
       } else {
-        // 回到顶部，恢复原始导航
-        mainHeader.classList.remove("scrolled");
-        scrollNav.style.display = "none";
-        desktopNav.style.opacity = "1";  // 让主导航渐显
+        // 回到顶部，渐出 `scrollNav`
+        scrollNav.style.opacity = "0";
+        setTimeout(() => { scrollNav.style.display = "none"; }, 300);
+
+        // `desktop-nav` 渐入
+        desktopNav.style.opacity = "1";
       }
 
-      lastScrollTop = currentScroll; // 更新滚动位置
+      lastScrollTop = currentScroll;
     });
   });
 </script>
