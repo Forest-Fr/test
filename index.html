@@ -15,6 +15,7 @@
   <style>
     /* 确保 Banner 背景颜色与 iPad Air 页面一致 */
    /* Banner 样式优化 */
+/* 🔥 Banner 样式优化 */
 .banner-container {
     width: 100vw;
     background-color: #f5f5f7;
@@ -22,9 +23,9 @@
     padding: 15px 0;
     font-size: 16px;
     font-weight: 500;
-    position: relative;
-    top: 40px;
+    position: static;  /* 避免影响滚动 */
 }
+
 /* Shop 按钮样式 */
 .banner-shop-link {
     color: #0071e3;
@@ -34,17 +35,12 @@
     display: inline-flex;
     align-items: center;
 }
-    /* 大于号 `>` 样式 */
 .banner-shop-link .arrow {
     font-size: 16px;
     margin-left: 4px;
 }
-    .banner-container a {
-        color: #0071e3;
-        text-decoration: none;
-        font-weight: 600;
-    }
-/* 滚动后显示的新导航 */
+
+/* 🟢 滚动后显示的 MeFan Air 导航 */
 #scrollNav {
     position: fixed;
     top: 0;
@@ -52,11 +48,12 @@
     width: 100%;
     background: #fff;
     z-index: 3000;
-    padding: 10px 20px;
-    display: none; /* 默认隐藏 */
+    padding: 12px 20px;  /* 增加填充，使其匹配原导航 */
+    display: none;  /* 默认隐藏，滚动 200px 后显示 */
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    height: 60px;  /* 统一高度 */
 }
 #scrollNav .nav-title {
     font-size: 1.2rem;
@@ -64,7 +61,7 @@
 }
 #scrollNav .nav-links {
     display: flex;
-    gap: 20px;
+    gap: 30px;
 }
 #scrollNav .nav-links a {
     text-decoration: none;
@@ -74,14 +71,66 @@
 #scrollNav .buy-btn {
     background: blue;
     color: white;
-    padding: 5px 12px;
+    padding: 8px 16px;
     border-radius: 5px;
+    font-size: 14px;
 }
 
-/* 滚动后背景变白 */
+/* 🟢 滚动后导航栏样式 */
+.scrolled .header-gradient {
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 🟢 滚动后，显示新导航 & 隐藏原导航 */
+.scrolled #scrollNav {
+    display: flex !important;
+}
+.scrolled .desktop-nav {
+    display: none !important;
+}
+
+/* 🔵 主要导航栏 (未滚动前可见) */
+.header-gradient {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 3000;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to right, #DEEFFF, #B2D8FF);
+    transition: background 0.2s ease;
+    height: 60px;  /* 统一高度 */
+}
 .header-gradient.nav-white {
     background: white !important;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 🟢 确保 `.desktop-nav` 在滚动前可见 */
+.desktop-nav {
+    display: flex;
+    align-items: center;
+}
+
+/* 🟢 滚动后才显示的 MeFan Air 导航 */
+.scrolled .nav-center {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    transition: all 0.3s ease-in-out;
 }
 
 /* 确保导航在不同状态下可见 */
@@ -747,17 +796,20 @@ body.search-open .desktop-nav {
 }
 
 /* 或者，也可以让 #mobileNav 保持原样，只是 search-panel 悬浮于其上 */
+/* 🔵 主要导航栏 (未滚动前可见) */
 .header-gradient {
-position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      z-index: 3000;原没有blur之前是1000
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: linear-gradient(to right, #DEEFFF, #B2D8FF);
-      transition: background 0.2s ease;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 3000;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to right, #DEEFFF, #B2D8FF);
+    transition: background 0.2s ease;
+    height: 60px;  /* 统一高度 */
     }
 /* 当鼠标进入时，将导航栏背景改为白色 */
  .header-gradient.nav-white {
@@ -1637,24 +1689,19 @@ list-style: none;
   <!-- -------------------- 独立运行的其他脚本 -------------------- -->
 
 <script>
-
 document.addEventListener("DOMContentLoaded", function () {
-    const mainHeader = document.getElementById("mainHeader");
-    const desktopNav = document.querySelector(".desktop-nav");
-    const scrollNav = document.getElementById("scrollNav");
+    const mainHeader = document.getElementById("mainHeader"); // 原始导航
+    const scrollNav = document.getElementById("scrollNav"); // 滚动后显示的新导航
 
     window.addEventListener("scroll", function () {
         if (window.scrollY > 200) {
-            scrollNav.style.display = "flex";  // 显示 MeFan Air 导航
-            desktopNav.style.opacity = "0";    // 让原导航透明
-            mainHeader.classList.add("nav-white"); // 变白
+            document.body.classList.add("scrolled");  // 触发滚动效果
         } else {
-            scrollNav.style.display = "none";  // 隐藏 MeFan Air 导航
-            desktopNav.style.opacity = "1";    // 让原导航恢复可见
-            mainHeader.classList.remove("nav-white"); // 恢复背景
+            document.body.classList.remove("scrolled"); // 还原默认状态
         }
     });
 });
+
 </script>
 
 
