@@ -75,6 +75,84 @@ body {
 }
 
 
+/* ========== 横幅 Banner ========== */
+.banner-promo {
+  background-color: #EFF7FF; /* 浅蓝背景，可自行调整 */
+  border-top: 1px solid #CBD5E1;    /* 上边线 */
+  border-bottom: 1px solid #CBD5E1; /* 下边线 */
+  padding: 10px 0;
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+}
+.banner-promo a {
+  color: #0071e3;      /* 苹果官网常见蓝色 */
+  text-decoration: none;
+  font-weight: 500;
+}
+.banner-promo a:hover {
+  text-decoration: underline;
+}
+
+/* ========== 新导航 (模拟苹果风格) ========== */
+.mefan-air-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 4000;  /* 盖住主导航 */
+  background: #f8f8f8;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  /* 初始隐藏（上移 + 透明） */
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* 新导航激活态：向下移入、完全可见 */
+.mefan-air-nav.active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* 左侧标题（如 iPad Air） */
+.mefan-air-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  padding: 15px 0;
+}
+
+/* 右侧菜单列表 */
+.mefan-air-list {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+.mefan-air-list li a {
+  text-decoration: none;
+  color: #0071e3;
+  font-weight: 500;
+  padding: 15px 0;
+}
+.mefan-air-list li a:hover {
+  text-decoration: underline;
+}
+
+/* ========== 其余原有或移动端样式省略 ========== */
+
+
+
+
+
+
+
+
+
 
 
 
