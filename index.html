@@ -31,15 +31,7 @@
         font-weight: 600;
     }
 
-    /* 头部导航栏 */
-    .header-gradient {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        background: transparent;
-        transition: background 0.3s ease-in-out;
-        z-index: 1000;
-    }
+
 
     /* 滚动后变白 */
     .scrolled .header-gradient {
@@ -102,6 +94,751 @@
             width: 90%;
         }
     }
+    /* 新增：移动端二级菜单（多级导航）的样式 */
+   .menu-panel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      z-index: 9999;
+      display: none; /* 默认隐藏 */
+      overflow-y: auto;
+    }
+    .menu-panel.active {
+      display: block;
+    }
+    .menu-panel--level2 {
+      /* 可加入动画过渡效果 */
+      transition: transform 0.3s ease;
+    }
+    .menu-panel__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #ccc;
+    }
+    .menu-panel__back {
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .menu-panel__title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .menu-panel__close {
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .menu-panel__content {
+      padding: 15px;
+    }
+    .menu-panel__content ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .menu-panel__content ul li {
+      margin-bottom: 10px;
+    }
+    .menu-panel__content ul li a {
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+    }
+    /* 新增：产品分组样式 */
+    .menu-panel__group-title {
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin: 20px 15px 10px;
+      color: #333;
+    }
+    .menu-panel__group-list {
+      list-style: none;
+      margin: 0;
+      padding-left: 15px;
+    }
+    .menu-panel__group-list li {
+      margin-bottom: 10px;
+    }
+/* 全屏阴影层：鼠标移出面板后触发关闭 */
+.hover1-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.05); /* 浅阴影 */
+  display: none; /* 默认隐藏 */
+  z-index: 2997; /* 在模糊层之下 */
+}
+
+/* 模糊背景层 */
+.blur1-bg {
+  position: fixed;
+  top: 60px; /* 导航高度 */
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 60px);
+  background: rgba(255, 255, 255, 0.6); /* 半透明 */
+  backdrop-filter: blur(20px); /* 模糊 */
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 2998; 
+}
+
+/* 悬停面板: 固定在导航下, 宽100%, 背景白 */
+.hover1-content {
+  position: fixed;   /* 也可用 absolute，看你需求 */
+  top: 50px;         /* 与导航对齐 */
+  left: 0;
+  width: 100%;
+  background: #fff;
+  display: none;
+  z-index: 2999;     /* 最前 */
+  padding: 20px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  opacity: 0;        /* 初始透明 */
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* active 状态下，显示 overlay、blurBg、content */
+.hover1-overlay.active {
+  display: block;
+}
+.blur1-bg.active {
+  display: block;
+  opacity: 1;
+}
+.hover1-content.active {
+  display: block;
+  opacity: 1;
+}
+
+/* 每个具体面板默认隐藏 */
+.hover1-section {
+  display: none;
+  /* 若想苹果式多列，可用 display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; 等 */
+}
+.hover1-section.active {
+  display: block; /* 仅当前选中面板显示 */
+}
+
+/* 样式示例 */
+.hover1-section h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+.hover1-section p {
+  margin: 0 0 1rem;
+}
+/* ========== Home1 区横向布局 ========== */
+.home1-horizontal-row {
+  display: flex;
+  gap: 40px;                /* 列间距 */
+  align-items: flex-start;  /* 顶部对齐 */
+  margin-top: 10px;         /* 让其和上面内容稍有间隔 */
+}
+.home1-intro-col {
+  flex: 1;
+  /* 你可酌情添加min-width, padding, etc. */
+}
+.home1-links-col {
+  flex: 1;
+}
+/* 你可给 a 链接等做更多样式 */
+
+/* 让三列(Products-intro, Premium, Classic)水平横排 */
+.products-horizontal-row {
+  display: flex;    /* 横向弹性布局 */
+  gap: 40px;        /* 列间距 */
+  align-items: flex-start;
+  margin-top: 10px; /* 与悬停面板上方留些空隙 */
+}
+
+/* 第1列：原有大标题 & MeFan Lite/X1/Pro 列表 */
+.products-intro-col {
+  flex: 1; 
+  min-width: 200px;
+}
+/* 父容器：使 Premium 与 Classic 横向排列 */ 未用
+.premium-classic-row {
+  display: flex;
+  gap: 40px;        /* 列间距 */
+  margin-top: 20px; /* 与上面原有列表留些空隙 */
+}
+/* 第2列：Premium */
+.premium1-column {
+  flex: 1; 
+  min-width: 180px;
+}
+
+/* 第3列：Classic */
+.classic1-column {
+  flex: 1;
+  min-width: 180px;
+}
+
+/* 标题样式，可自定义 */
+.premium1-title,
+.classic1-title {
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: #666; /* 比如灰色小标题 */
+}
+
+/* 列表样式 */
+.premium1-list,
+.classic1-list {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+.premium1-list li,
+.classic1-list li {
+  margin-bottom: 6px;
+}
+.premium1-list li a,
+.classic1-list li a {
+  text-decoration: none;
+  color: #333;
+}
+
+    /* 标题：premium1- & classic1- */另外一种排列未用上
+    .premium1-title,
+    .classic1-title {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 10px;
+    }
+    /* 下面的产品列表: p1, p2, p3 / c1, c2, c3 */
+    .premium1-list,
+    .classic1-list {
+      margin: 0; 
+      padding-left: 20px; /* 或者无序列表样式 */
+    }
+    .premium1-list li,
+    .classic1-list li {
+      margin-bottom: 6px;
+    }
+    .premium1-list li a,
+    .classic1-list li a {
+      text-decoration: none;
+      color: #333;
+    }
+/* ========== About 区横向布局 ========== */
+.about1-horizontal-row {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+.about1-intro-col {
+  flex: 1;
+}
+.about1-links-col {
+  flex: 1;
+}
+
+/* ========== Contact 区横向布局 ========== */
+.contact1-horizontal-row {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+.contact1-intro-col {
+  flex: 1;
+}
+.contact1-links-col {
+  flex: 1;
+}
+
+/* ========== 搜索功能布局 ========== */
+/* 搜索区域（桌面） */
+.search-wrap {
+  position: relative;
+  display: inline-block;
+}
+/* 搜索图标 */
+.search-icon {
+    font-size: 1.1rem;
+  cursor: pointer;
+}
+.search-form {
+  position: absolute;
+  top: 0;
+  left: 30px; /* 可根据需要微调 */
+  display: none;
+}
+.search-input {
+  padding: 6px 10px;
+  font-size: 1rem;
+  width: 200px; /* 搜索框宽度，可自行调整 */
+  outline: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+/* 搜索面板默认隐藏 */
+.search-panel {
+  display: none;
+  position: fixed;
+   top: 0; /* 改为0，让其覆盖导航 */另外显示导航的为/* 与 header 高度相匹配 */
+  left: 0;
+  width: 100%;
+   height: 100%; /* 全屏高度 */右边不是全屏高度calc(100% - 60px);
+  background: #fff;
+  padding: 80px 20px 40px; /* 上面留80px，防止关闭按钮或内容挤住 */之前的是40px 20px;
+  box-sizing: border-box;
+  z-index: 5000;原3000
+  overflow-y: auto;
+}
+body.search-open .search-panel {
+  display: block;
+}
+/* 大标题 (可编辑) */
+.search-title {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+outline: none;
+不用margin-top80px/* 留出更多空间，以防被按钮遮盖 */
+  /* 占位符：先用 data-placeholder + 伪元素 */
+  不用positionrelative
+}
+.search-title[data-placeholder]:empty::before {
+  content: attr(data-placeholder);
+  color: #999;
+}
+/* 放大镜图标的样式，可调大或更换图片 */
+.big-icon {
+  font-size: 2rem;
+  margin-right: 10px;
+}
+.search-results {
+  margin-top: 30px;
+}
+.search-item {
+  padding: 8px 0;
+  cursor: pointer;
+  color: #333;
+  font-size: 1rem;
+}
+.search-item a {
+  color: #333;
+  text-decoration: none;
+  font-size: 1rem;
+}
+.search-item a:hover {
+  text-decoration: underline;
+}
+.search-item:hover {
+  background-color: #eee;
+}
+.no-result {
+  color: #999;
+  font-style: italic;
+  padding: 8px 0;
+}
+/* 标题样式 */
+.search-panel h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+
+/* 关闭按钮(右上角) */
+.search-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Quick Links 块 */
+.quick-links {
+  margin-top: 20px;
+}
+.quick-links p {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.quick-links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.quick-links li {
+  margin: 5px 0;
+}
+.quick-links a {
+  text-decoration: none;
+  color: #007BFF;
+  font-size: 1rem;
+}
+/* 快速链接 */
+ .search-quick-links p {
+  font-weight: bold;
+}
+.search-quick-links ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+.search-quick-links li {
+  margin-bottom: 8px;
+}
+.search-quick-links a {
+  color: #333;
+  text-decoration: none;
+}
+/* ============ 当 body.search-open 时显示搜索面板，并可隐藏其他内容 ============ */
+body.search-open .search-panel {
+  display: block;
+}
+
+/* 若需要隐藏移动端或桌面导航，可在 search-open 时隐藏它们 */
+body.search-open #mobileNav,
+body.search-open .desktop-nav {
+  display: none;
+}
+
+/* 或者，也可以让 #mobileNav 保持原样，只是 search-panel 悬浮于其上 */
+.header-gradient {
+position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      z-index: 3000;原没有blur之前是1000
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(to right, #DEEFFF, #B2D8FF);
+      transition: background 0.2s ease;
+    }
+/* 当鼠标进入时，将导航栏背景改为白色 */
+ .header-gradient.nav-white {
+      background: #fff !important;
+    }
+/* LOGO */
+.logo-img {
+  width: 60px;
+  margin-right: 20px;
+}
+/* 居中导航容器 */
+.nav-center {
+  flex: 1; 
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 内容居中 */
+}
+/* 桌面端导航 */
+.desktop-nav {
+  flex: 1; /* 占据剩余空间以实现居中 */
+}
+/* 桌面导航列表 */
+.desktop-nav .nav-list {
+list-style: none;
+      display: flex;
+      gap: 20px;
+      margin: 0; padding: 0;
+    }
+.desktop-nav .nav-list > li > a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 600;
+    }
+.desktop-nav .nav-list li a {
+  text-decoration: none;
+  color: #333;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* 桌面导航菜单 */
+.desktop-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex; 
+  align-items: center; 
+}
+.desktop-nav ul li {
+  margin-right: 20px;
+}
+.desktop-nav ul li a {
+  text-decoration: none;
+  color: #fff; /* 或自己想要的颜色 */
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+/* 搜索图标（桌面右侧） */
+.search-icon {
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-left: 20px;
+}
+/* ========== 响应式设置 ========== */
+@media (min-width: 769px) {
+  .menu-icon {
+    display: none;
+  }
+  .header-gradient nav {
+    display: flex;
+    position: static;
+    height: auto;
+    background: none;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .header-gradient nav ul {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+  .close-btn {
+    display: none;
+  }
+}
+@media (max-width: 768px) {
+  .menu-icon {
+    display: flex;
+  }
+  .header-gradient nav {
+    display: none;
+  }
+  .header-gradient nav.active {
+    display: flex;
+  }
+  .header-gradient nav ul {
+    flex-direction: column;
+  }
+  .close-btn {
+    display: flex;
+    z-index: 2001;
+  }
+}
+
+
+
+
+/* ========== 汉堡菜单按钮 ========== */
+/* 汉堡菜单图标 */
+.menu-icon {
+  margin-left: auto; /* 在桌面端推到最右 */
+  cursor: pointer;
+}
+.menu-icon .bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  margin: 4px;
+  background-color: #fff;
+}
+/* 移动端图标容器 */
+.mobile-icons {
+  display: none; /* 默认在桌面端隐藏 */
+  margin-left: auto;
+  position: relative; /* 便于定位图标 */
+}
+
+/* 移动端搜索图标 */
+.mobile-search-icon {
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-right: 30px; /* 与汉堡间距 */
+}
+
+/* 汉堡菜单：三条竖线 */
+.vertical-hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;  /* 宽度 */
+  height: 18px; /* 高度 */
+  cursor: pointer;
+}
+.vertical-hamburger .v-bar {
+  height: 2px;
+  background: #333;
+}
+.v-bar {
+  width: 2px;
+  height: 6px;
+  background: #333;
+}
+
+/* 移动端导航（默认隐藏） */
+#mobileNav {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(255,255,255,0.95);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+}
+#mobileNav ul {
+  list-style: none;
+  margin: 0; 
+  padding: 0;
+}
+#mobileNav ul li {
+  margin: 15px 0;
+}
+#mobileNav ul li a {
+  text-decoration: none;
+  font-size: 1.2rem;
+  color: #333;
+  font-weight: bold;
+}
+.close-btn {
+  position: absolute;
+  top: 20px; right: 20px;
+  font-size: 30px;
+  cursor: pointer;
+}
+/* 响应式: 小屏显示 mobile-icons, 隐藏 desktop-nav */
+@media (max-width: 1024px) {
+  .desktop-nav {
+    display: none;
+  }
+  .search-icon {
+    display: none; /* 隐藏桌面搜索图标 */
+  }
+  .mobile-icons {
+    display: flex;
+  }
+}
+
+/* 当 mobileNav.active 时显示移动菜单 */
+#mobileNav.active {
+  display: flex;
+}
+/* 移动端搜索图标 */
+.mobile-search {
+  font-size: 24px;
+  color: #333;
+  pointer-events: auto; 
+}
+
+/* 关闭按钮 */
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+/* ============ 响应式 ============ */
+@media (max-width: 1024px) {
+  /* 隐藏桌面导航，显示汉堡菜单 */
+  .desktop-nav {
+    display: none;
+  }
+  #mobileNav {
+    display: none; /* 仍然通过脚本里 .active 来切换 */
+  }
+}
+
+/* 当点击汉堡按钮时通过JS加 .active，再让#mobileNav显示 */
+#mobileNav.active {
+  display: flex;
+}
+
+/* 移动端搜索图标位置距离汉堡菜单 30px */
+@media (max-width: 768px) {
+  /* 让移动端 search 与汉堡菜单保持一定间距 */
+  .menu-icon {
+    position: relative;
+  }
+  .mobile-search {
+    position: absolute;
+    left: 30px; 
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+    h1, h2, h3 {
+      margin: 15px 0;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #333;
+    }
+* ========== Footer & 社交媒体 ========== */
+.footer {
+  font-size: 12px;
+ text-align: center;
+  padding: 10px;
+  background-color: #f8f9fa;
+  margin-top: 0;
+}
+.footer .footer-extend {
+  font-size: 12px;
+  color: #6c757d;
+  text-align: center;
+  margin-top: 0;
+ display: block; /* 确保可以正确继承 text-align */
+}
+.footer .footer-extend a {
+  color: inherit; 
+  text-decoration: none;
+  margin: 0 10px;
+}
+.footer .footer-extend a:hover {
+  text-decoration: block;
+}
+
+/* 页脚始终在底部，但不会浮动 */
+.footer-extend {
+  text-align: center;  /* 居中文本 */
+  font-size: 12px;
+  margin-top: 0; /* 去掉上面的间距 */
+}
+.footer-info {
+  display: block; /* 移除 flex，避免影响 text-align */
+  text-align: center; /* 强制文本居中 */
+ font-size: 12px;
+}
+/* 电脑端：社交媒体图标靠右 */
+@media (min-width: 769px) {
+  .social-media {
+    display: flex;
+    justify-content: flex-end; /* 右对齐 */
+    gap: 30px;
+  }
+  justify-content: flex-end;  /* 将社交图标移动到右边 */
+  gap: 30px;
+  margin-top: 20px;
+}
+.social-icon {
+  width: 32px;  /* 适当放大 */
+  height: 32px;
+  display: inline-block; /* 确保图片正常显示 */
+  object-fit: contain; /* 让图片完整显示 */
+  margin: 5px; /* 增加图标之间的间距 */
+}
+@media (max-width: 768px) {
+  .footer-info .social-media {
+    display: flex;
+    justify-content: center; /* 确保居中 */
+    align-items: center;
+    flex-wrap: wrap; /* 防止溢出 */
+    gap: 15px; /* 增加间距 */
+    padding: 10px 0; /* 增加上方和下方的间距 */
+  }
+}
   </style>
 </head>
 <body>
