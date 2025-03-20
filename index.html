@@ -1,694 +1,176 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>Carousel with Alpha Shift</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="scripts.js" defer></script>
-  <script src="scroll.js" defer></script> <!-- 引入优化的滚动脚本 -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="MeFan - 提供高品质无线蓝牙耳机，带给您卓越的音频体验" />
+  <meta name="author" content="MeFan Solutions" />
+  <title>MeFan - 让体验无线自由</title>
+  <link rel="icon" href="MeFan Logo.png" type="image/x-icon"/>
+
+  <!-- 引入字体 -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- 内联 CSS（确保 MeFan UI 完全仿照 iPad Air） -->
   <style>
-    /* ========== 全局基础样式 ========== */
-    body {
-      margin: 0; padding: 0;
-      background: #f0f0f0;
-      font-family: Arial, sans-serif;
-    }
-    h2 { text-align: center; margin: 20px 0; }
-
-    /* ========== 桌面端样式 ========== */
-  .spec1-carousel-container {
-   position: relative;
-    width: 100%;
-    height: 450px; /* Ensure a fixed height for the carousel */
-top:12px;
-    overflow: hidden;
-    margin: auto;
-    display: flex;
-    justify-content: center; /* Ensure horizontal centering */
-    align-items: center; /* Ensure vertical centering */
-    padding: 0 10%; /* Adjust the left and right padding for appropriate image visibility */
-}
-
-.spec1-carousel-track {
-  display: flex; /* Use flex layout */
-    gap: 15px; /* Space between images */
-    transition: transform 0.5s ease-in-out;
-    justify-content: flex-start; /* Ensure that images start from the left */
-}
-
-.spec1-carousel-slide {
-  flex: 0 0 auto;
-  width: 100%;
-  position: relative;
-}
-
-.spec1-carousel-slide.active {
-    opacity: 1;
-}
-
-.spec1-carousel-slide img {
-   width: 100%; /* Ensure the image adapts to the container's width */
-    height: auto; /* Maintain the aspect ratio of the images */
-    display: block;
-    border-radius: 10px;
-}
-/* 覆盖层：绝对定位到轮播项内部，默认隐藏 */
-.spec1-overlay {
-  position: absolute;
-  left: 30px; /* 按钮和文字在左下角 */
-  bottom: 30px;
-  z-index: 200; /* 让其显示在轮播图上层 */
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  opacity: 0; /* 初始状态不可见 */
-  transform: translateY(80px); /* 初始位置往下 80px，模仿 Apple TV 的动画 */
-  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
-}
-
-
-/* 当轮播激活时再让覆盖层显示 */
-.spec1-carousel-slide.active .spec1-overlay {
- opacity: 1; /* 使按钮和文字显示 */
-  transform: translateY(0); /* 让它从下方移动到正常位置 */
-}
-.spec1-text-top, .spec1-text-bottom {
- opacity: 0;
-  transform: translateY(40px); /* 初始位置更低一点 */
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
-}
-/* 文字渐入 */
-.spec1-carousel-slide.active .spec1-text-top,
-.spec1-carousel-slide.active .spec1-text-bottom {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.2s; /* 文字比整体动画稍微慢 0.2s */
-}
-/* 按钮渐入 */
-.spec1-carousel-slide.active .spec1-explore-btn {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.4s; /* 按钮比文字慢 0.4s */
-}
-/* 上行文字，例如 "Stream now" */
-.spec1-text-top {
- font-size: 1.1rem;
-  margin-bottom: 10px;
-}
-
-/* 下行文字，例如 "Sci-Fi · New season" */
-.spec1-text-bottom {
-  font-size: 1rem;
-  margin-bottom: 15px;
-}
-
-/* 按钮样式 */
-.spec1-explore-btn {
- opacity: 0;
-  transform: translateY(60px); /* 初始往下偏移 60px */
-  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
-}
-
-.spec1-explore-btn:hover {
-  background-color: #0056b3;
-}
-
-.spec1-title {
- font-size: 2rem;
-  margin-top: 100px;
-  font-weight: bold;
-}
-/* 控制圆点的显示 */
-.spec1-carousel-dots {
-   display: flex;
-  justify-content: center;
-  position: absolute;
-  bottom: 10px;
-  width: 100%;
-}
-
-.spec1-carousel-dot {
-    width: 10px;
-  height: 10px;
-  background: #ccc;
-  border-radius: 50%;
-  margin: 0 5px;
-  cursor: pointer;
-}
-.spec1-carousel-dot.active {
-  background: #007BFF;
-}
-/* 确保圆点、左右按钮等都位于较低层级 */
-.spec1-carousel-prev,
-.spec1-carousel-next,
-.spec1-carousel-dot {
-    z-index: 50;
-}
-/* 控制桌面端按钮位置 */
-@media (min-width: 1024px) {
-    .spec1-overlay {
-        bottom: 45px; /* 按钮离左下角的距离 */
-    }
-}
-/* For PC: Hide thespec1- previous/next buttons */
-@media (min-width: 1024px) {
-    .spec1-carousel-prev,
-    .spec1-carousel-next {
-        display: none; /* Hide on large screens */
-    }
-
-    .spec1-carousel-dots {
-        display: block; /* Ensure the dots are visible on larger screens */
+    /* 确保 Banner 背景颜色与 iPad Air 页面一致 */
+    .banner-container {
+        width: 100vw;
+        background-color: #f5f5f7; /* iPad Air 页面风格 */
         text-align: center;
-        margin-top: 15px;
+        padding: 15px 0;
+        font-size: 16px;
+        font-weight: 500;
+        position: relative;
+        top: 40px; /* 向下移动 40px 适配导航栏 */
     }
 
-    .spec1-carousel-dot {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        background: #ccc;
-        border-radius: 50%;
-        margin: 0 5px;
-        cursor: pointer;
-        transition: background 0.3s;
+    .banner-container a {
+        color: #0071e3;
+        text-decoration: none;
+        font-weight: 600;
     }
 
-    .spec1-carousel-dot.active {
-        background: #007BFF;
+    /* 头部导航栏 */
+    .header-gradient {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: transparent;
+        transition: background 0.3s ease-in-out;
+        z-index: 1000;
     }
-}
-@media (max-width: 768px) {
-  .spec1-overlay {
-    left: 50%;
-    bottom: 20px;
-    transform: translateX(-50%) translateY(80px);
-    text-align: center;
-    align-items: center;
-  }
 
-  .spec1-text-top, .spec1-text-bottom {
-    text-align: center;
-  }
+    /* 滚动后变白 */
+    .scrolled .header-gradient {
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
 
-  .spec1-explore-btn {
-    margin-top: 10px;
-  }
+    /* 主要内容区域 */
+    .section1-hero {
+        height: 100vh;
+        background: url('MeFan X1.png') center/cover no-repeat;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: #000;
+    }
 
-/* Mobile adjustments */
-/* ===== 移动端：按钮和符号只在小屏时显示 ===== */
-/* 手机端样式：轮播图纵向排列 */
-@media (max-width: 768px) {
-  .spec1-carousel-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
+    .section1-hero h1 {
+        font-size: 4rem;
+        font-weight: bold;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 1.5s ease-in-out forwards;
+    }
 
-  /* 覆盖层的位置（按钮在正中，文字根据按钮位置调整） */
-  .spec1-overlay {
-    position: absolute;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-  }
+    /* 产品展示 */
+    .section1-products {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        padding: 60px 10%;
+    }
 
-  .spec1-title {
-    margin-top: 30px;
-  }
+    .section1-product {
+        width: 45%;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 1.5s ease-in-out forwards;
+    }
 
-  .spec1-explore-btn {
-    position: absolute;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
+    .section1-product img {
+        width: 100%;
+        max-width: 500px;
+        border-radius: 10px;
+    }
 
-  .spec1-text-bottom {
-    margin-top: 15px;
-  }
-}
+    /* 渐入动画 */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
+    /* 响应式优化 */
+    @media (max-width: 768px) {
+        .section1-product {
+            width: 90%;
+        }
+    }
   </style>
 </head>
 <body>
-  <h2>Carousel with Alpha Shift</h2>
 
-div class="spec1-carousel-container">
-    <button class="spec1-carousel-prev">&lt;</button>
-    <div class="spec1-carousel-track">
-      <div class="spec1-carousel-slide">
-      <a href="product-lite.html"><img src="MeFan Lite.png" alt="MeFan Lite"></a>
-      <div class="spec1-overlay">
-        <div class="spec1-text-bottom">New season.</div>
-        <button class="spec1-explore-btn">Explore now</button>
-        <div class="spec1-title">Lite</div>
-      </div>
-    </div>
-
-    <div class="spec1-carousel-slide">
-      <a href="product-x1.html"><img src="MeFan X1.png" alt="MeFan X1"></a>
-      <div class="spec1-overlay">
-        <div class="spec1-text-bottom">New season.</div>
-        <button class="spec1-explore-btn">Explore now</button>
-        <div class="spec1-title">X1</div>
-      </div>
-    </div>
-
-    <div class="spec1-carousel-slide">
-      <a href="product-pro.html"><img src="MeFan Pro.png" alt="MeFan Pro"></a>
-      <div class="spec1-overlay">
-        <div class="spec1-text-bottom">New season.</div>
-        <button class="spec1-explore-btn">Explore now</button>
-        <div class="spec1-title">Pro</div>
-      </div>
-    </div>
-
-    <div class="spec1-carousel-slide">
-      <a href="product-lite.html"><img src="MeFan Lite.png" alt="MeFan Lite"></a>
-      <div class="spec1-overlay">
-        <div class="spec1-text-bottom">New season.</div>
-        <button class="spec1-explore-btn">Explore now</button>
-        <div class="spec1-title">Lite</div>
-      </div>
-    </div>
+  <!-- Banner（确保与 iPad Air 设计一致） -->
+  <div class="banner-container">
+    Buy MeFan Air starting at $549 with education savings. △ <a href="#">Shop</a>
   </div>
-  <button class="spec1-carousel-next">&gt;</button>
-</div>
 
-<!-- 小圆点单独放到一个新的 div 中 -->
-<div class="spec1-carousel-dots-container">
-  <div class="spec1-carousel-dots">
-    <span class="spec1-carousel-dot"></span>
-    <span class="spec1-carousel-dot"></span>
-    <span class="spec1-carousel-dot"></span>
-  </div>
-</div>
-</section>
+  <!-- 头部导航 -->
+  <header class="header-gradient" id="mainHeader">
+    <img src="MeFan Logo.png" alt="MeFan Logo" class="logo-img" />
+    <nav class="desktop-nav">
+      <ul class="nav-list">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
 
+  <!-- 主视觉区 -->
+  <section class="section1-hero">
+    <h1>MeFan Air - 轻薄便携，强大性能</h1>
+  </section>
 
-<script>
-.spec1-carousel-container {
-   position: relative;
-    width: 100%;
-    height: 450px; /* Ensure a fixed height for the carousel */
-top:12px;
-    overflow: hidden;
-    margin: auto;
-    display: flex;
-    justify-content: center; /* Ensure horizontal centering */
-    align-items: center; /* Ensure vertical centering */
-    padding: 0 10%; /* Adjust the left and right padding for appropriate image visibility */
-}
-
-.spec1-carousel-track {
-  display: flex; /* Use flex layout */
-    gap: 15px; /* Space between images */
-    transition: transform 0.5s ease-in-out;
-    justify-content: flex-start; /* Ensure that images start from the left */
-}
-
-.spec1-carousel-slide {
-  flex: 0 0 auto;
-  width: 100%;
-  position: relative;
-}
-
-.spec1-carousel-slide.active {
-    opacity: 1;
-}
-
-.spec1-carousel-slide img {
-   width: 100%; /* Ensure the image adapts to the container's width */
-    height: auto; /* Maintain the aspect ratio of the images */
-    display: block;
-    border-radius: 10px;
-}
-/* 覆盖层：绝对定位到轮播项内部，默认隐藏 */
-.spec1-overlay {
-  position: absolute;
-  left: 30px; /* 按钮和文字在左下角 */
-  bottom: 30px;
-  z-index: 200; /* 让其显示在轮播图上层 */
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  opacity: 0; /* 初始状态不可见 */
-  transform: translateY(80px); /* 初始位置往下 80px，模仿 Apple TV 的动画 */
-  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
-}
-
-
-/* 当轮播激活时再让覆盖层显示 */
-.spec1-carousel-slide.active .spec1-overlay {
- opacity: 1; /* 使按钮和文字显示 */
-  transform: translateY(0); /* 让它从下方移动到正常位置 */
-}
-.spec1-text-top, .spec1-text-bottom {
- opacity: 0;
-  transform: translateY(40px); /* 初始位置更低一点 */
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
-}
-/* 文字渐入 */
-.spec1-carousel-slide.active .spec1-text-top,
-.spec1-carousel-slide.active .spec1-text-bottom {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.2s; /* 文字比整体动画稍微慢 0.2s */
-}
-/* 按钮渐入 */
-.spec1-carousel-slide.active .spec1-explore-btn {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.4s; /* 按钮比文字慢 0.4s */
-}
-/* 上行文字，例如 "Stream now" */
-.spec1-text-top {
- font-size: 1.1rem;
-  margin-bottom: 10px;
-}
-
-/* 下行文字，例如 "Sci-Fi · New season" */
-.spec1-text-bottom {
-  font-size: 1rem;
-  margin-bottom: 15px;
-}
-
-/* 按钮样式 */
-.spec1-explore-btn {
- opacity: 0;
-  transform: translateY(60px); /* 初始往下偏移 60px */
-  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
-}
-
-.spec1-explore-btn:hover {
-  background-color: #0056b3;
-}
-
-.spec1-title {
- font-size: 2rem;
-  margin-top: 100px;
-  font-weight: bold;
-}
-/* 控制圆点的显示 */
-.spec1-carousel-dots {
-   display: flex;
-  justify-content: center;
-  position: absolute;
-  bottom: 10px;
-  width: 100%;
-}
-
-.spec1-carousel-dot {
-    width: 10px;
-  height: 10px;
-  background: #ccc;
-  border-radius: 50%;
-  margin: 0 5px;
-  cursor: pointer;
-}
-.spec1-carousel-dot.active {
-  background: #007BFF;
-}
-/* 确保圆点、左右按钮等都位于较低层级 */
-.spec1-carousel-prev,
-.spec1-carousel-next,
-.spec1-carousel-dot {
-    z-index: 50;
-}
-/* 控制桌面端按钮位置 */
-@media (min-width: 1024px) {
-    .spec1-overlay {
-        bottom: 45px; /* 按钮离左下角的距离 */
-    }
-}
-/* For PC: Hide thespec1- previous/next buttons */
-@media (min-width: 1024px) {
-    .spec1-carousel-prev,
-    .spec1-carousel-next {
-        display: none; /* Hide on large screens */
-    }
-
-    .spec1-carousel-dots {
-        display: block; /* Ensure the dots are visible on larger screens */
-        text-align: center;
-        margin-top: 15px;
-    }
-
-    .spec1-carousel-dot {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        background: #ccc;
-        border-radius: 50%;
-        margin: 0 5px;
-        cursor: pointer;
-        transition: background 0.3s;
-    }
-
-    .spec1-carousel-dot.active {
-        background: #007BFF;
-    }
-}
-@media (max-width: 768px) {
-  .spec1-overlay {
-    left: 50%;
-    bottom: 20px;
-    transform: translateX(-50%) translateY(80px);
-    text-align: center;
-    align-items: center;
-  }
-
-  .spec1-text-top, .spec1-text-bottom {
-    text-align: center;
-  }
-
-  .spec1-explore-btn {
-    margin-top: 10px;
-  }
-
-/* Mobile adjustments */
-/* ===== 移动端：按钮和符号只在小屏时显示 ===== */
-/* 手机端样式：轮播图纵向排列 */
-@media (max-width: 768px) {
-  .spec1-carousel-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  /* 覆盖层的位置（按钮在正中，文字根据按钮位置调整） */
-  .spec1-overlay {
-    position: absolute;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-  }
-
-  .spec1-title {
-    margin-top: 30px;
-  }
-
-  .spec1-explore-btn {
-    position: absolute;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .spec1-text-bottom {
-    margin-top: 15px;
-  }
-}
-<div class="spec1-carousel-container">
-    <button class="spec1-carousel-prev">&lt;</button>
-    <div class="spec1-carousel-track">
-      <div class="spec1-carousel-slide">
-      <a href="product-lite.html"><img src="MeFan Lite.png" alt="MeFan Lite"></a>
-      <div class="spec1-overlay">
-        <div class="spec1-text-bottom">New season.</div>
-        <button class="spec1-explore-btn">Explore now</button>
-        <div class="spec1-title">Lite</div>
-      </div>
+  <!-- 产品展示 -->
+  <section class="section1-products">
+    <div class="section1-product">
+      <img src="MeFan Pro.png" alt="MeFan Pro">
+      <h2>MeFan Pro</h2>
+      <p>卓越音质，专业级降噪体验</p>
     </div>
-
-    <div class="spec1-carousel-slide">
-      <a href="product-x1.html"><img src="MeFan X1.png" alt="MeFan X1"></a>
-      <div class="spec1-overlay">
-        <div class="spec1-text-bottom">New season.</div>
-        <button class="spec1-explore-btn">Explore now</button>
-        <div class="spec1-title">X1</div>
-      </div>
+    <div class="section1-product">
+      <img src="MeFan Lite.png" alt="MeFan Lite">
+      <h2>MeFan Lite</h2>
+      <p>轻巧便捷，长效续航</p>
     </div>
+  </section>
 
-    <div class="spec1-carousel-slide">
-      <a href="product-pro.html"><img src="MeFan Pro.png" alt="MeFan Pro"></a>
-      <div class="spec1-overlay">
-        <div class="spec1-text-bottom">New season.</div>
-        <button class="spec1-explore-btn">Explore now</button>
-        <div class="spec1-title">Pro</div>
-      </div>
-    </div>
-
-    <div class="spec1-carousel-slide">
-      <a href="product-lite.html"><img src="MeFan Lite.png" alt="MeFan Lite"></a>
-      <div class="spec1-overlay">
-        <div class="spec1-text-bottom">New season.</div>
-        <button class="spec1-explore-btn">Explore now</button>
-        <div class="spec1-title">Lite</div>
-      </div>
-    </div>
-  </div>
-  <button class="spec1-carousel-next">&gt;</button>
-</div>
-
-<!-- 小圆点单独放到一个新的 div 中 -->
-<div class="spec1-carousel-dots-container">
-  <div class="spec1-carousel-dots">
-    <span class="spec1-carousel-dot"></span>
-    <span class="spec1-carousel-dot"></span>
-    <span class="spec1-carousel-dot"></span>
-  </div>
-</div>
-</section>
-
-
+  <!-- JavaScript 内联（独立运行，不影响现有功能） -->
   <script>
-const initSpec1CarouselTrack = () => { 
-    const track = document.querySelector(".spec1-carousel-track");
-    const slides = document.querySelectorAll(".spec1-carousel-slide");
-    const prevBtn = document.querySelector(".spec1-carousel-prev");
-    const nextBtn = document.querySelector(".spec1-carousel-next");
-    const dots = document.querySelectorAll(".spec1-carousel-dot");
-
-
-    if (!track || slides.length === 0 || !dots.length) return;
-
-    let currentIndex = 1; // Start at second image to avoid initial blank space
-    const totalSlides = slides.length;
-    const slideWidth = slides[0].offsetWidth + 15; // Slide width + gap
-
-    const firstSlide = slides[0];
-    const lastSlide = slides[slides.length - 1];
-    const firstClone = firstSlide.cloneNode(true);
-    const lastClone = lastSlide.cloneNode(true);
-    track.appendChild(firstClone);
-    track.insertBefore(lastClone, track.firstChild);
-
-    const totalSlidesWithClones = totalSlides + 2;
-
-    function updateCarousel() {
-        const offset = -currentIndex * slideWidth;
-        track.style.transform = `translateX(${offset}px)`;
-
-        slides.forEach((slide, index) => {
-            slide.classList.toggle("active", index === currentIndex);
-        });
-
-        dots.forEach((dot, i) => dot.classList.toggle("active", i === currentIndex));
-    }
-
-    function nextSlide() {
-        currentIndex++;
-        if (currentIndex >= totalSlidesWithClones) {
-            currentIndex = 1;
-            track.style.transition = "none";
-            updateCarousel();
-            setTimeout(() => {
-                track.style.transition = "transform 0.5s ease-in-out";
-            }, 50);
-        } else {
-            updateCarousel();
-        }
-    }
-
-    function prevSlide() {
-        currentIndex--;
-        if (currentIndex < 0) {
-            currentIndex = totalSlidesWithClones - 2;
-            track.style.transition = "none";
-            updateCarousel();
-            setTimeout(() => {
-                track.style.transition = "transform 0.5s ease-in-out";
-            }, 50);
-        } else {
-            updateCarousel();
-        }
-    }
-
-    function jumpToSlide(index) {
-        currentIndex = index;
-        updateCarousel();
-    }
-
-    prevBtn?.addEventListener("click", () => {
-        prevSlide();
-        resetInterval();
-    });
-
-    nextBtn?.addEventListener("click", () => {
-        nextSlide();
-        resetInterval();
-    });
-
-    dots.forEach((dot, index) => {
-        dot.addEventListener("click", () => {
-            jumpToSlide(index);
-            resetInterval();
-        });
-    });
-
-    let interval = setInterval(nextSlide, 5000);
-
-    function resetInterval() {
-        clearInterval(interval);
-        interval = setInterval(nextSlide, 5000);
-    }
-
-    setTimeout(() => {
-        track.style.transition = "none";
-        currentIndex = 1;
-        updateCarousel();
-
-        setTimeout(() => {
-            track.style.transition = "transform 0.5s ease-in-out";
-        }, 50);
-    }, 50);
-
-    if (window.innerWidth <= 768) {
-        setTimeout(() => {
-            track.style.transition = "transform 0.3s ease-in-out";
-        }, 500);
-    }
-
-    updateCarousel();
-
-   // 为按钮绑定点击事件，点击时跳转
-    const exploreBtns = document.querySelectorAll('.spec1-explore-btn');
-    exploreBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const link = e.target.closest('.spec1-carousel-slide').querySelector('a');
-            if (link) {
-                window.location.href = link.href;
+    document.addEventListener("DOMContentLoaded", function () {
+        // 滚动时改变导航栏背景
+        window.addEventListener("scroll", function () {
+            const header = document.getElementById("mainHeader");
+            if (window.scrollY > 50) {
+                header.classList.add("scrolled");
+            } else {
+                header.classList.remove("scrolled");
             }
         });
+
+        // 滚动时触发动画
+        const products = document.querySelectorAll(".section1-product");
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationDelay = "0.3s";
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                }
+            });
+        }, { threshold: 0.3 });
+
+        products.forEach(product => observer.observe(product));
     });
-};
+  </script>
 
-// 初始化新轮播
-document.addEventListener("DOMContentLoaded", initSpec1CarouselTrack);
-
-
-
-
-
-
-
-
-</script>
 </body>
 </html>
