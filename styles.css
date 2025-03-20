@@ -145,23 +145,26 @@ body {
 }
 /* ========== 新增：手机端 Mefan Air 导航 ========== */
 .mobile-air-nav {
-  position: fixed;
+position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 5000; /* 高于主导航 */
-  display: none; /* 默认不显示（滚动 < 400px 时） */
+  z-index: 5000; /* 移动端导航 z-index */
+  display: none; /* 默认隐藏，滚动后通过 JS 添加 .active 显示 */
   align-items: center;
   justify-content: space-between;
   background-color: #fff;
   border-bottom: 1px solid #ddd;
   padding: 0 16px;
-  height: 48px; /* 可根据需求微调 */
+  height: 48px;
 }
-
-/* 当激活 .active 时，显示 */
 .mobile-air-nav.active {
   display: flex;
+  }
+/* 当激活 .active 时，显示 */
+.mefan-air-nav.active {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 /* 左侧标题 */
@@ -169,16 +172,20 @@ body {
   font-size: 1rem;
   font-weight: 600;
   color: #333;
-  line-height: 48px; /* 垂直居中 */
+  line-height: 48px;
 }
-
 /* 右侧区域 */
 .mobile-air-right {
   display: flex;
   align-items: center;
   gap: 16px;
 }
-
+/* 切换按钮：初始文本为 “>”，展开后显示 “<” */
+.mobile-air-toggle-btn {
+  font-size: 1.2rem;
+  cursor: pointer;
+  user-select: none;
+}
 /* “>” 按钮（可用符号或图标） */
 .mobile-air-expand {
   font-size: 1.2rem;
@@ -190,9 +197,8 @@ body {
 
 /* Buy 按钮 */
 .mobile-air-buy {
-  display: inline-block;
-  padding: 6px 12px;
-  background-color: #0071e3; /* 蓝色 */
+padding: 6px 12px;
+  background-color: #0071e3;
   color: #fff;
   text-decoration: none;
   border-radius: 4px;
@@ -201,6 +207,59 @@ body {
 }
 .mobile-air-buy:hover {
   opacity: 0.8;
+}
+/* ========== 移动端 Mefan Air 二级面板 ========== */
+.mobile-air-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  z-index: 6000;
+  background-color: #fff;
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
+.mobile-air-panel.active {
+  height: 100vh; /* 全屏展开 */
+  overflow: auto;
+}
+/* 二级面板头部：左侧为 “Mefan Air”，右侧为关闭按钮 */
+.mobile-air-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #ddd;
+  background-color: #f8f8f8;
+}
+.mobile-air-panel-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+.mobile-air-close-btn {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* 二级面板菜单列表 */
+.mobile-air-panel-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.mobile-air-panel-list li {
+  border-bottom: 1px solid #eee;
+}
+.mobile-air-panel-list li a {
+  display: block;
+  padding: 14px 16px;
+  text-decoration: none;
+  color: #333;
+}
+.mobile-air-panel-list li a:hover {
+  background-color: #f2f2f2;
 }
 
 /* ========== 新增：Mefan Air 手机端二级菜单 ========== */
@@ -263,7 +322,7 @@ body {
 
 /* ========== 新增：Blur 背景层 ========== */
 .mobile-air-blur {
-  position: fixed;
+ position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -274,8 +333,6 @@ body {
   transition: height 0.3s ease, opacity 0.3s ease;
   opacity: 0;
 }
-
-/* 当 blur 激活时，覆盖全屏并显示 */
 .mobile-air-blur.active {
   height: 100vh;
   opacity: 1;
@@ -283,22 +340,17 @@ body {
 .mobile-air-nav {
   display: none;
 }
+/* 手机端：屏幕宽度 ≤ 768px  */
+/* 隐藏桌面端导航，显示移动端相关导航 */
 @media (max-width: 768px) {
-  .mobile-air-nav {
-    display: none; /* 先隐藏 */
-  }
-  .mobile-air-nav.active {
-    display: flex; /* 仅在小屏时启用 */
-  }
-}
-
-
-/* 根据需求可使用媒体查询只在手机端显示 */
-@media (min-width: 769px) {
-  .mobile-air-nav,
-  .mobile-air-menu,
-  .mobile-air-blur {
+  .mefan-air-nav {
     display: none !important;
+  }
+  /* 移动端导航、面板和 blur 默认显示（由 JS 控制 active 状态） */
+  .mobile-air-nav,
+  .mobile-air-panel,
+  .mobile-air-blur {
+    /* 保持各自样式，不做额外隐藏 */
   }
 }
 
