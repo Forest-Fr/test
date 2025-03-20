@@ -599,11 +599,11 @@
 
   <!-- -------------------- 独立运行的其他脚本 -------------------- -->
 
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   /************************************************************
    * 0) 保留原有汉堡菜单 (Home/Products/About/Contact) 功能
-   *    假设你的原脚本中是类似以下逻辑，保持不变即可
    ************************************************************/
   (function(){
     const menuIcon  = document.getElementById('menuIcon');
@@ -620,57 +620,67 @@ document.addEventListener("DOMContentLoaded", function() {
   })();
 
   /************************************************************
-   * 1) 桌面端：滚动 400px 后隐藏主导航，显示 mefanAirNav
+   * 1) 获取关键 DOM 元素
    ************************************************************/
   const mainHeader  = document.getElementById("mainHeader");   // 原主导航(带logo等)
-  const mefanAirNav = document.getElementById("mefanAirNav");  // 桌面端 Mefan Air
+  const mefanAirNav = document.getElementById("mefanAirNav");  // 桌面端 Mefan Air 导航
+  const mobileAirNav = document.getElementById("mobileAirNav"); // 移动端 Mefan Air 导航
 
-  /************************************************************
-   * 2) 移动端：滚动 400px 后隐藏主导航，显示 mobileAirNav
-   *    (上下箭头仅在移动端可见)
-   ************************************************************/
-  const mobileAirNav       = document.getElementById("mobileAirNav");       // 移动端 Mefan Air 导航
-  const mobileAirToggleBtn = document.getElementById("mobileAirToggleBtn"); // 上下箭头按钮
+  // 移动端二级面板相关元素
+  const mobileAirToggleBtn = document.getElementById("mobileAirToggleBtn"); // 上下翻按钮
   const mobileAirPanel     = document.getElementById("mobileAirPanel");     // 下拉面板
   const mobileAirCloseBtn  = document.getElementById("mobileAirCloseBtn");  // 面板关闭按钮
   const mobileAirBlur      = document.getElementById("mobileAirBlur");      // blur 背景
 
-  // 监听滚动事件，统一处理
+  /************************************************************
+   * 2) 监听滚动事件，根据屏幕宽度采用不同的阈值
+   *    桌面端：滚动 > 400px 显示桌面版 Mefan Air 导航
+   *    移动端：滚动 > 200px 显示移动版 Mefan Air 导航
+   ************************************************************/
   window.addEventListener("scroll", function() {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    if (scrollTop > 400) {
-      // 隐藏主导航
-      mainHeader.style.transform = "translateY(-100%)";
-      mainHeader.style.opacity   = "0";
-      // 显示桌面端导航
-      if (mefanAirNav) {
-        mefanAirNav.classList.add("active");
-      }
-      // 显示移动端导航
-      if (mobileAirNav) {
-        mobileAirNav.classList.add("active");
+    const isMobile = window.innerWidth <= 768; // 定义手机端条件
+
+    if (!isMobile) {
+      // 桌面端逻辑（阈值400px）
+      if (scrollTop > 400) {
+        mainHeader.style.transform = "translateY(-100%)";
+        mainHeader.style.opacity   = "0";
+        if (mefanAirNav) {
+          mefanAirNav.classList.add("active");
+        }
+      } else {
+        mainHeader.style.transform = "translateY(0)";
+        mainHeader.style.opacity   = "1";
+        if (mefanAirNav) {
+          mefanAirNav.classList.remove("active");
+        }
       }
     } else {
-      // 恢复主导航
-      mainHeader.style.transform = "translateY(0)";
-      mainHeader.style.opacity   = "1";
-      // 隐藏桌面端导航
-      if (mefanAirNav) {
-        mefanAirNav.classList.remove("active");
-      }
-      // 隐藏移动端导航
-      if (mobileAirNav) {
-        mobileAirNav.classList.remove("active");
+      // 移动端逻辑（阈值200px）
+      if (scrollTop > 200) {
+        mainHeader.style.transform = "translateY(-100%)";
+        mainHeader.style.opacity   = "0";
+        if (mobileAirNav) {
+          mobileAirNav.classList.add("active");
+        }
+      } else {
+        mainHeader.style.transform = "translateY(0)";
+        mainHeader.style.opacity   = "1";
+        if (mobileAirNav) {
+          mobileAirNav.classList.remove("active");
+        }
       }
     }
   });
 
   /************************************************************
-   * 3) 移动端二级面板：上下箭头 (⌄ / ⌃) + blur + 关闭按钮
+   * 3) 移动端二级面板：上下箭头 (上下翻) + blur + 关闭按钮
+   *    - 初始状态显示下箭头 (⌄, U+2304) 表示面板未展开
+   *    - 展开后按钮显示上箭头 (⌃, U+2303)
    ************************************************************/
-  let panelOpen = false; // 面板是否处于展开状态
+  let panelOpen = false; // 二级面板是否展开
 
-  // 打开面板：箭头变上箭头(⌃, U+2303)，显示 panel + blur
   function openPanel() {
     panelOpen = true;
     if (mobileAirToggleBtn) {
@@ -680,7 +690,6 @@ document.addEventListener("DOMContentLoaded", function() {
     if (mobileAirBlur)  mobileAirBlur.classList.add("active");
   }
 
-  // 关闭面板：箭头变下箭头(⌄, U+2304)，隐藏 panel + blur
   function closePanel() {
     panelOpen = false;
     if (mobileAirToggleBtn) {
@@ -690,7 +699,6 @@ document.addEventListener("DOMContentLoaded", function() {
     if (mobileAirBlur)  mobileAirBlur.classList.remove("active");
   }
 
-  // 点击上下箭头按钮 => 切换面板
   if (mobileAirToggleBtn) {
     mobileAirToggleBtn.addEventListener("click", function() {
       if (!panelOpen) {
@@ -701,22 +709,20 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // 点击关闭按钮 => 关闭面板
   if (mobileAirCloseBtn) {
     mobileAirCloseBtn.addEventListener("click", closePanel);
   }
 
-  // 点击 blur 区域 => 关闭面板
   if (mobileAirBlur) {
     mobileAirBlur.addEventListener("click", closePanel);
   }
 
   /************************************************************
-   * 4) 其它原有脚本逻辑(搜索功能、二级面板)保持不变
+   * 4) 保留其它原有脚本逻辑(搜索功能、二级面板)保持不变
    ************************************************************/
-
 });
 </script>
+
 
 
   </script>
