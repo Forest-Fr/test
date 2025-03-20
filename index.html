@@ -15,121 +15,19 @@
   <style>
     /* 确保 Banner 背景颜色与 iPad Air 页面一致 */
 /* 🔥 页面 Banner */
-.banner-container {
-    width: 100vw;
-    background-color: #f5f5f7;
-    text-align: center;
-    padding: 15px 0;
-    font-size: 16px;
-    font-weight: 500;
-    position: static;  /* 避免影响滚动 */
-}
-
-/* 🔥 Banner Shop 按钮 */
-.banner-shop-link {
-    color: #0071e3;
-    font-weight: 600;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    margin-left: 8px;
-}
-.banner-shop-link .arrow {
-    font-size: 16px;
-    margin-left: 4px;
-}
-
-/* 🟢 滚动后变白 */
-.header-gradient.nav-white,
-.scrolled .header-gradient {
-    display: none; /* 滚动 400px 后，主导航隐藏 */
-}
-.scrolled .mefan-nav-wrapper {
-  display: block; /* 仅显示 MeFan Air 导航 */
-}
-/* 🟢 原导航栏 (未滚动前可见) */
-.desktop-nav {
-    display: flex;
-    align-items: center;
-    height: 60px; /* 统一高度 */
-}
-
-/* 🟢 滚动后隐藏原导航 */
-.scrolled .desktop-nav {
-    display: none !important;
-}
-
-/* 🟢 滚动后显示的 MeFan Air 导航 */
-#scrollNav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 60px;  /* 统一高度 */
-    background: #fff;
-    z-index: 3000;
-    padding: 0 20px;  /* 统一内边距 */
-    display: none;  /* 默认隐藏，滚动 200px 后显示 */
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* 🟢 MeFan Air 文字 */
-#scrollNav .nav-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    line-height: 60px; /* 让文字居中 */
-}
-
-/* 🟢 导航链接 */
-#scrollNav .nav-links {
-    display: flex;
-    gap: 30px;
-    align-items: center;
-    height: 60px; /* 统一高度 */
-}
-#scrollNav .nav-links a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 600;
-}
-
-/* 🟢 Buy 按钮 */
-#scrollNav .buy-btn {
-    background: blue;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 5px;
-    font-size: 14px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 40px;
-}
-
-/* 🟢 滚动后才显示 MeFan Air 导航 */
-.scrolled #scrollNav {
-    display: flex !important;
-}
-
-/* 🟢 让 `MeFan Air` 导航匹配主导航的宽度 */
-.scrolled .nav-center {
-    display: flex !important;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 10px 20px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 9999;
-    transition: all 0.3s ease-in-out;
+/* 🔵 主导航样式 */
+.header-gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 3000;
+  background: linear-gradient(to right, #DEEFFF, #B2D8FF);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s ease;
 }
 .nav-container {
   display: flex;
@@ -139,17 +37,17 @@
   margin: 0 auto;
   padding: 0 20px;
 }
-    .logo-img {
+.logo-img {
   width: 50px;
   height: auto;
-      }
-    .desktop-nav {
+}
+.desktop-nav {
   display: flex;
   flex-grow: 1;
   justify-content: space-between;
   align-items: center;
 }
-    .nav-list {
+.nav-list {
   list-style: none;
   display: flex;
   gap: 20px;
@@ -161,44 +59,62 @@
   font-weight: 600;
   cursor: pointer;
 }
-/* 🟢 确保 `.desktop-nav` 在滚动前可见 */
-.desktop-nav .nav-list > li > a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 600;
-    transition: color 0.3s ease;
+.search-icon {
+  font-size: 18px;
+  cursor: pointer;
 }
 
-/* 🟢 MeFan Air 导航栏 */
+/* 🟢 MeFan Air 导航外裹层 */
+.mefan-nav-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: none; /* 默认隐藏 */
+  background: white;
+  z-index: 9999;
+  transition: all 0.3s ease;
+}
+
+/* 🟢 MeFan Air 导航 */
 .mefan-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 60px; /* 统一高度 */
-    background: #fff;
-    z-index: 3000;
-    padding: 0 20px; /* 统一内边距 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  background: #fff;
+  padding: 15px 20px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+.mefan-nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.mefan-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+.mefan-nav .nav-list {
+  display: flex;
+  gap: 30px;
+}
+.buy-btn {
+  background: blue;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-left: -80px; /* 向左移动 80px */
 }
 
-/* 🟢 MeFan Air 导航链接 */
-.mefan-nav .nav-list {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-    margin: 0;
-    padding: 0;
+/* 🔄 滚动逻辑 */
+.scrolled #mainHeader {
+  display: none; /* 滚动 400px 后，主导航隐藏 */
 }
-.mefan-nav .nav-list li a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 600;
-    font-size: 1rem;
+.scrolled #mefanNavWrapper {
+  display: block; /* 仅显示 MeFan Air 导航 */
 }
+
 
 /* 🔵 页面 Hero */
 .section1-hero {
@@ -1645,19 +1561,16 @@ document.addEventListener("DOMContentLoaded", function () {
   window.addEventListener("scroll", function () {
     let scrollPos = window.scrollY;
     let mainHeader = document.getElementById("mainHeader");
-    let mefanNav = document.getElementById("mefanNav");
+    let mefanNavWrapper = document.getElementById("mefanNavWrapper");
 
     if (scrollPos >= 400) {
-      mainHeader.classList.add("scrolled");
-      mefanNav.classList.add("scrolled");
+      document.body.classList.add("scrolled");
     } else {
-      mainHeader.classList.remove("scrolled");
-      mefanNav.classList.remove("scrolled");
+      document.body.classList.remove("scrolled");
     }
   });
 });
 
-  
 
 
 
