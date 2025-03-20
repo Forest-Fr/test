@@ -102,19 +102,21 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 4000;  /* 盖住主导航 */
+  z-index: 4000; /* 盖住主导航 */
   background: #f8f8f8;
   border-bottom: 1px solid #ddd;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  /* 初始隐藏（上移 + 透明） */
+  height: 60px;
+
+  /* 初始隐藏（用 transform/opacity 过渡） */
   transform: translateY(-100%);
   opacity: 0;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
-/* 当添加 .active 类时，导航下移并显示 */
+/* 当添加 .active 时，向下移入并显示 */
 .mefan-air-nav.active {
   transform: translateY(0);
   opacity: 1;
@@ -149,8 +151,8 @@ position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 5000; /* 移动端导航 z-index */
-  display: none; /* 默认隐藏，滚动后通过 JS 添加 .active 显示 */
+  z-index: 5000; /* 高于主导航 */
+  display: none; /* 默认隐藏，JS滚动满足条件后加 .active 显示 */
   align-items: center;
   justify-content: space-between;
   background-color: #fff;
@@ -158,9 +160,11 @@ position: fixed;
   padding: 0 16px;
   height: 48px;
 }
+
+/* 激活时（.active）显示 */
 .mobile-air-nav.active {
   display: flex;
-  }
+}
 /* 当激活 .active 时，显示 */
 .mefan-air-nav.active {
   transform: translateY(0);
@@ -169,22 +173,23 @@ position: fixed;
 
 /* 左侧标题 */
 .mobile-air-left {
-  font-size: 1rem;
+ font-size: 1rem;
   font-weight: 600;
   color: #333;
   line-height: 48px;
 }
 /* 右侧区域 */
 .mobile-air-right {
-  display: flex;
+   display: flex;
   align-items: center;
   gap: 16px;
 }
-/* 切换按钮：初始文本为 “>”，展开后显示 “<” */
+/* 上下箭头 (初始下箭头 U+2304: ⌄) */
 .mobile-air-toggle-btn {
   font-size: 1.2rem;
   cursor: pointer;
   user-select: none;
+  line-height: 48px;
 }
 /* “>” 按钮（可用符号或图标） */
 .mobile-air-expand {
@@ -197,7 +202,7 @@ position: fixed;
 
 /* Buy 按钮 */
 .mobile-air-buy {
-padding: 6px 12px;
+ padding: 6px 12px;
   background-color: #0071e3;
   color: #fff;
   text-decoration: none;
@@ -242,7 +247,6 @@ padding: 6px 12px;
   font-size: 1.5rem;
   cursor: pointer;
 }
-
 /* 二级面板菜单列表 */
 .mobile-air-panel-list {
   list-style: none;
@@ -322,7 +326,7 @@ padding: 6px 12px;
 
 /* ========== 新增：Blur 背景层 ========== */
 .mobile-air-blur {
- position: fixed;
+position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -336,24 +340,27 @@ padding: 6px 12px;
 .mobile-air-blur.active {
   height: 100vh;
   opacity: 1;
-
 }
 .mobile-air-nav {
   display: none;
 }
   
-/* 手机端：屏幕宽度 ≤ 768px  */
-/* 隐藏桌面端导航，显示移动端相关导航 */
+/* 移动端: <=768px */
 @media (max-width: 768px) {
   .mefan-air-nav {
     display: none !important;
   }
-  /* 移动端导航、面板和 blur 默认显示（由 JS 控制 active 状态） */
+  /* 移动端保留 .mobile-air-nav, .mobile-air-panel 等 */
+}
+
+/* 桌面端: >=1024px */
+@media (min-width: 1024px) {
   .mobile-air-nav,
   .mobile-air-panel,
   .mobile-air-blur {
-    /* 保持各自样式，不做额外隐藏 */
+    display: none !important;
   }
+  /* 保留 .mefan-air-nav */
 }
 
 /* ========== 其余原有或移动端样式省略 ========== */
