@@ -1,5 +1,4 @@
 /* ========== Reset & 基础 ========== */
-/* ========== Reset & 基础 ========== */
 * {
   margin: 0;
   padding: 0;
@@ -7,10 +6,10 @@
 }
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: #fff;
+  background-color: #fff; /* 保持整体背景 */
   color: #333;
   line-height: 1.6;
-  padding-top: 40px; /* 确保内容不被导航栏遮挡 */
+  padding-top: 40px; /* 确保内容不会被导航栏挡住 */
 }
 
 /* ========== 原主导航 ========== */
@@ -19,7 +18,7 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 3000;
+  z-index: 3000; /* 原没有blur之前是1000 */
   padding: 10px 20px;
   display: flex;
   align-items: center;
@@ -30,6 +29,7 @@ body {
 .header-gradient.nav-white {
   background: #fff !important;
 }
+/* LOGO */
 .logo-img {
   width: 60px;
   margin-right: 20px;
@@ -37,7 +37,7 @@ body {
 
 /* ========== 横幅 Banner ========== */
 .banner-promo {
-  margin-top: 40px;
+  margin-top: 40px; /* 与原导航保持一致的上边距 */
   background-color: #EFF7FF;
   border-top: 1px solid #CBD5E1;
   border-bottom: 1px solid #CBD5E1;
@@ -56,19 +56,19 @@ body {
 }
 
 /* ========== 桌面端 Mefan Air 导航 ========== */
+/* 与原主导航保持一致的内边距和宽度，不设置固定高度 */
 .mefan-air-nav {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 4000;
+  z-index: 4000;  /* 高于原主导航 */
   background: #f8f8f8;
   border-bottom: 1px solid #ddd;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
-  height: 60px;
+  padding: 10px 20px; /* 与原导航一致 */
   transform: translateY(-100%);
   opacity: 0;
   transition: transform 0.3s ease, opacity 0.3s ease;
@@ -92,19 +92,19 @@ body {
 }
 
 /* ========== 移动端 Mefan Air 导航 ========== */
+/* 使用与原主导航相同的内边距，不设置固定高度 */
 .mobile-air-nav {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 5000;
-  display: none; /* JS添加active时显示 */
+  display: none; /* 由JS控制 active 时显示 */
   align-items: center;
   justify-content: space-between;
   background-color: #fff;
   border-bottom: 1px solid #ddd;
-  padding: 0 16px;
-  height: 48px;
+  padding: 10px 20px; /* 与原主导航一致 */
 }
 .mobile-air-nav.active {
   display: flex;
@@ -150,7 +150,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
+  padding: 12px 20px; /* 与原导航内边距一致 */
   border-bottom: 1px solid #ddd;
 }
 .mobile-air-panel-title {
@@ -171,7 +171,7 @@ body {
 }
 .mobile-air-panel-list li a {
   display: block;
-  padding: 14px 16px;
+  padding: 14px 20px;
   text-decoration: none;
   color: #333;
 }
@@ -207,6 +207,7 @@ body {
     display: none !important;
   }
 }
+
 
 /* ========== 其余原有或移动端样式省略 ========== */
 
