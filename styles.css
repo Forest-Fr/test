@@ -97,6 +97,90 @@ body {
   text-decoration: underline;
 }
 
+.header-gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 3000; /* 原没有blur之前是1000 */
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(to right, #DEEFFF, #B2D8FF);
+  transition: background 0.2s ease, transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* 鼠标进入时，将导航栏背景改为白色 */
+.header-gradient.nav-white {
+  background: #fff !important;
+}
+
+/* LOGO */
+.logo-img {
+  width: 60px;
+  margin-right: 20px;
+}
+
+/* 新导航（section1-nav）：默认隐藏，通过 transform/opacity 控制动画效果 */
+.section1-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 4000;  /* 高于主导航 */
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* 激活状态：显示新导航 */
+.section1-nav.active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* 新导航内与原主导航样式一致的 nav-list */
+.section1-nav .nav-list {
+  list-style: none;
+  display: flex;
+}
+.section1-nav .nav-list li {
+  margin-right: 20px;
+}
+.section1-nav .nav-list li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+}
+
+
+/* ========== 横幅 Banner ========== */
+.banner-promo {
+  /* 让横幅整体向下移动 40px */
+  margin-top: 17px;
+  background-color: #EFF7FF; /* 浅蓝背景，可自行调整 */
+  border-top: 1px solid #CBD5E1;
+  border-bottom: 1px solid #CBD5E1;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+}
+.banner-promo a {
+  color: #0071e3; /* 苹果常见蓝色 */
+  text-decoration: none;
+  font-weight: 500;
+}
+.banner-promo a:hover {
+  text-decoration: underline;
+}
+
 /* ========== 新导航：Mefan Air ========== */
 .mefan-air-nav {
   position: fixed;
