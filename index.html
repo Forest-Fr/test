@@ -51,6 +51,30 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* 确保导航在不同状态下可见 */
+.desktop-nav {
+    display: flex;
+    align-items: center;
+}
+
+/* MeFan Air 导航样式 */
+.mefan-air-nav {
+    display: none; /* 默认隐藏 */
+    justify-content: center;
+    width: 100%;
+}
+.mefan-air-nav .nav-list {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+}
+.mefan-air-nav .nav-list li a {
+    text-decoration: none;
+    font-weight: 600;
+    color: #333;
+}
+
+
 /* 确保 `desktop-nav` 仍然可见 */
 .desktop-nav .nav-list > li > a {
     text-decoration: none;
@@ -1555,7 +1579,8 @@ list-style: none;
   </script>
 
   <!-- -------------------- 独立运行的其他脚本 -------------------- -->
- document.addEventListener("DOMContentLoaded", function() {
+ <script>
+  document.addEventListener("DOMContentLoaded", function() {
     const mainHeader = document.getElementById("mainHeader");
     const originalNav = document.querySelector(".desktop-nav"); // 原始导航
     const meFanAirNav = document.createElement("div"); // 创建 MeFan Air 导航
