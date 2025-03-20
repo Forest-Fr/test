@@ -338,6 +338,10 @@ padding: 6px 12px;
   opacity: 1;
 
 }
+.mobile-air-nav {
+  display: none;
+}
+  
 /* 手机端：屏幕宽度 ≤ 768px  */
 /* 隐藏桌面端导航，显示移动端相关导航 */
 @media (max-width: 768px) {
