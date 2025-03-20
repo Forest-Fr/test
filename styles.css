@@ -280,6 +280,17 @@ body {
   height: 100vh;
   opacity: 1;
 }
+.mobile-air-nav {
+  display: none;
+}
+@media (max-width: 768px) {
+  .mobile-air-nav {
+    display: none; /* 先隐藏 */
+  }
+  .mobile-air-nav.active {
+    display: flex; /* 仅在小屏时启用 */
+  }
+}
 
 /* 根据需求可使用媒体查询只在手机端显示 */
 @media (min-width: 769px) {
