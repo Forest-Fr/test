@@ -601,33 +601,88 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  // ========== 1) 获取关键 DOM 元素 ==========
-  const mainHeader    = document.getElementById("mainHeader");    // 原主导航
-  const mefanAirNav   = document.getElementById("mefanAirNav");   // 桌面端 Mefan Air 导航
-  const mobileAirNav  = document.getElementById("mobileAirNav");  // 移动端 Mefan Air 导航
+  /************************************************************
+   * 1) 桌面端：向下滚动 400px，隐藏主导航，显示 Mefan Air 导航
+   ************************************************************/
+  const mainHeader  = document.getElementById("mainHeader");   // 原主导航(带Logo等)
+  const mefanAirNav = document.getElementById("mefanAirNav");  // 桌面端 Mefan Air 导航
 
-  // 移动端二级菜单元素
-  const mobileAirToggleBtn = document.getElementById("mobileAirToggleBtn");
-  const mobileAirPanel     = document.getElementById("mobileAirPanel");
-  const mobileAirCloseBtn  = document.getElementById("mobileAirCloseBtn");
-  const mobileAirBlur      = document.getElementById("mobileAirBlur");
+  // 监听滚动事件
+  window.addEventListener("scroll", function() {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    if (scrollTop > 400) {
+      // 超过 400px，隐藏主导航
+      mainHeader.style.transform = "translateY(-100%)";
+      mainHeader.style.opacity   = "0";
 
-  let panelOpen = false; // 面板是否打开
+      // 显示桌面端 Mefan Air 导航
+      if (mefanAirNav) {
+        mefanAirNav.classList.add("active");
+      }
+
+      // 同时也可显示移动端导航(若需要)，见下方 #mobileAirNav 处理
+      if (mobileAirNav) {
+        mobileAirNav.classList.add("active");
+      }
+    } else {
+      // 小于等于 400px，恢复主导航
+      mainHeader.style.transform = "translateY(0)";
+      mainHeader.style.opacity   = "1";
+
+      // 隐藏桌面端 Mefan Air 导航
+      if (mefanAirNav) {
+        mefanAirNav.classList.remove("active");
+      }
+
+      // 隐藏移动端导航
+      if (mobileAirNav) {
+        mobileAirNav.classList.remove("active");
+      }
+    }
+  });
+
+  /************************************************************
+   * 2) 移动端：向下滚动 400px，隐藏主导航，显示 Mefan Air 导航
+   ************************************************************/
+  // 注：如果你只想在桌面端显示 mefanAirNav，
+  //    而只想在移动端显示 mobileAirNav，
+  //    需在 CSS 里使用媒体查询隐藏一个版本。
+  const mobileAirNav = document.getElementById("mobileAirNav"); // 移动端 Mefan Air 导航
+
+  // 上面的滚动事件里已经包含了对 mobileAirNav 的显示/隐藏处理。
+  // 如果你不想移动端也跟随 400px 逻辑，可自行移除上面对 mobileAirNav 的操作。
+
+  /************************************************************
+   * 3) 移动端二级面板：上下箭头切换 + 关闭按钮 + blur
+   ************************************************************/
+  const mobileAirToggleBtn = document.getElementById("mobileAirToggleBtn"); // 上下箭头按钮
+  const mobileAirPanel     = document.getElementById("mobileAirPanel");     // 二级面板
+  const mobileAirCloseBtn  = document.getElementById("mobileAirCloseBtn");  // 关闭按钮(×)
+  const mobileAirBlur      = document.getElementById("mobileAirBlur");      // blur 背景
+
+  let panelOpen = false; // 是否打开二级面板
 
   function openPanel() {
     panelOpen = true;
-    if (mobileAirToggleBtn) mobileAirToggleBtn.textContent = "\u2303";  // 显示上箭头 ⌃
+    if (mobileAirToggleBtn) {
+      // 显示上箭头(⌃, U+2303)
+      mobileAirToggleBtn.textContent = "\u2303";
+    }
     if (mobileAirPanel) mobileAirPanel.classList.add("active");
     if (mobileAirBlur)  mobileAirBlur.classList.add("active");
   }
+
   function closePanel() {
     panelOpen = false;
-    if (mobileAirToggleBtn) mobileAirToggleBtn.textContent = "\u2304";  // 显示下箭头 ⌄
+    if (mobileAirToggleBtn) {
+      // 显示下箭头(⌄, U+2304)
+      mobileAirToggleBtn.textContent = "\u2304";
+    }
     if (mobileAirPanel) mobileAirPanel.classList.remove("active");
     if (mobileAirBlur)  mobileAirBlur.classList.remove("active");
   }
 
-  // 点击切换按钮，打开或关闭二级面板
+  // 切换按钮(上下箭头)点击 => 打开/关闭面板
   if (mobileAirToggleBtn) {
     mobileAirToggleBtn.addEventListener("click", function() {
       if (!panelOpen) {
@@ -647,8 +702,13 @@ document.addEventListener("DOMContentLoaded", function() {
   if (mobileAirBlur) {
     mobileAirBlur.addEventListener("click", closePanel);
   }
-});
 
+  /************************************************************
+   * 4) 其它原有功能（汉堡菜单 #mobileNav / 搜索 / 等）
+   *    请在此处保持原逻辑不变
+   ************************************************************/
+});
+</script>
 
   </script>
 </body>
