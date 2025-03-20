@@ -90,6 +90,38 @@
     <h1>Welcome to Mefan</h1>
     <p>向下滚动 400px 后可以看到导航切换效果：主导航淡出隐藏，Mefan Air 导航出现。</p>
   </main>
+<!-- ========== 新增：手机端 Mefan Air 导航（滚动400px后出现） ========== -->
+<nav id="mobileAirNav" class="mobile-air-nav">
+  <!-- 左侧标题 -->
+  <div class="mobile-air-left">Mefan Air</div>
+  
+  <!-- 右侧区域：展开按钮 + Buy按钮 -->
+  <div class="mobile-air-right">
+    <!-- “>” 按钮（点击后展开二级菜单） -->
+    <span id="mobileAirExpandBtn" class="mobile-air-expand">&#x25BE;</span>
+    <!-- Buy 按钮，跳转到 sample.html -->
+    <a href="sample.html" target="_blank" class="mobile-air-buy">Buy</a>
+  </div>
+</nav>
+
+<!-- ========== 新增：Mefan Air 手机端二级菜单 + blur 背景 ========== -->
+<div id="mobileAirMenu" class="mobile-air-menu">
+  <!-- 顶部区域：标题 + 关闭按钮 -->
+  <div class="mobile-air-menu-header">
+    <span id="mobileAirMenuClose" class="mobile-air-menu-close">&times;</span>
+    <h2>Mefan Air</h2>
+  </div>
+  <!-- 菜单列表 -->
+  <ul class="mobile-air-menu-list">
+    <li><a href="sample.html" target="_blank">Overview</a></li>
+    <li><a href="sample.html" target="_blank">Tech Specs</a></li>
+    <li><a href="sample.html" target="_blank">Compare</a></li>
+    <li><a href="sample.html" target="_blank">Why mefan</a></li>
+  </ul>
+</div>
+
+<!-- Blur 背景层（仅手机端 Mefan Air 二级菜单使用） -->
+<div id="mobileAirBlur" class="mobile-air-blur"></div>
 
   <!-- 新增：移动端二级菜单面板（仅手机端有效） -->
   <div id="mobileNavLevel2Home" class="menu-panel menu-panel--level2">
@@ -595,7 +627,56 @@
       }
     });
   });
+ // ========== 1) Mefan Air 手机端导航滚动切换 ==========
+  const mainHeader    = document.getElementById("mainHeader");   // 主导航
+  const mobileAirNav  = document.getElementById("mobileAirNav"); // 新增的手机端导航
 
+  window.addEventListener("scroll", function() {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    if (scrollTop > 400) {
+      // 超过 400px，隐藏主导航，显示 Mefan Air 导航
+      mainHeader.style.transform = "translateY(-100%)";
+      mainHeader.style.opacity   = "0";
+      if (mobileAirNav) {
+        mobileAirNav.classList.add("active");
+      }
+    } else {
+      // 回到 400px 以内，恢复主导航，隐藏 Mefan Air 导航
+      mainHeader.style.transform = "translateY(0)";
+      mainHeader.style.opacity   = "1";
+      if (mobileAirNav) {
+        mobileAirNav.classList.remove("active");
+      }
+    }
+  });
+
+  // ========== 2) Mefan Air 二级菜单展开/收起 + blur ==========
+  const mobileAirExpandBtn = document.getElementById("mobileAirExpandBtn");
+  const mobileAirMenu      = document.getElementById("mobileAirMenu");
+  const mobileAirMenuClose = document.getElementById("mobileAirMenuClose");
+  const mobileAirBlur      = document.getElementById("mobileAirBlur");
+
+  if (mobileAirExpandBtn && mobileAirMenu && mobileAirBlur) {
+    // 点击 “>” 按钮 => 展开二级菜单 + blur
+    mobileAirExpandBtn.addEventListener("click", function() {
+      mobileAirMenu.classList.add("active");
+      mobileAirBlur.classList.add("active");
+    });
+
+    // 点击关闭按钮 => 收起菜单 + blur
+    mobileAirMenuClose.addEventListener("click", function() {
+      mobileAirMenu.classList.remove("active");
+      mobileAirBlur.classList.remove("active");
+    });
+
+    // 点击 blur 区域 => 收起菜单 + blur
+    mobileAirBlur.addEventListener("click", function() {
+      mobileAirMenu.classList.remove("active");
+      mobileAirBlur.classList.remove("active");
+    });
+  }
+
+});
 
 
 
