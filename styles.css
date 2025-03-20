@@ -269,6 +269,13 @@ body {
   align-items: center;
   gap: 16px;
 }
+.mobile-air-nav.active {
+  display: flex;
+}
+.mobile-air-left {
+  font-size: 1rem;
+  font-weight: 600;
+}
 .mobile-air-toggle-btn {
   font-size: 1.2rem;
   cursor: pointer;
