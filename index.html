@@ -57,22 +57,42 @@
     align-items: center;
 }
 
-/* MeFan Air 导航样式 */
-.mefan-air-nav {
-    display: none; /* 默认隐藏 */
-    justify-content: center;
+/* MeFan Air 导航栏样式 */
+.mefan-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
+    background: #fff;
+    z-index: 3000;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
-.mefan-air-nav .nav-list {
+
+/* MeFan Air 导航列表 */
+.mefan-nav .nav-list {
+    list-style: none;
     display: flex;
     gap: 20px;
-    list-style: none;
+    margin: 0;
+    padding: 0;
 }
-.mefan-air-nav .nav-list li a {
+
+.mefan-nav .nav-list li a {
     text-decoration: none;
-    font-weight: 600;
     color: #333;
+    font-weight: 600;
+    font-size: 1rem;
 }
+
+/* MeFan Air 导航激活白色背景 */
+.header-gradient.nav-white {
+    background: #fff !important;
+}
+
 
 
 /* 确保 `desktop-nav` 仍然可见 */
@@ -1579,38 +1599,43 @@ list-style: none;
   </script>
 
   <!-- -------------------- 独立运行的其他脚本 -------------------- -->
- <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const mainHeader = document.getElementById("mainHeader");
-    const originalNav = document.querySelector(".desktop-nav"); // 原始导航
-    const meFanAirNav = document.createElement("div"); // 创建 MeFan Air 导航
-    meFanAirNav.className = "mefan-air-nav";
-    meFanAirNav.innerHTML = `
-        <nav class="desktop-nav">
-          <ul class="nav-list">
-            <li><a href="mefan-air.html" class="active">MeFan Air</a></li>
-            <li><a href="products.html">Features</a></li>
-            <li><a href="compare.html">Compare</a></li>
-            <li><a href="buy.html">Buy</a></li>
-            <li><div class="search-icon">🔍</div></li>
-          </ul>
-        </nav>
-    `;
-    meFanAirNav.style.display = "none"; // 默认隐藏
-    mainHeader.appendChild(meFanAirNav); // 添加到导航栏
 
-    window.addEventListener("scroll", function() {
+ <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const mainHeader = document.getElementById("mainHeader"); // 主导航
+    const desktopNav = document.querySelector(".desktop-nav"); // 主页导航
+    const mefanNav = document.createElement("nav"); // 滚动后的 MeFan Air 导航
+
+    // 创建 MeFan Air 专属导航栏
+    mefanNav.classList.add("mefan-nav");
+    mefanNav.innerHTML = `
+        <ul class="nav-list">
+            <li><a href="sample.html">MeFan Air</a></li>
+            <li><a href="sample.html">Features</a></li>
+            <li><a href="sample.html">Compare</a></li>
+            <li><a href="sample.html">Buy</a></li>
+        </ul>
+    `;
+    mefanNav.style.display = "none"; // 默认隐藏
+
+    // 将 MeFan Air 导航插入 `mainHeader`
+    mainHeader.appendChild(mefanNav);
+
+    // 监听滚动事件
+    window.addEventListener("scroll", function () {
         if (window.scrollY > 200) {
-            mainHeader.classList.add("nav-white");
-            originalNav.style.display = "none"; // 隐藏原导航
-            meFanAirNav.style.display = "flex"; // 显示 MeFan Air 导航
+            desktopNav.style.display = "none"; // 隐藏原导航
+            mefanNav.style.display = "flex"; // 显示 MeFan Air 导航
+            mainHeader.classList.add("nav-white"); // 变白
         } else {
-            mainHeader.classList.remove("nav-white");
-            originalNav.style.display = "flex"; // 恢复原导航
-            meFanAirNav.style.display = "none"; // 隐藏 MeFan Air 导航
+            desktopNav.style.display = "flex"; // 恢复原导航
+            mefanNav.style.display = "none"; // 隐藏 MeFan Air 导航
+            mainHeader.classList.remove("nav-white"); // 取消白色背景
         }
     });
 });
+</script>
+
 
 
 
