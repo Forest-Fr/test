@@ -26,19 +26,61 @@ body {
   background: linear-gradient(to right, #DEEFFF, #B2D8FF);
   transition: background 0.2s ease, transform 0.3s ease, opacity 0.3s ease;
 }
+
+/* 鼠标进入时，将导航栏背景改为白色 */
 .header-gradient.nav-white {
   background: #fff !important;
 }
+
 /* LOGO */
 .logo-img {
   width: 60px;
   margin-right: 20px;
 }
 
+/* 新导航（section1-nav）：默认隐藏，通过 transform/opacity 控制动画效果 */
+.section1-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 4000;  /* 高于主导航 */
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* 激活状态：显示新导航 */
+.section1-nav.active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* 新导航内与原主导航样式一致的 nav-list */
+.section1-nav .nav-list {
+  list-style: none;
+  display: flex;
+}
+.section1-nav .nav-list li {
+  margin-right: 20px;
+}
+.section1-nav .nav-list li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+}
+
+
 /* ========== 横幅 Banner ========== */
 .banner-promo {
-  margin-top: 17px; /* 与原导航保持一致的上边距 */
-  background-color: #EFF7FF;
+  /* 让横幅整体向下移动 40px */
+  margin-top: 17px;
+  background-color: #EFF7FF; /* 浅蓝背景，可自行调整 */
   border-top: 1px solid #CBD5E1;
   border-bottom: 1px solid #CBD5E1;
   padding: 10px 0;
@@ -47,7 +89,7 @@ body {
   color: #333;
 }
 .banner-promo a {
-  color: #0071e3;
+  color: #0071e3; /* 苹果常见蓝色 */
   text-decoration: none;
   font-weight: 500;
 }
@@ -55,20 +97,20 @@ body {
   text-decoration: underline;
 }
 
-/* ========== 桌面端 Mefan Air 导航 ========== */
-/* 与原主导航保持一致的内边距和宽度，不设置固定高度 */
+/* ========== 新导航：Mefan Air ========== */
 .mefan-air-nav {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 4000;  /* 高于原主导航 */
+  z-index: 4000;
   background: #f8f8f8;
   border-bottom: 1px solid #ddd;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 20px; /* 与原导航一致 */
+  padding: 0 20px;
+  height: 60px;
   transform: translateY(-100%);
   opacity: 0;
   transition: transform 0.3s ease, opacity 0.3s ease;
@@ -91,16 +133,14 @@ body {
   color: #0071e3;
 }
 
-/* ========== 移动端 Mefan Air 导航 ========== */
-/* 使用与原主导航相同的内边距，不设置固定高度 */
-/* ========== 移动端 Mefan Air 导航 (顶部条) ========== */
+/* ========== 新增：手机端 Mefan Air 导航 ========== */
 .mobile-air-nav {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 5000; /* 高于主导航 */
-  display: none; /* 默认隐藏，滚动超过400px后用 .active 显示 */
+  z-index: 5000;
+  display: none; /* 由JS控制 .active 时才显示 */
   align-items: center;
   justify-content: space-between;
   background-color: #fff;
@@ -111,45 +151,28 @@ body {
 .mobile-air-nav.active {
   display: flex;
 }
-
-/* 左侧标题 */
 .mobile-air-left {
   font-size: 1rem;
   font-weight: 600;
-  color: #333;
-  line-height: 48px; /* 垂直居中 */
 }
-
-/* 右侧区域 */
 .mobile-air-right {
   display: flex;
   align-items: center;
   gap: 16px;
 }
-
-/* 箭头按钮，初始为“>”，展开后改为“<” */
 .mobile-air-toggle-btn {
   font-size: 1.2rem;
   cursor: pointer;
-  user-select: none;
 }
-
-/* Buy 按钮 */
 .mobile-air-buy {
-  display: inline-block;
   padding: 6px 12px;
-  background-color: #0071e3; /* 蓝色 */
+  background-color: #0071e3;
   color: #fff;
   text-decoration: none;
   border-radius: 4px;
-  font-size: 0.9rem;
-  line-height: 1;
-}
-.mobile-air-buy:hover {
-  opacity: 0.8;
 }
 
-/* ========== 移动端 Mefan Air 二级面板 ========== */
+/* ========== 移动端下拉面板 + blur ========== */
 .mobile-air-panel {
   position: fixed;
   top: 0;
@@ -162,30 +185,20 @@ body {
   transition: height 0.3s ease;
 }
 .mobile-air-panel.active {
-  height: 100vh; /* 全屏 */
+  height: 100vh;
   overflow: auto;
 }
-
-/* 头部：Mefan Air 在左，关闭按钮在右 */
 .mobile-air-panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
   border-bottom: 1px solid #ddd;
-  background-color: #f8f8f8;
-}
-.mobile-air-panel-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0;
 }
 .mobile-air-close-btn {
   font-size: 1.5rem;
   cursor: pointer;
 }
-
-/* 菜单列表 */
 .mobile-air-panel-list {
   list-style: none;
   margin: 0;
@@ -200,11 +213,6 @@ body {
   text-decoration: none;
   color: #333;
 }
-.mobile-air-panel-list li a:hover {
-  background-color: #f2f2f2;
-}
-
-/* Blur 背景层 */
 .mobile-air-blur {
   position: fixed;
   top: 0;
@@ -222,11 +230,18 @@ body {
   opacity: 1;
 }
 
-/* 只在小屏显示本导航，可选 */
-@media (min-width: 769px) {
+/* 媒体查询：只在桌面端显示 .mefan-air-nav，不显示 .mobile-air-nav */
+@media (min-width: 1024px) {
   .mobile-air-nav,
   .mobile-air-panel,
   .mobile-air-blur {
+    display: none !important;
+  }
+}
+
+/* 媒体查询：只在移动端显示 .mobile-air-nav，不显示 .mefan-air-nav */
+@media (max-width: 768px) {
+  .mefan-air-nav {
     display: none !important;
   }
 }
