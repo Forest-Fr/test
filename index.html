@@ -100,7 +100,6 @@
     display: flex;
     gap: 30px;
     align-items: center;
-    height: 60px;
 }
 
 /* 🟢 Buy 按钮修正 */
@@ -1035,7 +1034,7 @@ list-style: none;
   </style>
 </head>
 <body>
-<!-- 🔵 主要导航栏 (默认状态) -->
+<!-- 🔵 主要导航栏 (完整恢复，包括搜索功能) -->
 <header class="header-gradient" id="mainHeader">
     <div class="nav-container">
         <img src="MeFan Logo.png" alt="MeFan Logo" class="logo-img" />
@@ -1047,27 +1046,31 @@ list-style: none;
                 <li><a href="sample.html">Contact</a></li>
             </ul>
         </nav>
+        <div class="search-icon">🔍</div>
     </div>
 </header>
+
+<!-- 🔵 主要导航栏的搜索面板 -->
+<div class="search-panel">
+    <div class="search-close-btn">✖</div>
+    <h2>Search</h2>
+    <input type="text" class="search-input" placeholder="Type to search...">
+    <div class="search-results"></div>
+</div>
 
 <!-- 🟢 MeFan Air 导航 (滚动后出现) -->
 <div class="mefan-nav-wrapper">
     <div class="mefan-nav" id="scrollNav">
         <div class="nav-title">MeFan Air</div>
         <div class="nav-links">
-            <span class="nav-item">Overview</span>
-            <span class="nav-item">Tech Specs</span>
-            <span class="nav-item">Compare</span>
-            <span class="nav-item">Why MeFan Air</span>
-            <button class="buy-btn">Buy</button>
+            <a href="sample.html" class="nav-item">Overview</a>
+            <a href="sample.html" class="nav-item">Tech Specs</a>
+            <a href="sample.html" class="nav-item">Compare</a>
+            <a href="sample.html" class="nav-item">Why MeFan Air</a>
+            <a href="sample.html" class="buy-btn">Buy</a>
         </div>
     </div>
 </div>
-
-<!-- 🔥 主要内容区域 -->
-<section class="section1-hero">
-    <h1>MeFan Air - 轻薄便携，强大性能</h1>
-</section>
 
     <!-- 桌面端导航列表，居中对齐，带 Home / Products / About / Contact / 搜索按钮 -->
     <nav class="desktop-nav">
@@ -1594,9 +1597,12 @@ list-style: none;
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const mainHeader = document.getElementById("mainHeader");
     const scrollNav = document.querySelector(".mefan-nav-wrapper");
+    const searchIcon = document.querySelector(".search-icon");
+    const searchPanel = document.querySelector(".search-panel");
+    const searchCloseBtn = document.querySelector(".search-close-btn");
 
+    // 监听滚动，200px 后显示 MeFan Air 导航
     window.addEventListener("scroll", function () {
         if (window.scrollY > 200) {
             document.body.classList.add("scrolled");
@@ -1604,8 +1610,17 @@ document.addEventListener("DOMContentLoaded", function () {
             document.body.classList.remove("scrolled");
         }
     });
-});
 
+    // 打开搜索面板
+    searchIcon.addEventListener("click", function () {
+        searchPanel.style.display = "block";
+    });
+
+    // 关闭搜索面板
+    searchCloseBtn.addEventListener("click", function () {
+        searchPanel.style.display = "none";
+    });
+});
 
 
 
