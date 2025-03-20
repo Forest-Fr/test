@@ -78,7 +78,7 @@ body {
 /* ========== 横幅 Banner ========== */
 .banner-promo {
   /* 让横幅整体向下移动 40px */
-  margin-top: 40px;
+  margin-top: 32px;
   background-color: #EFF7FF; /* 浅蓝背景，可自行调整 */
   border-top: 1px solid #CBD5E1;
   border-bottom: 1px solid #CBD5E1;
