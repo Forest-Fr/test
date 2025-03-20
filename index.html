@@ -86,42 +86,52 @@
   </div>
 </section>
 
-  <!-- 新增：桌面端 Mefan Air 导航（放在 header 之外，与原导航平级） -->
-  <nav id="mefanAirNav" class="mefan-air-nav">
-    <div class="mefan-air-title">Mefan Air</div>
-    <ul class="mefan-air-list">
-      <li><a href="sample.html">Overview</a></li>
-      <li><a href="sample.html">Tech Specs</a></li>
-      <li><a href="sample.html">Compare</a></li>
-      <li><a href="sample.html">Why mefan</a></li>
-      <li><a href="sample.html">Buy</a></li>
-    </ul>
-  </nav>
+  <!-- 桌面端 Mefan Air 导航 (滚动400px出现)，示例ID: #mefanAirNav -->
+<nav class="mefan-air-nav" id="mefanAirNav">
+  <div class="mefan-air-title">Mefan Air</div>
+  <ul class="mefan-air-list">
+    <li><a href="sample.html" target="_blank">Overview</a></li>
+    <li><a href="sample.html" target="_blank">Tech Specs</a></li>
+    <li><a href="sample.html" target="_blank">Compare</a></li>
+    <li><a href="sample.html" target="_blank">Why mefan</a></li>
+    <li><a href="sample.html" target="_blank">Buy</a></li>
+  </ul>
+</nav>
 
-  <!-- 新增：移动端 Mefan Air 导航 -->
-  <nav id="mobileAirNav" class="mobile-air-nav">
-    <div class="mobile-air-left">Mefan Air</div>
-    <div class="mobile-air-right">
-      <!-- 上下翻按钮，初始显示下箭头 ⌄ -->
-      <span id="mobileAirToggleBtn" class="mobile-air-toggle-btn">&#x2304;</span>
-      <a href="sample.html" class="mobile-air-buy">Buy</a>
-    </div>
-  </nav>
+<main style="height: 2000px; padding: 20px;">
+  <h1>Welcome to Mefan</h1>
+  <p>向下滚动 400px 后可以看到导航切换效果：主导航淡出隐藏，Mefan Air 导航出现。</p>
+</main>
 
-  <!-- 新增：移动端下拉面板与 blur 背景 -->
-  <div id="mobileAirPanel" class="mobile-air-panel">
-    <div class="mobile-air-panel-header">
-      <div class="mobile-air-panel-title">Mefan Air</div>
-      <div id="mobileAirCloseBtn" class="mobile-air-close-btn">&#x2303;</div>
-    </div>
-    <ul class="mobile-air-panel-list">
-      <li><a href="sample.html">Overview</a></li>
-      <li><a href="sample.html">Tech Specs</a></li>
-      <li><a href="sample.html">Compare</a></li>
-      <li><a href="sample.html">Why mefan</a></li>
-    </ul>
+<!-- ========== 移动端 Mefan Air 导航 (滚动400px出现) ========== -->
+<nav id="mobileAirNav" class="mobile-air-nav">
+  <!-- 左侧：Mefan Air -->
+  <div class="mobile-air-left">Mefan Air</div>
+
+  <!-- 右侧：箭头 + Buy按钮 -->
+  <div class="mobile-air-right">
+    <!-- 初始箭头为“>” -->
+    <span id="mobileAirToggleBtn" class="mobile-air-toggle-btn&#x2304;</span>
+    <a href="sample.html" target="_blank" class="mobile-air-buy">Buy</a>
   </div>
-  <div id="mobileAirBlur" class="mobile-air-blur"></div>
+</nav>
+
+<!-- ========== 移动端 Mefan Air 二级面板 + blur 背景 ========== -->
+<div id="mobileAirPanel" class="mobile-air-panel">
+  <!-- 头部：Mefan Air 在左，关闭按钮在右 -->
+  <div class="mobile-air-panel-header">
+    <div class="mobile-air-panel-title">Mefan Air</div>
+    <div id="mobileAirCloseBtn" class="mobile-air-close-btn">&#x2303;</div>
+  </div>
+  <!-- 菜单列表 -->
+  <ul class="mobile-air-panel-list">
+    <li><a href="sample.html" target="_blank">Overview</a></li>
+    <li><a href="sample.html" target="_blank">Tech Specs</a></li>
+    <li><a href="sample.html" target="_blank">Compare</a></li>
+    <li><a href="sample.html" target="_blank">Why mefan</a></li>
+  </ul>
+</div>
+<div id="mobileAirBlur" class="mobile-air-blur"></div>
 
 <!-- 其余页面内容... -->
 <main>
