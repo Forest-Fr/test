@@ -14,8 +14,7 @@
   <!-- 内联 CSS（确保 MeFan UI 完全仿照 iPad Air） -->
   <style>
     /* 确保 Banner 背景颜色与 iPad Air 页面一致 */
-   /* Banner 样式优化 */
-/* 🔥 Banner 样式优化 */
+/* 🔥 页面 Banner */
 .banner-container {
     width: 100vw;
     background-color: #f5f5f7;
@@ -26,18 +25,53 @@
     position: static;  /* 避免影响滚动 */
 }
 
-/* Shop 按钮样式 */
+/* 🔥 Banner Shop 按钮 */
 .banner-shop-link {
     color: #0071e3;
     font-weight: 600;
     text-decoration: none;
-    margin-left: 8px;
     display: inline-flex;
     align-items: center;
+    margin-left: 8px;
 }
 .banner-shop-link .arrow {
     font-size: 16px;
     margin-left: 4px;
+}
+
+/* 🟢 主要导航栏 (未滚动前可见) */
+.header-gradient {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;  /* 统一高度 */
+    z-index: 3000;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to right, #DEEFFF, #B2D8FF);
+    transition: background 0.2s ease;
+}
+
+/* 🟢 滚动后变白 */
+.header-gradient.nav-white,
+.scrolled .header-gradient {
+    background: white !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 🟢 原导航栏 (未滚动前可见) */
+.desktop-nav {
+    display: flex;
+    align-items: center;
+    height: 60px; /* 统一高度 */
+}
+
+/* 🟢 滚动后隐藏原导航 */
+.scrolled .desktop-nav {
+    display: none !important;
 }
 
 /* 🟢 滚动后显示的 MeFan Air 导航 */
@@ -46,76 +80,56 @@
     top: 0;
     left: 0;
     width: 100%;
+    height: 60px;  /* 统一高度 */
     background: #fff;
     z-index: 3000;
-    padding: 12px 20px;  /* 增加填充，使其匹配原导航 */
+    padding: 0 20px;  /* 统一内边距 */
     display: none;  /* 默认隐藏，滚动 200px 后显示 */
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-    height: 60px;  /* 统一高度 */
 }
+
+/* 🟢 MeFan Air 文字 */
 #scrollNav .nav-title {
     font-size: 1.2rem;
     font-weight: bold;
+    line-height: 60px; /* 让文字居中 */
 }
+
+/* 🟢 导航链接 */
 #scrollNav .nav-links {
     display: flex;
     gap: 30px;
+    align-items: center;
+    height: 60px; /* 统一高度 */
 }
 #scrollNav .nav-links a {
     text-decoration: none;
     color: #333;
     font-weight: 600;
 }
+
+/* 🟢 Buy 按钮 */
 #scrollNav .buy-btn {
     background: blue;
     color: white;
     padding: 8px 16px;
     border-radius: 5px;
     font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
 }
 
-/* 🟢 滚动后导航栏样式 */
-.scrolled .header-gradient {
-    background: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* 🟢 滚动后，显示新导航 & 隐藏原导航 */
+/* 🟢 滚动后才显示 MeFan Air 导航 */
 .scrolled #scrollNav {
     display: flex !important;
 }
-.scrolled .desktop-nav {
-    display: none !important;
-}
 
-/* 🔵 主要导航栏 (未滚动前可见) */
-.header-gradient {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 3000;
-    padding: 10px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(to right, #DEEFFF, #B2D8FF);
-    transition: background 0.2s ease;
-    height: 60px;  /* 统一高度 */
-}
-.header-gradient.nav-white {
-    background: white !important;
-}
-
-/* 🟢 确保 `.desktop-nav` 在滚动前可见 */
-.desktop-nav {
-    display: flex;
-    align-items: center;
-}
-
-/* 🟢 滚动后才显示的 MeFan Air 导航 */
+/* 🟢 让 `MeFan Air` 导航匹配主导航的宽度 */
 .scrolled .nav-center {
     display: flex !important;
     align-items: center;
@@ -133,28 +147,31 @@
     transition: all 0.3s ease-in-out;
 }
 
-/* 确保导航在不同状态下可见 */
-.desktop-nav {
-    display: flex;
-    align-items: center;
+/* 🟢 确保 `.desktop-nav` 在滚动前可见 */
+.desktop-nav .nav-list > li > a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    transition: color 0.3s ease;
 }
 
-/* MeFan Air 导航栏样式 */
+/* 🟢 MeFan Air 导航栏 */
 .mefan-nav {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    height: 60px; /* 统一高度 */
     background: #fff;
     z-index: 3000;
-    padding: 10px 20px;
+    padding: 0 20px; /* 统一内边距 */
     display: flex;
     justify-content: center;
     align-items: center;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* MeFan Air 导航列表 */
+/* 🟢 MeFan Air 导航链接 */
 .mefan-nav .nav-list {
     list-style: none;
     display: flex;
@@ -162,7 +179,6 @@
     margin: 0;
     padding: 0;
 }
-
 .mefan-nav .nav-list li a {
     text-decoration: none;
     color: #333;
@@ -170,204 +186,109 @@
     font-size: 1rem;
 }
 
-/* MeFan Air 导航激活白色背景 */
-.header-gradient.nav-white {
-    background: #fff !important;
+/* 🔵 页面 Hero */
+.section1-hero {
+    height: calc(100vh + 260px);
+    background: url('MeFan X1.png') center/cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #000;
+}
+.section1-hero h1 {
+    font-size: 4rem;
+    font-weight: bold;
 }
 
-
-
-/* 确保 `desktop-nav` 仍然可见 */
-.desktop-nav .nav-list > li > a {
-    text-decoration: none;
-    color: #333; /* 保持可见 */
-    font-weight: 600;
-    transition: color 0.3s ease;
-}
-   /* 🔵 滚动后变白 */
-    .scrolled .header-gradient {
-      background: white;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+/* 🟢 响应式优化 */
+@media (max-width: 768px) {
+    .section1-product {
+        width: 90%;
     }
-
-    /* 🔵 滚动后显示新导航 */
-    .scrolled .nav-center {
-      display: flex !important;
-    }
-    /* 🟢 滚动后导航栏 */
-.scrolled .nav-center {
-  display: flex !important;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 10px 20px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 9999;
-  transition: all 0.3s ease-in-out;
 }
 
 /* 🟢 保持菜单居中 */
 .nav-center .nav-links {
-  display: flex;
-  gap: 40px;
-  margin-left: auto; 
-  margin-right: auto;
+    display: flex;
+    gap: 40px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* 🟢 让 Buy 按钮不偏移 */
 .nav-center .buy-btn {
-  background: #0071e3;
-  color: white;
-  padding: 8px 18px;
-  border-radius: 20px;
-  font-size: 16px;
-  font-weight: 600;
-  text-decoration: none;
+    background: #0071e3;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
 }
 
-    /* 🟢 默认隐藏滚动导航 */
-    .nav-center {
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
+.nav-center .buy-btn:hover {
+    background: #005bb5;
+}
 
-    /* 🟢 左侧 MeFan Air 标题 */
-    .nav-center .nav-title {
-      font-size: 20px;
-      font-weight: 600;
-      color: #000;
-    }
+/* 🟢 搜索图标 */
+.search-icon {
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-left: 20px;
+}
 
-    /* 🟢 右侧导航 */
-    .nav-center .nav-links {
-      display: flex;
-      gap: 40px;
-      margin-left: 450px;
-    }
+/* 🟢 Footer */
+.footer {
+    font-size: 12px;
+    text-align: center;
+    padding: 10px;
+    background-color: #f8f9fa;
+    margin-top: 0;
+}
+.footer .footer-extend {
+    font-size: 12px;
+    color: #6c757d;
+    text-align: center;
+    margin-top: 0;
+    display: block;
+}
+.footer .footer-extend a {
+    color: inherit;
+    text-decoration: none;
+    margin: 0 10px;
+}
+.footer .footer-extend a:hover {
+    text-decoration: underline;
+}
 
-    .nav-center .nav-links a {
-      text-decoration: none;
-      color: #000;
-      font-size: 16px;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-
-    .nav-center .nav-links a:hover {
-      color: #0071e3;
-    }
-
-    /* 🟢 蓝色 Buy 按钮 */
-    .nav-center .buy-btn {
-      background: #0071e3;
-      color: white;
-      padding: 8px 18px;
-      border-radius: 20px;
-      font-size: 16px;
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    .nav-center .buy-btn:hover {
-      background: #005bb5;
-    }
-
-    /* 🔥 页面 Banner */
-    .banner-container {
-      width: 100vw;
-      background-color: #f5f5f7;
-      text-align: center;
-      padding: 15px 0;
-      font-size: 16px;
-      font-weight: 500;
-      position: relative;
-      top: 40px;
-    }
-
-    /* 🔥 Banner Shop 按钮 */
-    .banner-shop-link {
-      color: #0071e3;
-      font-weight: 600;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      margin-left: 8px;
-    }
-
-    .banner-shop-link .arrow {
-      font-size: 16px;
-      margin-left: 4px;
-    }
-
-    /* 🔥 页面 Hero 图片高度增加 260px */
-    .section1-hero {
-      height: calc(100vh + 260px);
-      background: url('MeFan X1.png') center/cover no-repeat;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      color: #000;
-    }
-
-    .section1-hero h1 {
-      font-size: 4rem;
-      font-weight: bold;
-    }
-
-    /* 主要内容区域 */
-    .section1-hero {
-        height: calc(100vh + 260px);
-      background: url('MeFan X1.png') center/cover no-repeat;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      color: #000;
-    }
-
-    .section1-hero h1 {
-        font-size: 4rem;
-        font-weight: bold;
-        opacity: 0;
-        transform: translateY(20px);
-        animation: fadeInUp 1.5s ease-in-out forwards;
-    }
-
-    /* 产品展示 */
-    .section1-products {
+/* 🟢 社交媒体图标 */
+@media (min-width: 769px) {
+    .social-media {
         display: flex;
-        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 30px;
+        margin-top: 20px;
+    }
+}
+.social-icon {
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    object-fit: contain;
+    margin: 5px;
+}
+@media (max-width: 768px) {
+    .footer-info .social-media {
+        display: flex;
         justify-content: center;
         align-items: center;
-        gap: 40px;
-        padding: 60px 10%;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 10px 0;
     }
+}
 
-    .section1-product {
-        width: 45%;
-        text-align: center;
-        opacity: 0;
-        transform: translateY(30px);
-        animation: fadeInUp 1.5s ease-in-out forwards;
-    }
-
-    .section1-product img {
-        width: 100%;
-        max-width: 500px;
-        border-radius: 10px;
-    }
 
     /* 渐入动画 */
     @keyframes fadeInUp {
