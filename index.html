@@ -1600,13 +1600,13 @@ list-style: none;
 
   <!-- -------------------- 独立运行的其他脚本 -------------------- -->
 
- <script>
+<script>
 document.addEventListener("DOMContentLoaded", function () {
     const mainHeader = document.getElementById("mainHeader"); // 主导航
     const desktopNav = document.querySelector(".desktop-nav"); // 主页导航
-    const mefanNav = document.createElement("nav"); // 滚动后的 MeFan Air 导航
+    let mefanNav = document.createElement("nav"); // MeFan Air 导航栏
 
-    // 创建 MeFan Air 专属导航栏
+    // MeFan Air 专属导航
     mefanNav.classList.add("mefan-nav");
     mefanNav.innerHTML = `
         <ul class="nav-list">
@@ -1618,18 +1618,18 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
     mefanNav.style.display = "none"; // 默认隐藏
 
-    // 将 MeFan Air 导航插入 `mainHeader`
+    // 插入 MeFan Air 导航
     mainHeader.appendChild(mefanNav);
 
-    // 监听滚动事件
+    // 滚动监听
     window.addEventListener("scroll", function () {
         if (window.scrollY > 200) {
-            desktopNav.style.display = "none"; // 隐藏原导航
             mefanNav.style.display = "flex"; // 显示 MeFan Air 导航
-            mainHeader.classList.add("nav-white"); // 变白
+            desktopNav.style.opacity = "0"; // 让原导航透明，不是隐藏
+            mainHeader.classList.add("nav-white"); // 背景变白
         } else {
-            desktopNav.style.display = "flex"; // 恢复原导航
             mefanNav.style.display = "none"; // 隐藏 MeFan Air 导航
+            desktopNav.style.opacity = "1"; // 让原导航恢复可见
             mainHeader.classList.remove("nav-white"); // 取消白色背景
         }
     });
