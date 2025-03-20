@@ -602,38 +602,62 @@
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   /************************************************************
-   * 1) 桌面端：向下滚动 400px，隐藏主导航，显示 Mefan Air 导航
+   * 0) 保留原有汉堡菜单 (Home/Products/About/Contact) 功能
+   *    假设你的原脚本中是类似以下逻辑，保持不变即可
    ************************************************************/
-  const mainHeader  = document.getElementById("mainHeader");   // 原主导航(带Logo等)
-  const mefanAirNav = document.getElementById("mefanAirNav");  // 桌面端 Mefan Air 导航
+  (function(){
+    const menuIcon  = document.getElementById('menuIcon');
+    const closeBtn  = document.getElementById('closeBtn');
+    const mobileNav = document.getElementById('mobileNav'); // 原汉堡菜单容器
+    if (menuIcon && closeBtn && mobileNav) {
+      menuIcon.addEventListener('click', () => {
+        mobileNav.classList.add('active');
+      });
+      closeBtn.addEventListener('click', () => {
+        mobileNav.classList.remove('active');
+      });
+    }
+  })();
 
-  // 监听滚动事件
+  /************************************************************
+   * 1) 桌面端：滚动 400px 后隐藏主导航，显示 mefanAirNav
+   ************************************************************/
+  const mainHeader  = document.getElementById("mainHeader");   // 原主导航(带logo等)
+  const mefanAirNav = document.getElementById("mefanAirNav");  // 桌面端 Mefan Air
+
+  /************************************************************
+   * 2) 移动端：滚动 400px 后隐藏主导航，显示 mobileAirNav
+   *    (上下箭头仅在移动端可见)
+   ************************************************************/
+  const mobileAirNav       = document.getElementById("mobileAirNav");       // 移动端 Mefan Air 导航
+  const mobileAirToggleBtn = document.getElementById("mobileAirToggleBtn"); // 上下箭头按钮
+  const mobileAirPanel     = document.getElementById("mobileAirPanel");     // 下拉面板
+  const mobileAirCloseBtn  = document.getElementById("mobileAirCloseBtn");  // 面板关闭按钮
+  const mobileAirBlur      = document.getElementById("mobileAirBlur");      // blur 背景
+
+  // 监听滚动事件，统一处理
   window.addEventListener("scroll", function() {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
     if (scrollTop > 400) {
-      // 超过 400px，隐藏主导航
+      // 隐藏主导航
       mainHeader.style.transform = "translateY(-100%)";
       mainHeader.style.opacity   = "0";
-
-      // 显示桌面端 Mefan Air 导航
+      // 显示桌面端导航
       if (mefanAirNav) {
         mefanAirNav.classList.add("active");
       }
-
-      // 同时也可显示移动端导航(若需要)，见下方 #mobileAirNav 处理
+      // 显示移动端导航
       if (mobileAirNav) {
         mobileAirNav.classList.add("active");
       }
     } else {
-      // 小于等于 400px，恢复主导航
+      // 恢复主导航
       mainHeader.style.transform = "translateY(0)";
       mainHeader.style.opacity   = "1";
-
-      // 隐藏桌面端 Mefan Air 导航
+      // 隐藏桌面端导航
       if (mefanAirNav) {
         mefanAirNav.classList.remove("active");
       }
-
       // 隐藏移动端导航
       if (mobileAirNav) {
         mobileAirNav.classList.remove("active");
@@ -642,47 +666,31 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   /************************************************************
-   * 2) 移动端：向下滚动 400px，隐藏主导航，显示 Mefan Air 导航
+   * 3) 移动端二级面板：上下箭头 (⌄ / ⌃) + blur + 关闭按钮
    ************************************************************/
-  // 注：如果你只想在桌面端显示 mefanAirNav，
-  //    而只想在移动端显示 mobileAirNav，
-  //    需在 CSS 里使用媒体查询隐藏一个版本。
-  const mobileAirNav = document.getElementById("mobileAirNav"); // 移动端 Mefan Air 导航
+  let panelOpen = false; // 面板是否处于展开状态
 
-  // 上面的滚动事件里已经包含了对 mobileAirNav 的显示/隐藏处理。
-  // 如果你不想移动端也跟随 400px 逻辑，可自行移除上面对 mobileAirNav 的操作。
-
-  /************************************************************
-   * 3) 移动端二级面板：上下箭头切换 + 关闭按钮 + blur
-   ************************************************************/
-  const mobileAirToggleBtn = document.getElementById("mobileAirToggleBtn"); // 上下箭头按钮
-  const mobileAirPanel     = document.getElementById("mobileAirPanel");     // 二级面板
-  const mobileAirCloseBtn  = document.getElementById("mobileAirCloseBtn");  // 关闭按钮(×)
-  const mobileAirBlur      = document.getElementById("mobileAirBlur");      // blur 背景
-
-  let panelOpen = false; // 是否打开二级面板
-
+  // 打开面板：箭头变上箭头(⌃, U+2303)，显示 panel + blur
   function openPanel() {
     panelOpen = true;
     if (mobileAirToggleBtn) {
-      // 显示上箭头(⌃, U+2303)
-      mobileAirToggleBtn.textContent = "\u2303";
+      mobileAirToggleBtn.textContent = "\u2303"; // 上箭头 (⌃)
     }
     if (mobileAirPanel) mobileAirPanel.classList.add("active");
     if (mobileAirBlur)  mobileAirBlur.classList.add("active");
   }
 
+  // 关闭面板：箭头变下箭头(⌄, U+2304)，隐藏 panel + blur
   function closePanel() {
     panelOpen = false;
     if (mobileAirToggleBtn) {
-      // 显示下箭头(⌄, U+2304)
-      mobileAirToggleBtn.textContent = "\u2304";
+      mobileAirToggleBtn.textContent = "\u2304"; // 下箭头 (⌄)
     }
     if (mobileAirPanel) mobileAirPanel.classList.remove("active");
     if (mobileAirBlur)  mobileAirBlur.classList.remove("active");
   }
 
-  // 切换按钮(上下箭头)点击 => 打开/关闭面板
+  // 点击上下箭头按钮 => 切换面板
   if (mobileAirToggleBtn) {
     mobileAirToggleBtn.addEventListener("click", function() {
       if (!panelOpen) {
@@ -704,11 +712,12 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   /************************************************************
-   * 4) 其它原有功能（汉堡菜单 #mobileNav / 搜索 / 等）
-   *    请在此处保持原逻辑不变
+   * 4) 其它原有脚本逻辑(搜索功能、二级面板)保持不变
    ************************************************************/
+
 });
 </script>
+
 
   </script>
 </body>
