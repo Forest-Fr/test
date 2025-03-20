@@ -1535,21 +1535,27 @@ list-style: none;
     });
   </script>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const mainHeader = document.getElementById("mainHeader");
-      const scrollNav = document.getElementById("scrollNav");
+ <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const mainHeader = document.getElementById("mainHeader");
+    const scrollNav = document.getElementById("scrollNav");
+    const desktopNav = document.querySelector(".desktop-nav");
 
-      window.addEventListener("scroll", function () {
-        if (window.scrollY > 300) {
-          mainHeader.classList.add("scrolled");
-          scrollNav.style.display = "flex"; // 显示新导航栏
-        } else {
-          mainHeader.classList.remove("scrolled");
-          scrollNav.style.display = "none"; // 隐藏新导航栏
-        }
-      });
+    // 滚动监听
+    window.addEventListener("scroll", function () {
+      if (window.scrollY > 80) {
+        mainHeader.classList.add("scrolled");
+        scrollNav.style.display = "flex"; // 显示滚动导航
+        desktopNav.style.opacity = "0"; // 渐隐桌面导航
+      } else {
+        mainHeader.classList.remove("scrolled");
+        scrollNav.style.display = "none"; // 隐藏滚动导航
+        desktopNav.style.opacity = "1"; // 恢复桌面导航
+      }
     });
+  });
+
+
   </script>
 </body>
 </html>
