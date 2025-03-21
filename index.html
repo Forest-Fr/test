@@ -264,8 +264,8 @@
       }
     }
 .section2-highlights {
-  margin-top: 100px;
-  padding: 50px 20px;
+ margin-top: 50px; /* 从100px减半 */
+  padding: 30px 20px;
   text-align: center;
 }
 .section2-title {
@@ -273,17 +273,18 @@
   margin-bottom: 50px;
 }
 .section2-carousel-wrapper {
+ width: 1314px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+.section2-carousel-inner {
   display: flex;
   gap: 15px;
-  overflow: hidden;
+  transform: translateX(0);
+  transition: transform 0.6s ease;
 }
 .section2-carousel-item {
-  flex: none;
-  width: 1314px;
-  height: 520px;
-  position: relative;
-  opacity: 0;
-  transition: opacity 0.4s ease;
+  flex: 0 0 1314px;
 }
 .section2-carousel-item.active { opacity: 1; }
 .section2-caption {
@@ -293,10 +294,9 @@
   font-size: 1.5rem;
 }
 .section2-controls {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  margin-top: 30px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 .section2-controls.active { display: flex; }
 .section2-dots {
@@ -1159,19 +1159,22 @@ list-style: none;
   </section>
 <section id="section2-highlights" class="section2-highlights">
   <h2 class="section2-title">Highlights</h2>
-  <div class="section2-carousel-wrapper">
-    <div class="section2-carousel-item" data-index="0">
-      <img src="MeFan Pro.png" width="1314" height="520" alt="MeFan Pro">
-      <div class="section2-caption">Experience premium audio quality</div>
-    </div>
-    <div class="section2-carousel-item" data-index="1">
-      <img src="MeFan Lite.png" width="1314" height="520" alt="MeFan Lite">
-      <div class="section2-caption">Lightweight design for all‑day wear</div>
-    </div>
-    <div class="section2-carousel-item" data-index="2">
-      <img src="A nice girl wearing headphones.png" width="1314" height="520" alt="Girl Wearing Headphones">
-      <div class="section2-caption">Immersive sound wherever you go</div>
-    </div>
+- <div class="section2-carousel-wrapper">
++ <div class="section2-carousel-wrapper">
++   <div class="section2-carousel-inner">
+      <div class="section2-carousel-item" data-index="0">
+        <img src="MeFan Pro.png" width="1314" height="520" alt="MeFan Pro">
+        <div class="section2-caption">Experience premium audio quality</div>
+      </div>
+      <div class="section2-carousel-item" data-index="1">
+        <img src="MeFan Lite.png" width="1314" height="520" alt="MeFan Lite">
+        <div class="section2-caption">Lightweight design for all‑day wear</div>
+      </div>
+      <div class="section2-carousel-item" data-index="2">
+        <img src="A nice girl wearing headphones.png" width="1314" height="520" alt="Girl Wearing Headphones">
+        <div class="section2-caption">Immersive sound wherever you go</div>
+      </div>
++   </div>
   </div>
   <div class="section2-controls">
     <div class="section2-dots">
@@ -1182,6 +1185,7 @@ list-style: none;
     <button class="section2-refresh-btn" title="Restart">&#10227;</button>
   </div>
 </section>
+
 
     <!-- 桌面端新导航 (Mefan Air) 包裹容器 -->
   <div class="mefan-air-wrap" id="mefanAirWrap">
@@ -1597,46 +1601,44 @@ document.addEventListener("DOMContentLoaded", function() {
 
       // 其它功能（搜索、汉堡菜单、多级菜单等）保留不变
     });
-    document.addEventListener('DOMContentLoaded', () => {
+ document.addEventListener('DOMContentLoaded', () => {
   const section2 = document.getElementById('section2-highlights');
-  const items = section2.querySelectorAll('.section2-carousel-item');
+  const inner = section2.querySelector('.section2-carousel-inner');
   const dots = section2.querySelectorAll('.section2-dot');
   const controls = section2.querySelector('.section2-controls');
   const refresh = section2.querySelector('.section2-refresh-btn');
-  let current = 0;
+  let current = 0, interval;
 
-  function activate(i) {
-    items.forEach((it, idx) => it.classList.toggle('active', idx === i));
-    dots.forEach((d, idx) => {
-      d.classList.toggle('active', idx === i);
-      d.style.width = idx === i ? '40px' : '10px';
-    });
-    current = i;
+  function goTo(index) {
+    inner.style.transform = `translateX(-${index * (1314 + 15)}px)`;
+    dots.forEach((d,i) => d.classList.toggle('active', i === index));
+    current = index;
   }
 
-  function playNext() {
-    if (current < items.length - 1) activate(current + 1);
-  }
+  dots.forEach(dot => dot.addEventListener('click', () => {
+    clearInterval(interval);
+    goTo(+dot.dataset.index);
+  }));
 
-  refresh.addEventListener('click', () => activate(0));
+  refresh.addEventListener('click', () => goTo(0));
 
   const io = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        controls.classList.add('active');
-        activate(0);
-        const interval = setInterval(() => {
-          if (current === items.length - 1) clearInterval(interval);
-          else playNext();
-        }, 5000);
-      } else {
-        controls.classList.remove('active');
-      }
-    });
+    if (entries[0].isIntersecting) {
+      controls.classList.add('active');
+      goTo(0);
+      interval = setInterval(() => {
+        if (current < dots.length - 1) goTo(current + 1);
+        else clearInterval(interval);
+      }, 5000);
+    } else {
+      controls.classList.remove('active');
+      clearInterval(interval);
+    }
   }, { rootMargin: '0px 0px -100px 0px' });
 
   io.observe(section2);
 });
+
 
   </script>
 </body>
