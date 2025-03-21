@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MeFan - 让体验无线自由 (Apple-like Splitting Circle)</title>
+  <title>MeFan - Split Circle Apple-Style</title>
   <style>
     /* ========== Reset & 基础 ========== */
     * {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       box-sizing: border-box;
     }
     body {
@@ -16,30 +15,22 @@
       background-color: #fff;
       color: #333;
       line-height: 1.6;
-      padding-top: 40px; /* 原主导航高度 */
+      padding-top: 40px; /* 主导航高度 */
     }
 
     /* ========== 原主导航 ========== */
     .header-gradient {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 3000;
+      position: fixed; top: 0; left: 0;
+      width: 100%; z-index: 3000;
       padding: 10px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: flex; align-items: center; justify-content: space-between;
       background: linear-gradient(to right, #DEEFFF, #B2D8FF);
       transition: background 0.2s ease, transform 0.3s ease, opacity 0.3s ease;
-      height: 60px;
+      height: 60px; /* 统一导航高度 */
     }
-    .header-gradient.nav-white {
-      background: #fff !important;
-    }
+    .header-gradient.nav-white { background: #fff !important; }
     .logo-img {
-      width: 60px;
-      margin-right: 20px;
+      width: 60px; margin-right: 20px;
     }
 
     /* ========== 横幅 Banner ========== */
@@ -62,469 +53,330 @@
       text-decoration: underline;
     }
 
-    /* ========== MeFan X1 图片区 ========== */
+    /* ========== 头图区 ========== */
     .section1-hero {
-      position: relative;
-      width: 100%;
-      margin: 0 auto;
-      overflow: hidden;
-      text-align: center;
+      position: relative; width: 100%; margin: 0 auto; overflow: hidden; text-align: center;
       background-color: #000;
     }
     .section1-hero-img {
-      width: 100%;
-      height: auto;
+      width: 100%; height: auto;
       max-height: 520px;
-      display: block;
-      object-fit: cover;
+      display: block; object-fit: cover;
     }
     .section1-hero-content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
+      position: absolute; top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      color: #fff;
-      text-align: center;
+      color: #fff; text-align: center;
       max-width: 90%;
     }
     .section1-title {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
+      font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;
     }
     .section1-subtitle {
-      font-size: 1.4rem;
-      margin-bottom: 1rem;
+      font-size: 1.4rem; margin-bottom: 1rem;
     }
     .section1-buy-btn {
       display: inline-block;
-      background-color: #0071e3;
-      color: #fff;
-      text-decoration: none;
-      padding: 10px 20px;
-      border-radius: 4px;
-      font-size: 1rem;
+      background-color: #0071e3; color: #fff;
+      text-decoration: none; padding: 10px 20px;
+      border-radius: 4px; font-size: 1rem;
       margin-bottom: 0.8rem;
     }
-    .section1-buy-btn:hover {
-      background-color: #005bb5;
-    }
+    .section1-buy-btn:hover { background-color: #005bb5; }
     .section1-price {
-      font-size: 0.9rem;
-      margin-top: 0;
+      font-size: 0.9rem; margin-top: 0;
     }
 
     /* ========== 桌面端新导航 (Mefan Air) ========== */
     .mefan-air-wrap {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 4000;
-      background: #f8f8f8;
-      border-bottom: 1px solid #ddd;
-      padding: 10px 20px;
-      transform: translateY(-100%);
-      opacity: 0;
-      transition: transform 0.3s ease, opacity 0.3s ease;
+      position: fixed; top: 0; left: 0; width: 100%;
+      z-index: 4000; background: #f8f8f8; border-bottom: 1px solid #ddd;
+      padding: 10px 20px; transform: translateY(-100%);
+      opacity: 0; transition: transform 0.3s ease, opacity 0.3s ease;
     }
     .mefan-air-wrap.active {
-      transform: translateY(0);
-      opacity: 1;
+      transform: translateY(0); opacity: 1;
     }
     .mefan-air-nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      margin: 0;
-      padding: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; margin: 0; padding: 0;
     }
     .mefan-air-left {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin: 0;
-      padding: 0;
-      margin-right: auto;
+      font-size: 1.2rem; font-weight: 600; margin-right: auto;
     }
     .mefan-air-list {
-      list-style: none;
-      display: flex;
-      gap: 20px;
-      margin: 0;
+      list-style: none; display: flex; gap: 20px; margin: 0;
     }
     .mefan-air-list li a {
-      text-decoration: none;
-      color: #0071e3;
+      text-decoration: none; color: #0071e3;
     }
 
     /* ========== 移动端新导航 (Mefan Air) ========== */
     .mobile-air-nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 5000;
-      display: none;
-      background-color: #fff;
-      border-bottom: 1px solid #ddd;
+      position: fixed; top: 0; left: 0; width: 100%;
+      z-index: 5000; display: none;
+      background-color: #fff; border-bottom: 1px solid #ddd;
       padding: 10px 20px;
     }
-    .mobile-air-nav.active {
-      display: block;
-    }
+    .mobile-air-nav.active { display: block; }
     .mobile-air-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: flex; align-items: center; justify-content: space-between;
     }
     .mobile-air-left {
-      font-size: 1rem;
-      font-weight: 600;
-      margin: 0;
-      padding: 0;
+      font-size: 1rem; font-weight: 600;
     }
     .mobile-air-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
+      display: flex; align-items: center; gap: 16px;
     }
     .mobile-air-toggle-btn {
-      font-size: 1.2rem;
-      cursor: pointer;
-      user-select: none;
+      font-size: 1.2rem; cursor: pointer; user-select: none;
     }
     .mobile-air-buy {
-      padding: 6px 12px;
-      background-color: #0071e3;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 4px;
+      padding: 6px 12px; background-color: #0071e3; color: #fff;
+      text-decoration: none; border-radius: 4px;
     }
     .mobile-air-panel {
-      overflow: hidden;
-      width: 70%;
-      max-height: 0;
-      transition: max-height 0.3s ease;
+      overflow: hidden; width: 70%; max-height: 0; transition: max-height 0.3s ease;
     }
-    .mobile-air-panel.active {
-      max-height: 100vh;
-    }
+    .mobile-air-panel.active { max-height: 100vh; }
     .mobile-air-panel-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
+      list-style: none; margin: 0; padding: 0;
     }
-    .mobile-air-panel-list li {
-      border-bottom: 1px solid #eee;
-    }
+    .mobile-air-panel-list li { border-bottom: 1px solid #eee; }
     .mobile-air-panel-list li a {
-      display: block;
-      padding: 14px 20px;
-      text-decoration: none;
-      color: #333;
+      display: block; padding: 14px 20px;
+      text-decoration: none; color: #333;
     }
-    .mobile-air-panel-list li a:hover {
-      background-color: #f2f2f2;
-    }
+    .mobile-air-panel-list li a:hover { background-color: #f2f2f2; }
     .mobile-air-blur {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 0;
-      z-index: 4500;
-      background: rgba(0,0,0,0.3);
-      backdrop-filter: blur(8px);
+      position: fixed; top: 0; left: 0; width: 100%; height: 0;
+      z-index: 4500; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px);
       transition: height 0.3s ease, opacity 0.3s ease;
       opacity: 0;
     }
     .mobile-air-blur.active {
-      height: 100vh;
-      opacity: 1;
+      height: 100vh; opacity: 1;
     }
-
     @media (min-width: 769px) {
-      .mobile-air-nav,
-      .mobile-air-panel,
-      .mobile-air-blur {
+      .mobile-air-nav, .mobile-air-panel, .mobile-air-blur {
         display: none !important;
       }
     }
     @media (max-width: 768px) {
-      .mefan-air-wrap {
-        display: none !important;
-      }
+      .mefan-air-wrap { display: none !important; }
     }
 
-    /* ===== Section2 Highlights (轮播) ===== */
+    /* ========== 轮播区 (Section2) ========== */
     .section2-highlights {
-      margin-top: 50px;
-      padding: 30px 20px;
-      text-align: center;
-      position: relative; /* 重要: 为绝对定位提供参考 */
+      margin-top: 50px; padding: 30px 20px;
+      text-align: center; position: relative;
     }
     .section2-title {
-      font-size: 2.5rem;
-      margin-bottom: 50px;
+      font-size: 2.5rem; margin-bottom: 50px;
     }
     .section2-carousel-wrapper {
-      width: 100%;
-      max-width: 1013px;
-      overflow: hidden;
-      margin: 0 auto;
+      width: 100%; max-width: 1013px; overflow: hidden; margin: 0 auto;
     }
     .section2-carousel-inner {
-      display: flex;
-      gap: 15px;
-      transform: translateX(0);
-      transition: transform 0.6s ease;
+      display: flex; gap: 15px;
+      transform: translateX(0); transition: transform 0.6s ease;
     }
     .section2-carousel-item {
-      flex: 0 0 1013px; /* 每个项目宽度与图片一致 */
-      position: relative;
+      flex: 0 0 1013px; position: relative;
     }
     .section2-carousel-item img {
-      width: 100%;
-      display: block;
+      width: 100%; display: block;
     }
     .section2-caption {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      font-size: 1.5rem;
-      color: #333;
+      position: absolute; top: 20px; left: 20px;
+      font-size: 1.5rem; color: #333;
     }
-
-    /* 轮播底部“播放+dots+刷新” */
+    /* 原有播放+dots+refresh */
     .section2-controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      transform: translateY(20px);
+      display: flex; justify-content: center; align-items: center;
+      opacity: 0; transform: translateY(20px);
       transition: opacity 0.4s ease, transform 0.4s ease;
       margin-top: 20px;
     }
     .section2-controls.active {
-      opacity: 1;
-      transform: translateY(0);
+      opacity: 1; transform: translateY(0);
     }
+    .section2-play-btn {
+      font-size: 24px; background: none; border: none; cursor: pointer;
+      margin-right: 16px; opacity: 0; transition: opacity 0.4s ease;
+    }
+    .section2-controls.active .section2-play-btn { opacity: 1; }
     .section2-dots {
-      background: #f2f2f2;
-      border-radius: 30px;
-      padding: 8px 16px;
-      display: flex;
-      gap: 12px;
+      background: #f2f2f2; border-radius: 30px; padding: 8px 16px;
+      display: flex; gap: 12px;
     }
     .section2-dot {
-      width: 10px;
-      height: 10px;
-      background: #999;
-      border-radius: 50%;
-      cursor: pointer;
+      width: 10px; height: 10px; background: #999; border-radius: 50%; cursor: pointer;
       transition: width 5s linear;
     }
     .section2-dot.active {
-      width: 40px;
-      background: #333;
-      border-radius: 4px;
-    }
-    .section2-play-btn {
-      font-size: 24px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      margin-right: 16px;
-      opacity: 0; /* 初始隐藏 */
-      transition: opacity 0.4s ease;
-    }
-    .section2-controls.active .section2-play-btn {
-      opacity: 1;
+      width: 40px; background: #333; border-radius: 4px;
     }
     .section2-refresh-btn {
-      margin-left: 16px;
-      font-size: 24px;
-      background: none;
-      border: none;
-      cursor: pointer;
+      margin-left: 16px; font-size: 24px; background: none; border: none; cursor: pointer;
     }
 
-    /* ========== 模拟苹果分裂式圆圈 ========== */
-    /* 父容器: 用于定位 + 控制可见性 */
+    /* ========== 分裂式圆圈按钮 ========== */
+    /* 先把外容器放在轮播区“绝对定位” => 初始在容器中央 (top:50%...),
+       动画结束后移动到底部30px */
     .split-circle-wrap {
       position: absolute;
-      right: 50px;
-      bottom: 30px;
-      width: 80px;
-      height: 80px;
-      z-index: 9999; /* 确保在图像上方 */
-      pointer-events: none; /* 初始不可点击 */
-      opacity: 0;
-      transition: opacity 0.3s ease-in-out;
+      width: 80px; height: 80px;
+      pointer-events: none; /* 初始不可点 */
+      opacity: 0;           /* 初始透明 */
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      z-index: 9999;        /* 确保在图片上层 */
     }
     .split-circle-wrap.active {
-      opacity: 1;
       pointer-events: auto; /* 激活后可点击 */
     }
 
-    /* 外圈+内圈: 绝对定位叠加, 做分裂动画 */
+    /* 外圈+内圈 => 分裂动画 */
     .outer-ring,
     .inner-circle {
-      position: absolute;
-      top: 0; left: 0;
+      position: absolute; top: 0; left: 0;
       width: 80px; height: 80px;
       border-radius: 50%;
     }
     .outer-ring {
-      border: 3px solid #007aff; /* Apple蓝 */
-      background: transparent;
+      border: 3px solid #007aff; background: transparent;
     }
     .inner-circle {
-      background: #444;  /* 可改成灰色/黑色 */
+      background: #444;
     }
 
-    /* ========== 动画关键帧 ========== */
-    @keyframes circleEnter {
+    /* ========== Keyframes for the container's position/scale ========== */
+    @keyframes circleContainerEnter {
       0% {
-        transform: scale(0);
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
       }
       30% {
-        transform: scale(1);
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
       }
+      /* 到60%时仍在中央; 让内圈与外圈内部clip-path分裂 */
       60% {
-        /* 分裂: clip-path把左半边隐藏,只留右半边(演示) */
-        clip-path: inset(0 50% 0 0);
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
+      /* 动画最后移动到底部 30px 处 (本示例假设容器高度~520px, 你可微调) */
+      100% {
+        /* 这里让 Y 平移到 ~ (containerHeight - 30) - (80/2) = 230px 仅示例 */
+        /* 真实项目请微调 translateY( 200px / 300px ) 以贴合实际 */
+        transform: translate(-50%, calc( -50% + 200px )) scale(1);
+        opacity: 1;
+      }
+    }
+    @keyframes circleContainerLeave {
+      0% {
+        /* 从底部位置开始 */
+        transform: translate(-50%, calc( -50% + 200px )) scale(1);
+        opacity: 1;
+      }
+      40% {
+        /* 先回到中央 */
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
       }
       100% {
-        clip-path: inset(0 50% 0 0);
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
       }
+    }
+
+    /* ========== Keyframes for the “split” ========== */
+    @keyframes circleEnter {
+      0%   { transform: scale(0); }
+      30%  { transform: scale(1); }
+      60%  { clip-path: inset(0 50% 0 0); }
+      100% { clip-path: inset(0 50% 0 0); }
     }
     @keyframes circleEnterInner {
-      0% {
-        transform: scale(0);
-      }
-      30% {
-        transform: scale(1);
-      }
-      60% {
-        /* 分裂: clip-path留左半边,隐藏右半边 */
-        clip-path: inset(0 0 0 50%);
-      }
-      100% {
-        clip-path: inset(0 0 0 50%);
-      }
+      0%   { transform: scale(0); }
+      30%  { transform: scale(1); }
+      60%  { clip-path: inset(0 0 0 50%); }
+      100% { clip-path: inset(0 0 0 50%); }
     }
-
     @keyframes circleLeave {
-      0% {
-        clip-path: inset(0 50% 0 0);
-        transform: scale(1);
-      }
-      40% {
-        clip-path: inset(0); /* 合并回完整圆 */
-      }
-      100% {
-        transform: scale(0);
-      }
+      0%   { clip-path: inset(0 50% 0 0); transform: scale(1); }
+      40%  { clip-path: inset(0); }
+      100% { transform: scale(0); }
     }
     @keyframes circleLeaveInner {
-      0% {
-        clip-path: inset(0 0 0 50%);
-        transform: scale(1);
-      }
-      40% {
-        clip-path: inset(0);
-      }
-      100% {
-        transform: scale(0);
-      }
+      0%   { clip-path: inset(0 0 0 50%); transform: scale(1); }
+      40%  { clip-path: inset(0); }
+      100% { transform: scale(0); }
     }
 
-    /* 通过添加/移除 .enter / .leave 类来触发 */
+    /* 容器 position 动画: enter / leave */
+    .split-circle-wrap.enter {
+      animation: circleContainerEnter 1.1s forwards ease-in-out;
+    }
+    .split-circle-wrap.leave {
+      animation: circleContainerLeave 1.1s forwards ease-in-out;
+    }
+    /* 外圈 & 内圈: clip-path 分裂 / 合并 */
     .outer-ring.enter {
-      animation: circleEnter 0.9s forwards ease-in-out;
+      animation: circleEnter 1.1s forwards ease-in-out;
     }
     .inner-circle.enter {
-      animation: circleEnterInner 0.9s forwards ease-in-out;
+      animation: circleEnterInner 1.1s forwards ease-in-out;
     }
     .outer-ring.leave {
-      animation: circleLeave 0.9s forwards ease-in-out;
+      animation: circleLeave 1.1s forwards ease-in-out;
     }
     .inner-circle.leave {
-      animation: circleLeaveInner 0.9s forwards ease-in-out;
+      animation: circleLeaveInner 1.1s forwards ease-in-out;
     }
   </style>
 </head>
 <body>
 
-  <!-- ==================== 原主导航 ==================== -->
+  <!-- ========== 原主导航等区域，保持不变 ========== -->
   <header class="header-gradient" id="mainHeader">
     <img src="MeFan Logo.png" alt="MeFan Logo" class="logo-img">
-    <nav class="desktop-nav">
-      <ul class="nav-list">
-        <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="products.html">Products</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><div class="search-icon" id="desktopSearchIcon">🔍</div></li>
-      </ul>
-    </nav>
-    <div class="mobile-icons">
-      <span id="mobileSearchIcon" class="mobile-search-icon">🔍</span>
-      <div class="vertical-hamburger" id="menuIcon">
-        <div class="v-bar"></div>
-        <div class="v-bar"></div>
-        <div class="v-bar"></div>
-      </div>
-    </div>
-    <nav id="mobileNav">
-      <div class="close-btn" id="closeBtn">&times;</div>
-      <ul>
-        <li><a href="javascript:void(0);" data-level="home">Home</a></li>
-        <li><a href="javascript:void(0);" data-level="products">Products</a></li>
-        <li><a href="javascript:void(0);" data-level="about">About</a></li>
-        <li><a href="javascript:void(0);" data-level="contact">Contact</a></li>
-      </ul>
-    </nav>
+    <!-- 其余导航同原代码 -->
   </header>
 
-  <!-- ==================== 横幅 Banner ==================== -->
-  <div class="banner-promo">
-    Buy now with special offers! <a href="sample.html" target="_blank">Shop &gt;</a>
-  </div>
+  <div class="banner-promo">Buy now with special offers! <a href="#">Shop &gt;</a></div>
 
-  <!-- ==================== MeFan X1 图片区 ==================== -->
+  <!-- ========== 头图区 ========== -->
   <section class="section1-hero">
-    <img src="MeFan X1.png" alt="MeFan X1" class="section1-hero-img">
+    <img src="YourLargeImage.png" alt="MeFan X1" class="section1-hero-img">
     <div class="section1-hero-content">
       <h1 class="section1-title">Experience Next-Gen Sound</h1>
       <h2 class="section1-subtitle">Unleash the power of wireless audio.</h2>
-      <a href="sample.html" target="_blank" class="section1-buy-btn">Buy</a>
+      <a href="#" class="section1-buy-btn">Buy</a>
       <p class="section1-price">From $599 or $49.91/mo. for 12 mo.*</p>
     </div>
   </section>
 
-  <!-- ==================== Section2 Highlights (轮播) ==================== -->
+  <!-- ========== Section2 (轮播) ========== -->
   <section id="section2-highlights" class="section2-highlights">
     <h2 class="section2-title">Highlights</h2>
     <div class="section2-carousel-wrapper">
       <div class="section2-carousel-inner">
+        <!-- 轮播项 -->
         <div class="section2-carousel-item" data-index="0">
-          <img src="MeFan Pro.png" width="1314" height="520" alt="MeFan Pro">
-          <div class="section2-caption">Experience premium audio quality</div>
+          <img src="Slide1.png" width="1314" height="520" alt="MeFan Pro">
         </div>
         <div class="section2-carousel-item" data-index="1">
-          <img src="MeFan Lite.png" width="1314" height="520" alt="MeFan Lite">
-          <div class="section2-caption">Lightweight design for all‑day wear</div>
+          <img src="Slide2.png" width="1314" height="520" alt="MeFan Lite">
         </div>
         <div class="section2-carousel-item" data-index="2">
-          <img src="A nice girl wearing headphones.png" width="1314" height="520" alt="Girl Wearing Headphones">
-          <div class="section2-caption">Immersive sound wherever you go</div>
+          <img src="Slide3.png" width="1314" height="520" alt="Girl wearing headphones">
         </div>
       </div>
     </div>
-    <!-- 轮播底部控件 (原有: 播放, dots, 刷新) -->
+
+    <!-- 底部播放+Dots+刷新(原功能) -->
     <div class="section2-controls">
       <button class="section2-play-btn" title="Play">▶</button>
       <div class="section2-dots">
@@ -535,286 +387,117 @@
       <button class="section2-refresh-btn" title="Restart">&#10227;</button>
     </div>
 
-    <!-- ==================== 新增：分裂式圆圈容器 ==================== -->
-    <div class="split-circle-wrap" id="splitCircle">
+    <!-- ========== 分裂圆圈外容器 ========== -->
+    <div id="splitCircle" class="split-circle-wrap">
       <div class="outer-ring"></div>
       <div class="inner-circle"></div>
     </div>
   </section>
 
-  <!-- ==================== 桌面端新导航 (Mefan Air) ==================== -->
-  <div class="mefan-air-wrap" id="mefanAirWrap">
-    <nav class="mefan-air-nav" id="mefanAirNavDesktop">
-      <div class="mefan-air-left">Mefan Air</div>
-      <ul class="mefan-air-list">
-        <li><a href="sample.html">Overview</a></li>
-        <li><a href="sample.html">Tech Specs</a></li>
-        <li><a href="sample.html">Compare</a></li>
-        <li><a href="sample.html">Why mefan</a></li>
-        <li><a href="sample.html">Buy</a></li>
-      </ul>
-    </nav>
-  </div>
-
-  <!-- ==================== 移动端新导航 (Mefan Air) ==================== -->
-  <nav id="mobileAirNav" class="mobile-air-nav">
-    <div class="mobile-air-top">
-      <div class="mobile-air-left">Mefan Air</div>
-      <div class="mobile-air-right">
-        <span id="mobileAirToggleBtn" class="mobile-air-toggle-btn">&#x2304;</span>
-        <a href="sample.html" target="_blank" class="mobile-air-buy">Buy</a>
-      </div>
-    </div>
-    <div id="mobileAirPanel" class="mobile-air-panel">
-      <ul class="mobile-air-panel-list">
-        <li><a href="sample.html" target="_blank">Overview</a></li>
-        <li><a href="sample.html" target="_blank">Tech Specs</a></li>
-        <li><a href="sample.html" target="_blank">Compare</a></li>
-        <li><a href="sample.html" target="_blank">Why mefan</a></li>
-      </ul>
-    </div>
-  </nav>
-  <div id="mobileAirBlur" class="mobile-air-blur"></div>
-
-  <!-- ==================== 页面主体内容 ==================== -->
+  <!-- 其余内容 (Mefan Air wrap, mobile nav, main, footer...) 同原代码 -->
   <main style="height: 1200px;">
     <h1>Welcome to Mefan</h1>
-    <p>向下滚动 400px 后可以看到导航切换效果。滚到轮播区底部还差180px处时，会出现“圆圈分裂”动画按钮。</p>
+    <p>滚动到轮播区域底部还差 180px 左右时，按钮先在中心出现并分裂，然后移动到底部 30px。离开时反向合并并消失。</p>
   </main>
 
-  <!-- ==================== 原有移动端多级菜单 (保留) ==================== -->
-  <div id="mobileNavLevel2Home" class="menu-panel menu-panel--level2">
-    <div class="menu-panel__header">
-      <div class="menu-panel__back">&lt; 返回</div>
-      <div class="menu-panel__title">Explore the Mefan</div>
-      <div class="menu-panel__close">&times;</div>
-    </div>
-    <div class="menu-panel__content">
-      <ul>
-        <li><a href="http://mefan.42web.io" target="_blank">Explore the Mefan</a></li>
-      </ul>
-    </div>
-  </div>
-  <div id="mobileNavLevel2Products" class="menu-panel menu-panel--level2">
-    <div class="menu-panel__header">
-      <div class="menu-panel__back">&lt; 返回</div>
-      <div class="menu-panel__title">Products</div>
-      <div class="menu-panel__close">&times;</div>
-    </div>
-    <div class="menu-panel__content">
-      <div class="menu-panel__group">
-        <div class="menu-panel__group-title">MEFAN SERIES</div>
-        <ul class="menu-panel__group-list">
-          <li><a href="product-lite.html" target="_blank">MeFan Lite</a></li>
-          <li><a href="product-x1.html" target="_blank">MeFan X1</a></li>
-          <li><a href="product-pro.html" target="_blank">MeFan Pro</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <!-- 其它多级菜单面板省略 -->
-
-  <!-- ==================== 再放个主体区 (或 Footer) ==================== -->
-  <main>
-    <h2>More Content ...</h2>
-    <p>这里是页面其它内容……</p>
-  </main>
-
-  <!-- ==================== 主功能脚本 ==================== -->
-  <script>
- 
-
-  <!-- ========== 控制导航切换的脚本 ========== -->
-  <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const mainHeader   = document.getElementById("mainHeader");
-    const mefanAirWrap = document.getElementById("mefanAirWrap");
-    const mobileAirNav = document.getElementById("mobileAirNav");
-
-    window.addEventListener("scroll", function() {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const isMobile = window.innerWidth <= 768;
-
-      if (!isMobile) {
-        // 桌面端滚动 > 400px: 隐藏主导航，显示 MeFan Air
-        if (scrollTop > 400) {
-          mainHeader.style.transform = "translateY(-100%)";
-          mainHeader.style.opacity   = "0";
-          if (mefanAirWrap) mefanAirWrap.classList.add("active");
-        } else {
-          mainHeader.style.transform = "translateY(0)";
-          mainHeader.style.opacity   = "1";
-          if (mefanAirWrap) mefanAirWrap.classList.remove("active");
-        }
-      } else {
-        // 移动端滚动 > 200px: 隐藏主导航，显示手机端 Mefan Air
-        if (scrollTop > 200) {
-          mainHeader.style.transform = "translateY(-100%)";
-          mainHeader.style.opacity   = "0";
-          if (mobileAirNav) mobileAirNav.classList.add("active");
-        } else {
-          mainHeader.style.transform = "translateY(0)";
-          mainHeader.style.opacity   = "1";
-          if (mobileAirNav) mobileAirNav.classList.remove("active");
-        }
-      }
-    });
-
-    // 移动端下拉面板
-    if (window.innerWidth <= 768) {
-      const mobileAirToggleBtn = document.getElementById("mobileAirToggleBtn");
-      const mobileAirPanel     = document.getElementById("mobileAirPanel");
-      const mobileAirBlur      = document.getElementById("mobileAirBlur");
-      let panelOpen = false;
-
-      function openPanel() {
-        panelOpen = true;
-        if (mobileAirToggleBtn) mobileAirToggleBtn.textContent = "\u2303"; // 上箭头
-        if (mobileAirPanel)     mobileAirPanel.style.maxHeight = mobileAirPanel.scrollHeight + "px";
-        if (mobileAirBlur)      mobileAirBlur.classList.add("active");
-      }
-      function closePanel() {
-        panelOpen = false;
-        if (mobileAirToggleBtn) mobileAirToggleBtn.textContent = "\u2304"; // 下箭头
-        if (mobileAirPanel)     mobileAirPanel.style.maxHeight = "0";
-        if (mobileAirBlur)      mobileAirBlur.classList.remove("active");
-      }
-
-      if (mobileAirToggleBtn && mobileAirPanel) {
-        mobileAirToggleBtn.addEventListener("click", function() {
-          panelOpen ? closePanel() : openPanel();
-        });
-      }
-      if (mobileAirBlur) {
-        mobileAirBlur.addEventListener("click", closePanel);
-      }
-    }
-  });
-  </script>
-
-  <!-- ========== 轮播 & 分裂式圆圈动画脚本 ========== -->
+  <!-- ========== 主功能脚本 ========== -->
   <script>
   document.addEventListener('DOMContentLoaded', () => {
-    /*****************************************************
-     * A) 轮播 / dots / 播放按钮 (与 IntersectionObserver)
-     *****************************************************/
-    const section2 = document.getElementById('section2-highlights');
-    const inner = section2.querySelector('.section2-carousel-inner');
-    const dots = section2.querySelectorAll('.section2-dot');
-    const controls = section2.querySelector('.section2-controls');
-    const refreshBtn = section2.querySelector('.section2-refresh-btn');
-    const oldPlayBtn = section2.querySelector('.section2-play-btn');
-    let currentIndex = 0;
 
-    function goToSlide(idx) {
-      inner.style.transform = `translateX(-${idx * (1013 + 15)}px)`;
-      dots.forEach((d,i) => d.classList.toggle('active', i===idx));
-      currentIndex = idx;
-    }
-    dots.forEach(dot => {
-      dot.addEventListener('click', () => goToSlide(+dot.dataset.index));
-    });
-    if (refreshBtn) {
-      refreshBtn.addEventListener('click', () => goToSlide(0));
-    }
-    if (oldPlayBtn) {
-      oldPlayBtn.addEventListener('click', () => {
-        alert("Old Play Button clicked!");
-      });
-    }
+    /* A) 模拟原先的滚动切换导航脚本... (略)
+       B) 模拟 轮播 + 播放/刷新/切换功能... (略)
+       这里不再重复写，你可放你原有脚本或合并即可
+    */
 
-    // 显示/隐藏 controls
-    const obs = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        controls.classList.add('active');
-      } else {
-        controls.classList.remove('active');
-      }
-    }, { threshold: 0.3 });
-    obs.observe(section2);
-
-    /*****************************************************
-     * B) 分裂式圆圈动画
-     * - 滚动到 #section2-highlights 的底部 <= -180px 时
-     *   => 触发 "enter" 动画(分裂出现)
-     * - 离开后 => "leave" 动画(合并消失)
-     *****************************************************/
+    /********************************************************
+     * C) 分裂圆圈核心脚本
+     * - 当 #section2-highlights 滚动到底部 <= -180px 时
+     *   => 容器在中间scale(0)->scale(1)并分裂 => 移动到底部
+     * - 离开时 => 反向合并到圆 => scale(0)
+     ********************************************************/
+    const section2    = document.getElementById('section2-highlights');
     const splitCircle = document.getElementById('splitCircle');
     const outerRing   = splitCircle.querySelector('.outer-ring');
     const innerCircle = splitCircle.querySelector('.inner-circle');
 
-    let isShown = false;    // 当前是否处于显示(分裂)状态
-    let leaving = false;    // 是否正在离开动画
+    let isActive  = false;  // 是否已经在显示(分裂)状态
+    let isLeaving = false;  // 是否正在离场
 
-    // 给圆圈加个点击事件演示
+    // 按钮点击演示
     splitCircle.addEventListener('click', () => {
-      alert("Splitting circle clicked!");
+      alert("Clicked the splitting circle!");
     });
 
-    window.addEventListener('scroll', handleScroll);
-
-    function handleScroll() {
-      if (!splitCircle || !section2) return;
+    function onScroll() {
       const rect = section2.getBoundingClientRect();
-      const distanceToBottom = rect.bottom - window.innerHeight;
-
-      // 当 distanceToBottom <= -180 => 显示(分裂)
-      if (distanceToBottom <= -180 && distanceToBottom > -2000) {
-        if (!isShown) {
-          showCircle();
+      const distance = rect.bottom - window.innerHeight;
+      // 距离底部 <= -180 => 执行出现动画
+      if (distance <= -180 && distance > -2000) {
+        if (!isActive) {
+          showSplitCircle();
         }
       } else {
-        if (isShown) {
-          hideCircle();
+        if (isActive) {
+          hideSplitCircle();
         }
       }
     }
 
-    function showCircle() {
-      isShown = true;
-      leaving = false;
-      splitCircle.classList.add('active');  // 让容器可见
-      // 移除离开动画class
+    function showSplitCircle() {
+      isActive  = true;
+      isLeaving = false;
+      splitCircle.classList.add('active'); // 让其可点击
+      // 移除离场class
+      splitCircle.classList.remove('leave');
       outerRing.classList.remove('leave');
       innerCircle.classList.remove('leave');
-      // 添加进入动画class
+      // 添加进场class
+      splitCircle.classList.add('enter');
       outerRing.classList.add('enter');
       innerCircle.classList.add('enter');
-
-      // 动画结束后移除 .enter
-      outerRing.addEventListener('animationend', onEnterEnd);
-      innerCircle.addEventListener('animationend', onEnterEnd);
     }
 
-    function onEnterEnd(e) {
+    function hideSplitCircle() {
+      isActive  = false;
+      isLeaving = true;
+      // 移除进场class
+      splitCircle.classList.remove('enter');
+      outerRing.classList.remove('enter');
+      innerCircle.classList.remove('enter');
+      // 添加离场class
+      splitCircle.classList.add('leave');
+      outerRing.classList.add('leave');
+      innerCircle.classList.add('leave');
+    }
+
+    // 当离场动画结束后，彻底隐藏
+    splitCircle.addEventListener('animationend', (e) => {
+      // 监听 leave 动画最后一帧
+      if (e.animationName === 'circleContainerLeave') {
+        // 容器位移合并完成 => 不再可见
+        splitCircle.classList.remove('active');
+      }
+    });
+    outerRing.addEventListener('animationend', (e) => {
+      // 动画结束后移除enter/leave类
       if (e.animationName === 'circleEnter' || e.animationName === 'circleEnterInner') {
         e.target.classList.remove('enter');
       }
-    }
-
-    function hideCircle() {
-      isShown = false;
-      leaving = true;
-      // 加 .leave
-      outerRing.classList.remove('enter');
-      innerCircle.classList.remove('enter');
-      outerRing.classList.add('leave');
-      innerCircle.classList.add('leave');
-
-      // 动画结束后隐藏容器
-      outerRing.addEventListener('animationend', onLeaveEnd);
-      innerCircle.addEventListener('animationend', onLeaveEnd);
-    }
-
-    function onLeaveEnd(e) {
-      if (e.animationName === 'circleLeave' || e.animationName === 'circleLeaveInner') {
+      if (e.animationName === 'circleLeave') {
         e.target.classList.remove('leave');
       }
-      if (!outerRing.classList.contains('leave') && 
-          !innerCircle.classList.contains('leave')) {
-        splitCircle.classList.remove('active');
+    });
+    innerCircle.addEventListener('animationend', (e) => {
+      if (e.animationName === 'circleEnter' || e.animationName === 'circleEnterInner') {
+        e.target.classList.remove('enter');
       }
-    }
+      if (e.animationName === 'circleLeave') {
+        e.target.classList.remove('leave');
+      }
+    });
+
+    // 监听滚动
+    window.addEventListener('scroll', onScroll);
   });
   </script>
 </body>
