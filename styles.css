@@ -208,47 +208,62 @@ body {
 
 /* ========== 桌面端 Mefan Air 导航 ========== */
 /* 包裹容器：固定在页面顶部，不让它跑到下面去 */
+/* 原主导航 (header-gradient) 等保持不变... */
+
+/* ========== 新增：包裹容器 .mefan-air-wrap ========== */
 .mefan-air-wrap {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
+  /* 默认隐藏: 上移并透明 */
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
   z-index: 4000; /* 保证在原导航之上或合适层级 */
   background: #f8f8f8; 
   border-bottom: 1px solid #ddd;
-  /* 不要设置 padding-left 之类，让里面的文字可贴左端 */
 }
 
-/* 导航本身只控制内部排版，不设置额外的 left/right */
+/* 当添加 .active 时，平滑移入、显示 */
+.mefan-air-wrap.active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* 内部导航 .mefan-air-nav: 仅做内部排版 */
 .mefan-air-nav {
   display: flex;
   align-items: center;
   justify-content: flex-start; /* 左对齐 */
-  padding: 10px 0; /* 若想上下留点空隙，可保留 */
+  padding: 10px 0; /* 上下留白 */
   margin: 0;
+  width: 100%;
 }
 
-/* “Mefan Air” 文本紧贴左端，可去掉任何左边距或 padding */
+/* 左侧标题，贴近左端：去掉左边距 */
 .mefan-air-left {
   margin-left: 0;
   padding-left: 0;
   font-weight: 600;
   font-size: 1.2rem;
-  /* 如果想让右侧链接顶到右边，可加 margin-right: auto; */
+  margin-right: auto; /* 让右侧链接自动顶到右边 */
 }
 
-/* 链接列表放在右侧，可配合 margin-left: auto 或其它方式分布 */
+/* 右侧链接列表 */
 .mefan-air-list {
   list-style: none;
   display: flex;
   gap: 20px;
-  margin: 0 20px 0 auto; 
-  /* margin: 0 auto 0 20px; 也可根据需求微调 */
+  margin: 0 20px 0 0; /* 右边留20px */
 }
 .mefan-air-list li a {
   text-decoration: none;
   color: #0071e3;
 }
+
+/* 若需要分桌面端 / 移动端，可再加媒体查询控制显示 */
+
 
 .mefan-air-nav.active {
   transform: translateY(0);
