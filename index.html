@@ -263,6 +263,7 @@
         display: none !important;
       }
     }
+/* ===== Section2 Highlights ===== */
 .section2-highlights {
   margin-top: 50px;
   padding: 30px 20px;
@@ -276,7 +277,7 @@
 
 .section2-carousel-wrapper {
   width: 100%;
-  max-width: 1314px;
+  max-width: 1013px;
   overflow: hidden;
   margin: 0 auto;
 }
@@ -289,7 +290,7 @@
 }
 
 .section2-carousel-item {
-  flex: 0 0 1314px;
+  flex: 0 0 1013px;
   position: relative;
 }
 
@@ -298,6 +299,7 @@
   top: 20px;
   left: 20px;
   font-size: 1.5rem;
+  color: #333;
 }
 
 .section2-controls {
@@ -329,7 +331,7 @@
   background: #999;
   border-radius: 50%;
   cursor: pointer;
-  transition: width 0.3s ease;
+  transition: width 5s linear;
 }
 
 .section2-dot.active {
@@ -1621,7 +1623,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
       // 其它功能（搜索、汉堡菜单、多级菜单等）保留不变
     });
- document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   const section2 = document.getElementById('section2-highlights');
   const inner = section2.querySelector('.section2-carousel-inner');
   const dots = section2.querySelectorAll('.section2-dot');
@@ -1630,8 +1632,8 @@ document.addEventListener("DOMContentLoaded", function() {
   let current = 0;
 
   function goTo(index) {
-    inner.style.transform = `translateX(-${index * (1314 + 15)}px)`;
-    dots.forEach((d,i) => d.classList.toggle('active', i === index));
+    inner.style.transform = `translateX(-${index * (1013 + 15)}px)`;
+    dots.forEach((d, i) => d.classList.toggle('active', i === index));
     current = index;
   }
 
@@ -1642,12 +1644,13 @@ document.addEventListener("DOMContentLoaded", function() {
   refresh.addEventListener('click', () => goTo(0));
 
   const observer = new IntersectionObserver(([entry]) => {
-    controls.classList.toggle('active', entry.isIntersecting);
-    if (!entry.isIntersecting) goTo(current); // 保留当前位置
-  }, { rootMargin: '0px 0px -100px 0px' });
+    if (entry.isIntersecting) controls.classList.add('active');
+    else controls.classList.remove('active');
+  }, { rootMargin: '0px 0px -100px 0px', threshold: 0 });
 
   observer.observe(section2);
 });
+
 
 
 
