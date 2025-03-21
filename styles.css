@@ -107,7 +107,7 @@ body {
 }
 
 /* ========== 桌面端新导航 (Mefan Air) ========== */
-.mefan-air-nav {
+.mefan-air-wrap {
   position: fixed;
   top: 0;
   left: 0;
@@ -115,17 +115,22 @@ body {
   z-index: 4000;
   background: #f8f8f8;
   border-bottom: 1px solid #ddd;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: 10px 20px;
   transform: translateY(-100%);
   opacity: 0;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
-.mefan-air-nav.active {
+.mefan-air-wrap.active {
   transform: translateY(0);
   opacity: 1;
+}
+.mefan-air-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 .mefan-air-left {
   font-size: 1.2rem;
@@ -152,15 +157,18 @@ body {
   left: 0;
   width: 100%;
   z-index: 5000;
-  display: none; /* 默认隐藏，由JS添加active显示 */
-  align-items: center;
-  justify-content: space-between;
+  display: none; /* 默认隐藏，由 JS 控制 active 状态 */
   background-color: #fff;
   border-bottom: 1px solid #ddd;
   padding: 10px 20px;
 }
 .mobile-air-nav.active {
+  display: block;
+}
+.mobile-air-top {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .mobile-air-left {
   font-size: 1rem;
@@ -189,18 +197,17 @@ body {
 /* ========== 移动端下拉面板 + 模糊背景 ========== */
 .mobile-air-panel {
   position: fixed;
-  top: 0;
+  top: 100%; /* 紧贴新导航下方 */
   left: 0;
-  width: 70%; /* 占屏幕左侧70%，以免遮挡右侧Buy按钮 */
-  height: 0;
+  width: 70%; /* 占屏幕左侧70%，不遮挡右侧 Buy 按钮 */
+  max-height: 0; /* 初始收起 */
   z-index: 6000;
   background-color: #fff;
   overflow: hidden;
-  transition: height 0.3s ease;
+  transition: max-height 0.3s ease;
 }
 .mobile-air-panel.active {
-  height: 100vh;
-  overflow: auto;
+  max-height: 100vh; /* 根据内容自动扩展 */
 }
 .mobile-air-panel-header {
   display: flex;
@@ -253,8 +260,8 @@ body {
 }
 
 /* ========== 媒体查询 ========== */
-/* 桌面端：屏幕宽度 ≥1024px 只显示桌面端新导航 */
-@media (min-width: 1024px) {
+/* 桌面端：屏幕宽度 ≥769px 只显示桌面端新导航 */
+@media (min-width: 769px) {
   .mobile-air-nav,
   .mobile-air-panel,
   .mobile-air-blur {
@@ -267,6 +274,7 @@ body {
     display: none !important;
   }
 }
+
 
 
 
