@@ -1,4 +1,5 @@
 /* ========== Reset & 基础 ========== */
+/* ========== Reset & 基础 ========== */
 * {
   margin: 0;
   padding: 0;
@@ -106,9 +107,8 @@ body {
   margin-top: 0;
 }
 
-/* ========== 新增：桌面端 Mefan Air 导航 ========== */
-/* 外部包裹容器，用于整体定位，与原导航内边距一致 */
-.mefan-air-wrap {
+/* ========== 桌面端新导航 (Mefan Air) ========== */
+.mefan-air-nav {
   position: fixed;
   top: 0;
   left: 0;
@@ -116,24 +116,17 @@ body {
   z-index: 4000;
   background: #f8f8f8;
   border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 10px 20px;
-  /* 默认隐藏 */
   transform: translateY(-100%);
   opacity: 0;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
-.mefan-air-wrap.active {
+.mefan-air-nav.active {
   transform: translateY(0);
   opacity: 1;
-}
-/* 内部导航部分 */
-.mefan-air-nav {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  margin: 0;
-  padding: 0; /* 内部排版由包裹容器控制 */
 }
 .mefan-air-left {
   font-size: 1.2rem;
@@ -153,14 +146,14 @@ body {
   color: #0071e3;
 }
 
-/* ========== 新增：移动端 Mefan Air 导航 ========== */
+/* ========== 移动端新导航 (Mefan Air) ========== */
 .mobile-air-nav {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 5000;
-  display: none; /* 默认隐藏，由 JS 添加 active 显示 */
+  display: none; /* 默认隐藏，由JS添加active显示 */
   align-items: center;
   justify-content: space-between;
   background-color: #fff;
@@ -194,13 +187,12 @@ body {
   border-radius: 4px;
 }
 
-/* ========== 移动端下拉面板 + blur ========== */
-/* 下拉面板宽度设置为70%，以免遮挡右侧Buy按钮 */
+/* ========== 移动端下拉面板 + 模糊背景 ========== */
 .mobile-air-panel {
   position: fixed;
   top: 0;
   left: 0;
-  width: 70%;
+  width: 70%; /* 占屏幕左侧70%，以免遮挡右侧Buy按钮 */
   height: 0;
   z-index: 6000;
   background-color: #fff;
@@ -276,6 +268,7 @@ body {
     display: none !important;
   }
 }
+
 
 
 /* ========== 其余原有或移动端样式省略 ========== */
