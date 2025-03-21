@@ -88,9 +88,9 @@
 
   <!-- 桌面端 Mefan Air 导航 (滚动400px出现)，示例ID: #mefanAirNav -->
 
-<!-- 新增：包裹容器 .mefan-air-wrap，默认隐藏，通过 transform/opacity -->
+<!-- 新增：桌面端 Mefan Air 新导航（仅在桌面端显示） -->
 <div class="mefan-air-wrap" id="mefanAirWrap">
-  <nav class="mefan-air-nav" id="mefanAirNav">
+  <nav class="mefan-air-nav" id="mefanAirNavDesktop">
     <!-- 左侧标题，贴近左侧 -->
     <div class="mefan-air-left">Mefan Air</div>
     <!-- 右侧链接列表 -->
@@ -104,37 +104,23 @@
   </nav>
 </div>
 
-
 <main style="height: 2000px; padding: 20px;">
   <h1>Welcome to Mefan</h1>
-  <p>向下滚动 400px 后可以看到导航切换效果：主导航淡出隐藏，Mefan Air 导航出现。</p>
+  <p>向下滚动 400px 后可以看到导航切换效果：原导航隐藏，新导航出现。</p>
 </main>
 
-<!-- ========== 移动端 Mefan Air 导航 (滚动400px出现) ========== -->
-  <nav id="mefanAirNav" class="mefan-air-nav">
-  <div class="mefan-air-left">Mefan Air</div>
-  <ul class="mefan-air-list">
-    <li><a href="sample.html">Overview</a></li>
-    <li><a href="sample.html">Tech Specs</a></li>
-    <li><a href="sample.html">Compare</a></li>
-    <li><a href="sample.html">Why mefan</a></li>
-    <li><a href="sample.html">Buy</a></li>
-  </ul>
-</nav>
-
-<!-- ========== 移动端 Mefan Air 导航 (悬停式) ========== -->
+<!-- 新增：移动端 Mefan Air 导航（悬停式，下拉式，含上下翻按钮，仅在移动端显示） -->
 <nav id="mobileAirNav" class="mobile-air-nav">
   <!-- 顶部导航部分 -->
   <div class="mobile-air-top">
     <div class="mobile-air-left">Mefan Air</div>
     <div class="mobile-air-right">
-      <!-- 初始箭头为下箭头 (⌄, U+2304) -->
+      <!-- 下拉切换按钮，初始显示下箭头 (⌄, U+2304) -->
       <span id="mobileAirToggleBtn" class="mobile-air-toggle-btn">&#x2304;</span>
       <a href="sample.html" target="_blank" class="mobile-air-buy">Buy</a>
     </div>
   </div>
-
-  <!-- 下拉面板 (紧贴在导航下方) -->
+  <!-- 下拉面板：从导航下方展开，宽度占屏幕左侧70% -->
   <div id="mobileAirPanel" class="mobile-air-panel">
     <ul class="mobile-air-panel-list">
       <li><a href="sample.html" target="_blank">Overview</a></li>
@@ -145,9 +131,8 @@
   </div>
 </nav>
 
-<!-- 模糊背景层 -->
+<!-- 模糊背景层，用于移动端下拉面板 -->
 <div id="mobileAirBlur" class="mobile-air-blur"></div>
-
 
 <!-- 其余页面内容... -->
 <main>
