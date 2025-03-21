@@ -630,40 +630,129 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  const mainHeader   = document.getElementById("mainHeader");    // 原主导航
-  const mefanAirWrap = document.getElementById("mefanAirWrap");  // 包裹容器
 
+  /************************************************************
+   * 0) 原移动端汉堡菜单功能
+   *    (Home, Products, About, Contact 的那个 #mobileNav)
+   ************************************************************/
+  (function(){
+    const menuIcon  = document.getElementById('menuIcon');
+    const closeBtn  = document.getElementById('closeBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    if (menuIcon && closeBtn && mobileNav) {
+      // 点击汉堡图标 => 显示菜单
+      menuIcon.addEventListener('click', () => {
+        mobileNav.classList.add('active');
+      });
+      // 点击关闭按钮 => 隐藏菜单
+      closeBtn.addEventListener('click', () => {
+        mobileNav.classList.remove('active');
+      });
+      // 点击菜单内任意链接 => 隐藏菜单
+      document.querySelectorAll('#mobileNav ul li a').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileNav.classList.remove('active');
+        });
+      });
+    }
+  })();
+
+
+  /************************************************************
+   * 1) 获取关键元素：原主导航 & 新导航(桌面端/移动端)
+   ************************************************************/
+  const mainHeader   = document.getElementById("mainHeader");   // 原主导航(带logo等)
+  const mefanAirNav  = document.getElementById("mefanAirNav");  // 桌面端 Mefan Air 导航
+  const mobileAirNav = document.getElementById("mobileAirNav"); // 移动端 Mefan Air 导航
+
+  // 移动端二级面板(上下翻)
+  const mobileAirToggleBtn = document.getElementById("mobileAirToggleBtn"); 
+  const mobileAirPanel     = document.getElementById("mobileAirPanel");
+  const mobileAirCloseBtn  = document.getElementById("mobileAirCloseBtn");
+  const mobileAirBlur      = document.getElementById("mobileAirBlur");
+
+
+  /************************************************************
+   * 2) 滚动事件：根据桌面/移动端显示新导航 & 隐藏原导航
+   ************************************************************/
   window.addEventListener("scroll", function() {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const isMobile = window.innerWidth <= 768;
+    const isMobile  = window.innerWidth <= 768;
 
     if (!isMobile) {
-      // 桌面端：滚动 >400px 显示新导航
+      // ========== 桌面端：阈值 400px ==========
       if (scrollTop > 400) {
+        // 隐藏原导航
         mainHeader.style.transform = "translateY(-100%)";
         mainHeader.style.opacity   = "0";
-        mefanAirWrap.classList.add("active");
+        // 显示桌面端新导航
+        mefanAirNav && mefanAirNav.classList.add("active");
       } else {
+        // 恢复原导航
         mainHeader.style.transform = "translateY(0)";
         mainHeader.style.opacity   = "1";
-        mefanAirWrap.classList.remove("active");
+        // 隐藏桌面端新导航
+        mefanAirNav && mefanAirNav.classList.remove("active");
       }
     } else {
-      // 移动端：滚动 >200px 显示新导航
+      // ========== 移动端：阈值 200px ==========
       if (scrollTop > 200) {
         mainHeader.style.transform = "translateY(-100%)";
         mainHeader.style.opacity   = "0";
-        mefanAirWrap.classList.add("active");
+        mobileAirNav && mobileAirNav.classList.add("active");
       } else {
         mainHeader.style.transform = "translateY(0)";
         mainHeader.style.opacity   = "1";
-        mefanAirWrap.classList.remove("active");
+        mobileAirNav && mobileAirNav.classList.remove("active");
       }
     }
   });
-});
 
-  
+
+  /************************************************************
+   * 3) 移动端上下翻功能
+   *    - 初始下箭头 (⌄, U+2304)
+   *    - 展开后上箭头 (⌃, U+2303)
+   ************************************************************/
+  let panelOpen = false;
+
+  function openPanel() {
+    panelOpen = true;
+    if (mobileAirToggleBtn) {
+      mobileAirToggleBtn.textContent = "\u2303"; // 上箭头(⌃)
+    }
+    mobileAirPanel && mobileAirPanel.classList.add("active");
+    mobileAirBlur && mobileAirBlur.classList.add("active");
+  }
+  function closePanel() {
+    panelOpen = false;
+    if (mobileAirToggleBtn) {
+      mobileAirToggleBtn.textContent = "\u2304"; // 下箭头(⌄)
+    }
+    mobileAirPanel && mobileAirPanel.classList.remove("active");
+    mobileAirBlur && mobileAirBlur.classList.remove("active");
+  }
+
+  // 点击下箭头 => 打开/关闭二级面板
+  if (mobileAirToggleBtn) {
+    mobileAirToggleBtn.addEventListener("click", function() {
+      panelOpen ? closePanel() : openPanel();
+    });
+  }
+
+  // 点击右上角关闭按钮 => 关闭面板
+  if (mobileAirCloseBtn) {
+    mobileAirCloseBtn.addEventListener("click", closePanel);
+  }
+
+  // 点击模糊背景 => 关闭面板
+  if (mobileAirBlur) {
+    mobileAirBlur.addEventListener("click", closePanel);
+  }
+
+});
+</script>
+
   
   
 
