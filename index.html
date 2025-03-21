@@ -2,329 +2,203 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>MeFan - Left & Right Containers + One Merged</title>
+  <title>MeFan - Independent Left/Right Containers</title>
   <style>
-    /* ========== 基础重置 ========== */
+    /* ========== Reset & 基础 ========== */
     * {
-      margin: 0; padding: 0;
-      box-sizing: border-box;
+      margin: 0; padding: 0; box-sizing: border-box;
     }
     body {
       font-family: sans-serif;
-      line-height: 1.6;
-      background: #fff;
-      color: #333;
-      padding-top: 60px; /* 模拟顶部导航高度 */
+      line-height: 1.5;
+      padding-top: 60px; /* 模拟顶部导航 */
+      background: #fff; color: #333;
     }
-
     .header {
-      position: fixed; top: 0; left: 0; width: 100%; height: 60px;
+      position: fixed; top:0; left:0; width:100%; height:60px;
       background: linear-gradient(to right, #DEEFFF, #B2D8FF);
-      display: flex; align-items: center; padding: 0 20px;
-      z-index: 3000;
+      z-index:3000; display:flex; align-items:center; padding:0 20px;
     }
-    .header h1 {
-      font-size: 1.2rem; color: #444;
-    }
+    .header h1 { font-size:1.2rem; color:#444; }
 
-    /* ========== 模拟轮播容器 ========== */
-    .carousel-container {
+    /* ========== 模拟区块: section2-highlights ========== */
+    .section2-highlights {
       position: relative;
       width: 80%; max-width: 1000px;
-      margin: 60px auto; padding: 20px;
-      background: #f9f9f9;
-      border: 1px solid #ddd;
-      text-align: center;
+      margin: 50px auto; padding: 20px;
+      background: #f9f9f9; border: 1px solid #ddd; text-align: center;
     }
-    .carousel {
+    .section2-content {
       width: 100%; height: 300px; background: #eee;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem; color: #666;
+      font-size:1.5rem; color:#666;
     }
 
-    /* ========== 父容器：绝对定位到轮播容器中间 ========== */
-    .btn-parent {
+    /* ========== 左右容器(独立) ========== */
+    /* 绝对定位在 .section2-highlights 内部 (position: relative) */
+    #leftPill, #rightCircle {
       position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%) scale(0);
+      top: 50%; /* 先让它们都以中线为基准 */
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0); /* 初始缩小隐藏 */
       opacity: 0;
-      width: 220px; /* 留足宽度给左+右+中缝 */
-      height: 80px;
-      pointer-events: none; /* 初始不可点击 */
+      transition: transform 0.5s ease, opacity 0.5s ease;
       z-index: 9999;
-    }
-    .btn-parent.active {
-      pointer-events: auto; /* 激活后可点 */
+      pointer-events: auto; /* 可点击 */
     }
 
-    /* ========== 合并态：一个大圆 ========== */
-    .btn-merged {
-      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      border: 2px solid #007aff;
-      border-radius: 50%;
-      background: #f2f2f2;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; color: #333; font-weight: bold;
-      opacity: 1; /* 初始可见 */
-      transition: opacity 0.3s ease;
-    }
-
-    /* ========== 分裂态：左、右容器各自完全独立 ========== */
-    /* 让左右物理上分开，中间留间隙 20px (可改) */
-    .btn-left {
-      position: absolute;
-      top: 0; left: 0;
-      width: 140px; height: 80px; /* 占父容器左边 140px */
-      opacity: 0;
-      display: flex; align-items: center; justify-content: center;
-    }
-    /* 胶囊(进度条+圆点)本身可再加 container */
-    .left-pill {
+    /* 左胶囊内部样式 */
+    #leftPill {
+      width: 140px; height: 50px;
       border: 2px solid #007aff;
       border-radius: 30px;
       background: #f2f2f2;
       display: flex; align-items: center; justify-content: space-evenly;
-      gap: 6px;
-      padding: 0 12px;
+      gap: 6px; padding: 0 12px;
     }
     .progress-bar {
       width: 40px; height: 8px; background: #666; border-radius: 4px;
     }
     .dot {
-      width: 6px; height: 6px; background: #666; border-radius: 50%;
+      width:6px; height:6px; background:#666; border-radius:50%;
     }
 
-    .btn-right {
-      position: absolute;
-      top: 0; right: 0;
-      width: 60px; height: 80px; /* 剩余 60px */
-      opacity: 0;
-      display: flex; align-items: center; justify-content: center;
+    /* 右播放圆 */
+    #rightCircle {
+      width: 50px; height: 50px;
+      border: 2px solid #007aff; border-radius: 50%;
+      background: #fff;
+      display: flex; align-items:center; justify-content:center;
       cursor: pointer;
     }
-    /* 播放圆 */
-    .right-circle {
-      width: 50px; height: 50px; /* 可调 */
-      border: 2px solid #007aff;
-      border-radius: 50%;
-      background: #fff;
-      display: flex; align-items: center; justify-content: center;
-    }
     .play-icon {
-      width: 0; height: 0;
-      border-top: 6px solid transparent;
-      border-bottom: 6px solid transparent;
-      border-left: 10px solid #333;
-      margin-left: 2px;
+      width:0; height:0;
+      border-top:6px solid transparent; border-bottom:6px solid transparent;
+      border-left:10px solid #333; margin-left:2px;
     }
 
-    /* ========== 动画关键帧 (容器进场/离场) ========== */
-    @keyframes parentEnter {
-      0% {
-        transform: translate(-50%, -50%) scale(0);
-        opacity: 0;
-      }
-      50% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-      }
-      100% {
-        /* 最终让其位移下移 150px 表示贴近底部 */
-        transform: translate(-50%, calc(-50% + 150px)) scale(1);
-        opacity: 1;
-      }
+    /* ========== 通过切换类 parted/merged/hidden 让他们移动/缩放 ========== */
+    /* hidden: 不可见 => scale(0), opacity:0 */
+    .hidden {
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+      pointer-events: none;
     }
-    @keyframes parentLeave {
-      0% {
-        transform: translate(-50%, calc(-50% + 150px)) scale(1);
-        opacity: 1;
-      }
-      50% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(-50%, -50%) scale(0);
-        opacity: 0;
-      }
+    /* merged: 两者都重叠在中心 => scale(1), 不偏移X */
+    .merged {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
     }
-
-    /* ========== 合并态(大圆)动画 ========== */
-    @keyframes mergedFadeOut {
-      0%   { opacity: 1; }
-      100% { opacity: 0; }
+    /* parted: 左的往左移, 右的往右移 => 形成间距 */
+    /* 例如 left: transformX(-120px), right: transformX(+120px) */
+    .left-parted {
+      transform: translate(-50%, -50%) translateX(-80px) scale(1);
+      /* 你可调 -80px => 间距大小 */
+      opacity: 1;
     }
-    @keyframes mergedFadeIn {
-      0%   { opacity: 0; }
-      100% { opacity: 1; }
-    }
-
-    /* ========== 分裂态(左右容器)进场/离场 ========== */
-    @keyframes leftEnter {
-      0%   { opacity: 0; }
-      100% { opacity: 1; }
-    }
-    @keyframes rightEnter {
-      0%   { opacity: 0; }
-      100% { opacity: 1; }
-    }
-    @keyframes leftLeave {
-      0%   { opacity: 1; }
-      100% { opacity: 0; }
-    }
-    @keyframes rightLeave {
-      0%   { opacity: 1; }
-      100% { opacity: 0; }
-    }
-
-    /* 容器 进场/离场 */
-    .btn-parent.enter {
-      animation: parentEnter 1.2s forwards ease-in-out;
-    }
-    .btn-parent.leave {
-      animation: parentLeave 1.2s forwards ease-in-out;
-    }
-
-    /* 合并态 大圆 */
-    .btn-merged.enter {
-      animation: mergedFadeOut 0.5s 0.5s forwards ease-in-out;
-      /* 0.5s后开始fadeOut, total ~1.0s => 跟 parentEnter配合 */
-    }
-    .btn-merged.leave {
-      animation: mergedFadeIn 0.5s 0.6s forwards ease-in-out;
-      /* 在左右都隐藏后(0.6s)再出现(合并态) */
-    }
-
-    /* 左胶囊,右圆 进场(分裂) */
-    .btn-left.enter {
-      animation: leftEnter 0.5s 1.0s forwards ease-in-out;
-      /* 1.0s时fadeIn => 大圆差不多fadeOut完毕 */
-    }
-    .btn-right.enter {
-      animation: rightEnter 0.5s 1.0s forwards ease-in-out;
-    }
-    /* 左胶囊,右圆 离场 */
-    .btn-left.leave {
-      animation: leftLeave 0.4s 0s forwards ease-in-out;
-    }
-    .btn-right.leave {
-      animation: rightLeave 0.4s 0s forwards ease-in-out;
+    .right-parted {
+      transform: translate(-50%, -50%) translateX(80px) scale(1);
+      opacity: 1;
     }
 
   </style>
 </head>
 <body>
   <div class="header">
-    <h1>Top Header</h1>
+    <h1>Independent Left & Right Containers Demo</h1>
   </div>
 
-  <!-- 模拟长页面让你滚动 -->
-  <div style="height:400px; background:#fff;">
-    <p style="padding:20px;">Scroll down to see the "carousel-container" and the splitting button demo ...</p>
+  <!-- 模拟上方内容 -->
+  <div style="height:400px; background:#fff; padding:20px;">
+    <p>Scroll down to see section2 highlights area with left & right containers parted or merged.</p>
   </div>
 
-  <!-- 轮播容器 (示例) -->
-  <div class="carousel-container" id="carouselContainer">
-    <h2>Carousel Demo</h2>
-    <div class="carousel">
-      <p>Slide Content</p>
+  <!-- section2-highlights -->
+  <section id="section2-highlights" class="section2-highlights">
+    <h2>Demo for Splitting Buttons (No Outer Container)</h2>
+    <div class="section2-content">
+      <p>Slide Content / Carousel ...</p>
     </div>
-    <!-- 父容器: 独立3个子容器(合并态/左胶囊/右圆) -->
-    <div class="btn-parent" id="btnParent">
-      <!-- 合并态大圆 -->
-      <div class="btn-merged" id="btnMerged">
-        <span>合并态</span>
-      </div>
-      <!-- 左侧容器: 内含一个胶囊 -->
-      <div class="btn-left" id="btnLeft">
-        <div class="left-pill">
-          <div class="progress-bar"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-        </div>
-      </div>
-      <!-- 右侧容器: 内含一个圆形播放按钮 -->
-      <div class="btn-right" id="btnRight">
-        <div class="right-circle">
-          <div class="play-icon"></div>
-        </div>
-      </div>
+
+    <!-- 左胶囊(独立容器) -->
+    <div id="leftPill" class="hidden">
+      <div class="progress-bar"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
     </div>
-  </div>
+    <!-- 右圆形播放按钮(独立容器) -->
+    <div id="rightCircle" class="hidden">
+      <div class="play-icon"></div>
+    </div>
+  </section>
 
   <!-- 其余内容... -->
-  <div style="height:800px;background:#fafafa; padding:20px;">
-    <h2>More content ...</h2>
+  <div style="height:1000px; background:#fafafa;">
+    <p style="padding:20px;">More content below ... keep scrolling ...</p>
   </div>
 
   <script>
   document.addEventListener('DOMContentLoaded', function(){
-    const carouselContainer = document.getElementById('carouselContainer');
-    const btnParent = document.getElementById('btnParent');
-    const btnMerged = document.getElementById('btnMerged');
-    const btnLeft   = document.getElementById('btnLeft');
-    const btnRight  = document.getElementById('btnRight');
+    const section2 = document.getElementById('section2-highlights');
+    const leftPill = document.getElementById('leftPill');
+    const rightCircle = document.getElementById('rightCircle');
 
-    let isActive = false; // 是否已出现(分裂态)
+    let parted = false; // 标记是否“分裂”状态
 
-    // 给各容器加点击事件测试
-    btnMerged.addEventListener('click', (e)=>{
+    // 简单示例点击事件
+    leftPill.addEventListener('click', (e)=>{
       e.stopPropagation();
-      alert("点击合并态大圆！");
+      alert("点击到左胶囊容器!");
     });
-    btnLeft.addEventListener('click', (e)=>{
+    rightCircle.addEventListener('click', (e)=>{
       e.stopPropagation();
-      alert("点击左胶囊容器！");
-    });
-    btnRight.addEventListener('click', (e)=>{
-      e.stopPropagation();
-      alert("点击右播放圆容器！");
+      alert("点击到右播放圆容器!");
     });
 
-    // 滚动监听
+    // 监听滚动, 根据 rect.bottom-viewport <= -180 => parted, 否则 merged
     window.addEventListener('scroll', onScroll);
+
     function onScroll(){
-      const rect = carouselContainer.getBoundingClientRect();
+      const rect = section2.getBoundingClientRect();
       const distance = rect.bottom - window.innerHeight;
-      // 当轮播底部 <= -180 => 显示按钮
-      if(distance <= -180 && distance > -2000){
-        if(!isActive) showBtn();
+      if(distance <= -180) {
+        if(!parted){
+          showParted(); // 进入分裂状态
+        }
       } else {
-        if(isActive) hideBtn();
+        if(parted){
+          hideParted(); // 回到合并or隐藏状态
+        }
       }
     }
 
-    function showBtn(){
-      isActive = true;
-      btnParent.classList.add('active'); // pointer-events
-      btnParent.classList.remove('leave');
-      btnParent.classList.add('enter');
-
-      btnMerged.classList.remove('leave');
-      btnMerged.classList.add('enter');
-
-      btnLeft.classList.remove('leave');
-      btnLeft.classList.add('enter');
-
-      btnRight.classList.remove('leave');
-      btnRight.classList.add('enter');
+    function showParted(){
+      parted = true;
+      // 让左右从 hidden => parted
+      leftPill.classList.remove('hidden', 'merged');
+      leftPill.classList.add('left-parted');
+      rightCircle.classList.remove('hidden', 'merged');
+      rightCircle.classList.add('right-parted');
     }
 
-    function hideBtn(){
-      isActive = false;
-      btnParent.classList.remove('enter');
-      btnParent.classList.add('leave');
+    function hideParted(){
+      parted = false;
+      // 先合并 (merged) => 再变 hidden
+      // 你也可一步到位 => hidden, 这里示例：先 merged => setTimeout => hidden
+      leftPill.classList.remove('left-parted');
+      rightCircle.classList.remove('right-parted');
+      leftPill.classList.add('merged');
+      rightCircle.classList.add('merged');
 
-      btnMerged.classList.remove('enter');
-      btnMerged.classList.add('leave');
-
-      btnLeft.classList.remove('enter');
-      btnLeft.classList.add('leave');
-
-      btnRight.classList.remove('enter');
-      btnRight.classList.add('leave');
+      // 等 merged 动画结束后 => hidden
+      setTimeout(()=>{
+        leftPill.classList.remove('merged');
+        rightCircle.classList.remove('merged');
+        leftPill.classList.add('hidden');
+        rightCircle.classList.add('hidden');
+      }, 500); // 与transition时长匹配
     }
   });
   </script>
