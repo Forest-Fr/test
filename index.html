@@ -1407,186 +1407,143 @@ list-style: none;
 <script>
 
 
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // 1) 轮播相关
-    const imagesWrap = document.getElementById('section2-images');
-    const slides = [...imagesWrap.querySelectorAll('.section2-img')];
-    const totalSlides = slides.length; // =4
-    let currentIndex = 0; // 从第0张开始
-    let playing = false; // 是否在播放
-    let intervalId = null;
+/* ========== 轮播 + 分裂按钮脚本 ========== */
+document.addEventListener('DOMContentLoaded', function(){
+  const section2        = document.getElementById('section2-highlights');
+  const carouselInner   = document.getElementById('section2-carouselInner');
+  const leftPill        = document.getElementById('leftPill');
+  const rightCircle     = document.getElementById('rightCircle');
+  const playIcon        = document.getElementById('section2-playIcon');
+  const dotsContainer   = document.getElementById('section2-progressDots');
+  const dots            = dotsContainer.querySelectorAll('.dot');
 
-    // 进度条时长(毫秒)
-    const perSlideDuration = 3000; 
+  // 轮播状态
+  let currentIndex = 0;       // 当前图片索引
+  let isPlaying    = false;   // 是否在自动播放中
+  let parted       = false;   // 是否已经分裂(出现)
+  let timer        = null;    // 播放定时器
 
-    // 2) 左胶囊(4个dot), 右按钮
-    const leftPill = document.getElementById('section2-leftPill');
-    const rightCircle = document.getElementById('section2-rightCircle');
-    const circleIcon = document.getElementById('section2-circleIcon'); // 播放or刷新
-    const dotEls = [...leftPill.querySelectorAll('.section2-dot')];
+  const totalImages = 4;      // 4 张图片
 
-    // 将轮播移动到 currentIndex
-    function updateCarousel() {
-      // 每张宽1013 +15px margin except last => let's do simpler approach
-      const offset = (1013+15)*currentIndex; 
-      imagesWrap.style.transform = `translateX(-${offset}px)`;
-    }
-
-    // 当前dot进度条开始
-    function startDotProgress(idx) {
-      const dot = dotEls[idx].querySelector('.section2-dot-inner');
-      dot.style.transition = `transform ${perSlideDuration}ms linear`;
-      dot.style.transform = `scaleX(1)`; 
-    }
-    // 清除dot进度
-    function resetDot(idx) {
-      const dot = dotEls[idx].querySelector('.section2-dot-inner');
-      dot.style.transition = 'none';
-      dot.style.transform = `scaleX(0)`; 
-    }
-
-    function playNext() {
-      // 停止若已是最后一张
-      if(currentIndex >= totalSlides-1) {
-        // 播放完 => 改右按钮为“刷新”
-        circleIcon.classList.remove('circle-icon-play');
-        circleIcon.classList.add('circle-icon-refresh');
-        stopPlaying();
-        return;
+  // ========== 监听滚动，控制“分裂按钮”出现/隐藏 ==========
+  window.addEventListener('scroll', onScroll);
+  function onScroll(){
+    const rect = section2.getBoundingClientRect();
+    const distance = rect.bottom - window.innerHeight;
+    // 当底部 <= -180 => parted
+    if(distance <= -180){
+      if(!parted) {
+        parted = true;
+        showSplittedButtons();
       }
-      // 清除上一个dot
-      resetDot(currentIndex);
-      currentIndex++;
-      updateCarousel();
-      startDotProgress(currentIndex);
-    }
-
-    function startPlaying() {
-      if(playing) return;
-      playing = true;
-      circleIcon.classList.remove('circle-icon-refresh');
-      circleIcon.classList.add('circle-icon-play');
-      // 若已在最后一张, 从头开始
-      if(currentIndex >= totalSlides-1) {
-        // 重播
-        resetDot(currentIndex);
-        currentIndex = 0;
-        updateCarousel();
-      }
-      // 开始本张dot进度
-      startDotProgress(currentIndex);
-      intervalId = setInterval(()=>{
-        playNext();
-      }, perSlideDuration);
-    }
-
-    function stopPlaying() {
-      playing = false;
-      if(intervalId) {
-        clearInterval(intervalId);
-        intervalId = null;
+    } else {
+      if(parted){
+        parted = false;
+        hideSplittedButtons();
       }
     }
+  }
 
-    // 切换到某一张
-    function goToSlide(idx) {
-      stopPlaying();
-      // 清除当前进度
-      resetDot(currentIndex);
-      currentIndex = idx;
-      updateCarousel();
-      // 切过去后保持“暂停”状态
-      // 如果要立即播放 => startPlaying();
-    }
+  function showSplittedButtons(){
+    // 先移除 hidden, add parted
+    leftPill.classList.remove('hidden','merged');
+    leftPill.classList.add('parted');
+    rightCircle.classList.remove('hidden','merged');
+    rightCircle.classList.add('parted');
+  }
+  function hideSplittedButtons(){
+    // 先合并 => hidden
+    leftPill.classList.remove('parted');
+    rightCircle.classList.remove('parted');
+    leftPill.classList.add('merged');
+    rightCircle.classList.add('merged');
+    setTimeout(()=>{
+      leftPill.classList.remove('merged');
+      rightCircle.classList.remove('merged');
+      leftPill.classList.add('hidden');
+      rightCircle.classList.add('hidden');
+    },400);
+    // 同时若在播放 => 停止
+    stopAutoPlay();
+  }
 
-    // 绑定点击dot => 跳转
-    dotEls.forEach((dot, i)=>{
-      dot.addEventListener('click', e=>{
-        goToSlide(i);
-      });
-    });
-
-    // 右按钮点击 => 若是刷新图标 => replay, 否则=>play/pause?
-    rightCircle.addEventListener('click', e=>{
-      // 若是刷新, 重播
-      if(circleIcon.classList.contains('circle-icon-refresh')) {
-        // 重播
-        circleIcon.classList.remove('circle-icon-refresh');
-        circleIcon.classList.add('circle-icon-play');
-        resetDot(currentIndex);
-        currentIndex=0;
-        updateCarousel();
-        startPlaying();
-      } else {
-        // 如果没在播 => start, 正在播 => stop
-        if(!playing) {
-          startPlaying();
-        } else {
-          stopPlaying();
-        }
+  // ========== 轮播相关 ========== 
+  function goToImage(index){
+    if(index<0) index=0;
+    if(index>=totalImages) index=totalImages-1;
+    currentIndex = index;
+    carouselInner.style.transform = `translateX(-${index*(1013+15)}px)`;
+    updateDots();
+  }
+  function updateDots(){
+    dots.forEach((dot, i)=>{
+      dot.classList.remove('active','playing');
+      if(i===currentIndex) {
+        dot.classList.add('active');
       }
     });
+  }
 
-    // 默认暂停, currentIndex=0, dot=0 scaleX(0)...
+  dots.forEach(dot=>{
+    dot.addEventListener('click', ()=>{
+      const idx = +dot.dataset.dot;
+      goToImage(idx);
+      stopAutoPlay(); // 点击圆点 => 手动切换 => 暂停自动播放
+    });
+  });
 
-    // 3) 分裂/合并/隐藏逻辑 + 滚动检测
-    let parted = false; 
-    let visible = false;
-    const container = document.getElementById('section2-highlights');
-
-    function onScroll() {
-      const rect = container.getBoundingClientRect();
-      const distance = rect.bottom - window.innerHeight;
-      if(distance <= -180) {
-        // parted
-        if(!visible) showMerged();
-        if(!parted) {
-          setTimeout(()=> doParted(), 300);
-        }
-      } else {
-        // 合并并隐藏
-        if(visible || parted) hideAll();
-      }
-    }
-    window.addEventListener('scroll', onScroll);
-
-    // 先合并态中心出现( scale(1) ), 再 parted
-    function showMerged(){
-      visible=true;
-      parted=false;
-      leftPill.classList.remove('section2-hidden','section2-leftParted');
-      leftPill.classList.add('section2-merged');
-      rightCircle.classList.remove('section2-hidden','section2-rightParted');
-      rightCircle.classList.add('section2-merged');
-    }
-    // parted => 向左右分开,下移30px
-    function doParted(){
-      parted=true;
-      leftPill.classList.remove('section2-merged');
-      leftPill.classList.add('section2-leftParted');
-      rightCircle.classList.remove('section2-merged');
-      rightCircle.classList.add('section2-rightParted');
-    }
-
-    function hideAll(){
-      parted=false;
-      visible=false;
-      // 先合并
-      leftPill.classList.remove('section2-leftParted');
-      leftPill.classList.add('section2-merged');
-      rightCircle.classList.remove('section2-rightParted');
-      rightCircle.classList.add('section2-merged');
-
-      // 再过一段时间 => hidden
-      setTimeout(()=>{
-        leftPill.classList.remove('section2-merged');
-        leftPill.classList.add('section2-hidden');
-        rightCircle.classList.remove('section2-merged');
-        rightCircle.classList.add('section2-hidden');
-      },400);
+  // ========== 播放按钮点击，启动/停止播放 ==========
+  rightCircle.addEventListener('click', ()=> {
+    if(!isPlaying){
+      startAutoPlay();
+    } else {
+      // 如果正在播放 => 点击可改成“暂停” 或 “刷新”
+      // 这里直接“停止”播放
+      stopAutoPlay();
+      // 你也可让 playIcon 变成 refreshIcon
+      playIcon.textContent = "↻"; 
     }
   });
+
+  function startAutoPlay(){
+    if(isPlaying) return;
+    isPlaying = true;
+    // 恢复图标 => 播放三角
+    playIcon.textContent="";  // 恢复三角
+    playIcon.className="play-icon";
+    playNextImage();
+  }
+  function stopAutoPlay(){
+    if(timer){
+      clearTimeout(timer);
+      timer=null;
+    }
+    isPlaying=false;
+  }
+
+  function playNextImage(){
+    // 给当前 dot 做“进度”动画
+    const dot = dots[currentIndex];
+    dot.classList.add('playing'); 
+    // 模拟3秒一张
+    timer = setTimeout(()=>{
+      dot.classList.remove('playing'); 
+      currentIndex++;
+      if(currentIndex >= totalImages){
+        // 播放完 => stop & show refresh
+        stopAutoPlay();
+        playIcon.textContent="↻"; 
+        return;
+      }
+      goToImage(currentIndex);
+      // 继续下一张
+      playNextImage();
+    },3000);
+  }
+
+  // 初始不播放 => goToImage(0)
+  goToImage(0);
+});
   </script>
 </body>
 </html>
