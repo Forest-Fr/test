@@ -264,41 +264,57 @@
       }
     }
 .section2-highlights {
- margin-top: 50px; /* 从100px减半 */
+  margin-top: 50px;
   padding: 30px 20px;
   text-align: center;
 }
+
 .section2-title {
   font-size: 2.5rem;
   margin-bottom: 50px;
 }
+
 .section2-carousel-wrapper {
- width: 1314px;
+  width: 100%;
+  max-width: 1314px;
   overflow: hidden;
   margin: 0 auto;
 }
+
 .section2-carousel-inner {
   display: flex;
   gap: 15px;
   transform: translateX(0);
   transition: transform 0.6s ease;
 }
+
 .section2-carousel-item {
   flex: 0 0 1314px;
+  position: relative;
 }
-.section2-carousel-item.active { opacity: 1; }
+
 .section2-caption {
   position: absolute;
   top: 20px;
   left: 20px;
   font-size: 1.5rem;
 }
+
 .section2-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.4s ease, transform 0.4s ease;
+  margin-top: 20px;
 }
-.section2-controls.active { display: flex; }
+
+.section2-controls.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .section2-dots {
   background: #f2f2f2;
   border-radius: 30px;
@@ -306,20 +322,24 @@
   display: flex;
   gap: 12px;
 }
+
 .section2-dot {
   width: 10px;
   height: 10px;
   background: #999;
   border-radius: 50%;
-  transition: width 5s linear;
+  cursor: pointer;
+  transition: width 0.3s ease;
 }
+
 .section2-dot.active {
   width: 40px;
-  border-radius: 4px;
   background: #333;
+  border-radius: 4px;
 }
+
 .section2-refresh-btn {
-  margin-left: 20px;
+  margin-left: 16px;
   font-size: 24px;
   background: none;
   border: none;
@@ -1159,9 +1179,8 @@ list-style: none;
   </section>
 <section id="section2-highlights" class="section2-highlights">
   <h2 class="section2-title">Highlights</h2>
-- <div class="section2-carousel-wrapper">
-+ <div class="section2-carousel-wrapper">
-+   <div class="section2-carousel-inner">
+  <div class="section2-carousel-wrapper">
+    <div class="section2-carousel-inner">
       <div class="section2-carousel-item" data-index="0">
         <img src="MeFan Pro.png" width="1314" height="520" alt="MeFan Pro">
         <div class="section2-caption">Experience premium audio quality</div>
@@ -1174,7 +1193,7 @@ list-style: none;
         <img src="A nice girl wearing headphones.png" width="1314" height="520" alt="Girl Wearing Headphones">
         <div class="section2-caption">Immersive sound wherever you go</div>
       </div>
-+   </div>
+    </div>
   </div>
   <div class="section2-controls">
     <div class="section2-dots">
@@ -1185,6 +1204,7 @@ list-style: none;
     <button class="section2-refresh-btn" title="Restart">&#10227;</button>
   </div>
 </section>
+
 
 
     <!-- 桌面端新导航 (Mefan Air) 包裹容器 -->
@@ -1607,7 +1627,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const dots = section2.querySelectorAll('.section2-dot');
   const controls = section2.querySelector('.section2-controls');
   const refresh = section2.querySelector('.section2-refresh-btn');
-  let current = 0, interval;
+  let current = 0;
 
   function goTo(index) {
     inner.style.transform = `translateX(-${index * (1314 + 15)}px)`;
@@ -1615,29 +1635,20 @@ document.addEventListener("DOMContentLoaded", function() {
     current = index;
   }
 
-  dots.forEach(dot => dot.addEventListener('click', () => {
-    clearInterval(interval);
-    goTo(+dot.dataset.index);
-  }));
+  dots.forEach(dot =>
+    dot.addEventListener('click', () => goTo(+dot.dataset.index))
+  );
 
   refresh.addEventListener('click', () => goTo(0));
 
-  const io = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting) {
-      controls.classList.add('active');
-      goTo(0);
-      interval = setInterval(() => {
-        if (current < dots.length - 1) goTo(current + 1);
-        else clearInterval(interval);
-      }, 5000);
-    } else {
-      controls.classList.remove('active');
-      clearInterval(interval);
-    }
+  const observer = new IntersectionObserver(([entry]) => {
+    controls.classList.toggle('active', entry.isIntersecting);
+    if (!entry.isIntersecting) goTo(current); // 保留当前位置
   }, { rootMargin: '0px 0px -100px 0px' });
 
-  io.observe(section2);
+  observer.observe(section2);
 });
+
 
 
   </script>
