@@ -2,301 +2,214 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
+  <title>两部分按钮示例 - 滚动淡入淡出</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>滚动触发分裂按钮示例</title>
   <style>
-    /* 你的原始样式大致保留... 这里仅示意 */
-
-    body {
+    /* ========== 基础重置 ========== */
+    * {
       margin: 0; padding: 0;
-      font-family: sans-serif;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
     }
 
-    header, .banner-promo, .section1-hero, main {
-      /* 省略你的导航和头部样式 */
-    }
-
-    /* ====== Section2 (轮播) ====== */
+    /* ========== 模拟的轮播区 ========== */
     .section2-highlights {
-      position: relative; /* 让内部元素可以绝对定位 */
-      margin-top: 50px;
-      padding: 30px 20px;
+      position: relative; /* 为绝对定位的按钮做定位基准 */
+      width: 100%;
+      max-width: 1200px;
+      margin: 40px auto;
+      background: #f9f9f9;
+      padding: 30px;
       text-align: center;
-      background-color: #f9f9f9;
+      border: 1px solid #ddd;
     }
     .section2-title {
-      font-size: 2.5rem;
-      margin-bottom: 50px;
+      font-size: 2rem;
+      margin-bottom: 20px;
     }
-    .section2-carousel-wrapper {
-      width: 100%;
-      max-width: 1013px;
+    .carousel-container {
       overflow: hidden;
+      width: 100%;
+      max-width: 1013px; /* 根据你图片尺寸 */
       margin: 0 auto;
     }
-    .section2-carousel-inner {
+    .carousel-track {
       display: flex;
-      gap: 15px;
-      transform: translateX(0);
-      transition: transform 0.6s ease;
+      transition: transform 0.5s ease;
     }
-    .section2-carousel-item {
-      flex: 0 0 1013px;
+    .carousel-item {
+      flex: 0 0 1013px; /* 跟图片宽度相同 */
       position: relative;
     }
-    .section2-carousel-item img {
+    .carousel-item img {
       width: 100%;
       display: block;
     }
 
-    /* 原先的 controls (dots / refresh) 省略... */
-
-    /* ============ 新增：分裂按钮外容器 ============ */
-    #splitBtnWrap {
+    /* ========== 两部分按钮外层容器 ========== */
+    .two-part-btn-wrap {
       position: absolute;
-      bottom: 30px;  /* 按你需要，距离容器底部 30px */
-      left: 50%;     /* 水平居中 */
-      transform: translateX(-50%);
-      width: 80px;   /* 大小随意调 */
-      height: 80px;
-      /* 先 hidden，等滚动到一定程度再显示并触发动画 */
+      /* 让它出现在轮播区的下方 30px, 你可调成top/bottom等，按需求 */
+      bottom: 30px;
+      right: 50px; 
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      /* 初始隐藏 */
       opacity: 0;
-      pointer-events: none; /* 不影响其他操作, 只有激活后再可点击 */
-      transition: opacity 0.3s ease-in-out;
-      /* 也可用 display:none; / block; 但这里用 opacity+pointer-events 方便做过渡 */
+      transform: translateY(20px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      pointer-events: none; /* 不影响点击，等激活才可点击 */
     }
-    /* 处于“显示并执行动画”状态时 */
-    #splitBtnWrap.active {
+    /* 激活时可点击，并做淡入效果 */
+    .two-part-btn-wrap.active {
       opacity: 1;
+      transform: translateY(0);
       pointer-events: auto;
     }
 
-    /* 外环 + 内环：可自行用更精细的结构 */
-    .outer-ring,
-    .inner-circle {
-      position: absolute;
-      top: 0; left: 0;
-      width: 80px;
-      height: 80px;
+    /* 左侧胶囊(pill)背景 */
+    .dots-pill {
+      display: inline-flex;
+      align-items: center;
+      background: #f3f3f7; /* 淡灰色或淡白色 */
+      padding: 8px 16px;
+      border-radius: 30px;
+      /* 也可以加边框: border: 1px solid #ccc; */
+      gap: 8px;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: #666;
       border-radius: 50%;
     }
-    .outer-ring {
-      /* 初始时，可给边框颜色, 也可做渐变 */
-      border: 6px solid #007aff; /* 蓝色外圈 */
-      background: transparent;
-    }
-    .inner-circle {
-      /* 初始时灰色实心 */
-      background: #888;
+    /* 可以让中间的长灰条，模拟进度，但这仅作为示例 */
+    .progress-bar {
+      width: 60px;
+      height: 10px;
+      background: #575757;
+      border-radius: 5px;
     }
 
-    /* =========== 动画关键帧 (示例) =========== */
-    /* 进入动画: circleEnter
-       0%: scale(0), 不可见
-       30%: 大圆撑开 + 边框蓝色
-       60%: 分裂(演示: 用clip-path分成左右两半), 这只是大概演示
-       100%: 保持分裂形态
-    */
-    @keyframes circleEnter {
-      0% {
-        transform: scale(0);
-      }
-      30% {
-        transform: scale(1);
-      }
-      60% {
-        /* 分裂演示：clip-path 分割为左右两半 */
-        clip-path: inset(0 50% 0 0);
-      }
-      100% {
-        clip-path: inset(0 50% 0 0);
-      }
+    /* 右侧圆形蓝色按钮 */
+    .circle-btn {
+      width: 44px;
+      height: 44px;
+      border: 2px solid #007aff; /* 蓝色描边 */
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
     }
-    /* 内圈同理可以搞另一个动画，也可合并处理。
-       这里做简单版: 先从scale(0)->scale(1) -> clip
-    */
-    @keyframes circleEnterInner {
-      0% { transform: scale(0); }
-      30% { transform: scale(1); }
-      60% { clip-path: inset(0 0 0 50%); }
-      100% { clip-path: inset(0 0 0 50%); }
+    /* 播放图标 */
+    .circle-btn .play-icon {
+      width: 0;
+      height: 0;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 12px solid #000;
+      margin-left: 2px; /* 略微右移 */
+    }
+    /* 悬浮时边框加深 */
+    .circle-btn:hover {
+      border-color: #005bb5;
+    }
+    /* 点击时的效果可自行设计，这里只是演示 */
+    .circle-btn:active {
+      background: #007aff22;
     }
 
-    /* 离开动画: circleLeave (反向)
-       0%: 分裂状态
-       40%: 合并为大圆
-       100%: scale(0)消失
-    */
-    @keyframes circleLeave {
-      0% {
-        clip-path: inset(0 50% 0 0); /* 分裂状态 */
-        transform: scale(1);
-      }
-      40% {
-        clip-path: inset(0); /* 还原为完整圆 */
-      }
-      100% {
-        transform: scale(0);
-      }
-    }
-    @keyframes circleLeaveInner {
-      0% {
-        clip-path: inset(0 0 0 50%);
-        transform: scale(1);
-      }
-      40% {
-        clip-path: inset(0);
-      }
-      100% {
-        transform: scale(0);
-      }
-    }
-
-    /* 用 .enter / .leave 类名控制播放哪个动画 */
-    .outer-ring.enter {
-      animation: circleEnter 1s forwards ease-in-out;
-    }
-    .inner-circle.enter {
-      animation: circleEnterInner 1s forwards ease-in-out;
-    }
-    .outer-ring.leave {
-      animation: circleLeave 1s forwards ease-in-out;
-    }
-    .inner-circle.leave {
-      animation: circleLeaveInner 1s forwards ease-in-out;
+    /* 其它示例正文高度 */
+    .page-content {
+      height: 1500px;
+      background: #fff;
+      padding: 20px;
     }
   </style>
 </head>
 <body>
 
-  <!-- 头部/导航/轮播... -->
-  <header>
-    <!-- 省略你的主导航 -->
-  </header>
-
-  <!-- 这里仅示范：一个轮播区 (section2-highlights) -->
-  <section id="section2-highlights" class="section2-highlights">
+  <!-- 模拟轮播区 -->
+  <section class="section2-highlights" id="section2">
     <h2 class="section2-title">Highlights</h2>
-    <div class="section2-carousel-wrapper">
-      <div class="section2-carousel-inner">
-        <div class="section2-carousel-item">
-          <img src="your-image1.jpg" alt="Image1">
+    <div class="carousel-container">
+      <div class="carousel-track">
+        <div class="carousel-item">
+          <img src="https://via.placeholder.com/1013x400/ccc/fff?text=Slide+1" alt="Slide1">
         </div>
-        <div class="section2-carousel-item">
-          <img src="your-image2.jpg" alt="Image2">
+        <div class="carousel-item">
+          <img src="https://via.placeholder.com/1013x400/999/fff?text=Slide+2" alt="Slide2">
         </div>
-        <div class="section2-carousel-item">
-          <img src="your-image3.jpg" alt="Image3">
+        <div class="carousel-item">
+          <img src="https://via.placeholder.com/1013x400/666/fff?text=Slide+3" alt="Slide3">
         </div>
       </div>
     </div>
 
-    <!-- 其它 dots / refresh 按钮... -->
-
-    <!-- 新增：分裂按钮容器 -->
-    <div id="splitBtnWrap">
-      <div class="outer-ring"></div>
-      <div class="inner-circle"></div>
+    <!-- 两部分按钮容器 -->
+    <div class="two-part-btn-wrap" id="twoPartBtn">
+      <!-- 左侧胶囊 -->
+      <div class="dots-pill">
+        <!-- 这里可以放一条灰色进度条 + 多个小圆点 -->
+        <div class="progress-bar"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <!-- 右侧圆形播放按钮 -->
+      <div class="circle-btn" id="playBtn">
+        <div class="play-icon"></div>
+      </div>
     </div>
-
   </section>
 
-  <main style="height: 1600px;">
-    <p>向下滚动，直到轮播底部还剩 180px 就会出现分裂按钮。</p>
-  </main>
+  <div class="page-content">
+    <p>向下滚动，直到轮播区域底部距离视口底部180px时，上面的两部分按钮将淡入出现。再往下滚，离开之后又会淡出。</p>
+    <p>可根据需要修改相应逻辑。</p>
+  </div>
 
   <script>
   /**************************************************************
-   *  核心思路：用 scroll 事件来判断 section2 的 bottom 与视口底部距离
-   *  - 当 bottom 距离窗口底 <= 180，就触发“进入”动画
-   *  - 当再滚动离开该范围，就触发“离开”动画
+   * 核心逻辑：
+   * 1) 监听 scroll，获取 section2 的 bottom 到视口顶的距离 rect.bottom
+   * 2) 当 bottom - window.innerHeight <= -180 => 说明已滚过某个位置
+   *    => 两部分按钮一起淡入
+   * 3) 若不满足 => 淡出
+   * 你可根据需求更精细地控制区间
    **************************************************************/
-  document.addEventListener("DOMContentLoaded", function() {
-    const section2 = document.getElementById("section2-highlights");
-    const splitBtnWrap = document.getElementById("splitBtnWrap");
-    const outerRing = document.querySelector(".outer-ring");
-    const innerCircle = document.querySelector(".inner-circle");
+  document.addEventListener('DOMContentLoaded', function(){
+    const section2   = document.getElementById('section2');
+    const twoPartBtn = document.getElementById('twoPartBtn');
+    // 仅演示: 给播放按钮加一个点击事件
+    const playBtn    = document.getElementById('playBtn');
+    if (playBtn) {
+      playBtn.addEventListener('click', function(){
+        alert("Play button clicked!");
+      });
+    }
 
-    let isActive = false;   // 记录是否已经处于显示动画后状态
-    let isLeaving = false;  // 记录是否正在离开动画
-
-    window.addEventListener("scroll", handleScroll);
-
-    function handleScroll() {
-      if (!section2) return;
-
-      // 计算 bottom 距离视口底的距离： bottom - window.innerHeight
+    window.addEventListener('scroll', onScroll);
+    function onScroll() {
+      if (!section2 || !twoPartBtn) return;
       const rect = section2.getBoundingClientRect();
-      const distanceToBottom = rect.bottom - window.innerHeight;
-
-      // 需求：当 distanceToBottom <= -180 => 说明已滚动过了 180px
-      // （或者你要写 <= 0 - 180 => -180, 具体视情况微调）
-      if (distanceToBottom <= -180 && distanceToBottom > -1000) {
-        // 满足区间 => 显示并执行进入动画
-        if (!isActive) {
-          showSplitBtn();
-        }
+      // "距离视口底部180px" => rect.bottom - window.innerHeight <= -180
+      const distance = rect.bottom - window.innerHeight;
+      // 你可以自己选择区间，这里只是举例
+      if (distance <= -180) {
+        // 淡入出现
+        twoPartBtn.classList.add('active');
       } else {
-        // 不在这个区间 => 如果当前已经显示，就开始离开动画
-        if (isActive) {
-          hideSplitBtn();
-        }
-      }
-    }
-
-    function showSplitBtn() {
-      isActive = true;
-      isLeaving = false;
-
-      // 先让容器可见
-      splitBtnWrap.classList.add("active");
-      // 移除离开动画类
-      outerRing.classList.remove("leave");
-      innerCircle.classList.remove("leave");
-      // 添加进入动画类
-      outerRing.classList.add("enter");
-      innerCircle.classList.add("enter");
-
-      // 当动画结束后（进入动画约1s），把 .enter 移除，保持最终状态
-      outerRing.addEventListener("animationend", onEnterEnd);
-      innerCircle.addEventListener("animationend", onEnterEnd);
-    }
-
-    function onEnterEnd(e) {
-      // 确认是进入动画结束
-      if (e.animationName === "circleEnter" || e.animationName === "circleEnterInner") {
-        // 清除enter类，保持分裂状态
-        e.target.classList.remove("enter");
-      }
-      // 如果两个都结束了就移除事件监听
-    }
-
-    function hideSplitBtn() {
-      isActive = false;
-      isLeaving = true;
-
-      // 添加离开动画
-      outerRing.classList.remove("enter");
-      innerCircle.classList.remove("enter");
-      outerRing.classList.add("leave");
-      innerCircle.classList.add("leave");
-
-      // 动画结束后彻底隐藏
-      outerRing.addEventListener("animationend", onLeaveEnd);
-      innerCircle.addEventListener("animationend", onLeaveEnd);
-    }
-
-    function onLeaveEnd(e) {
-      if (e.animationName === "circleLeave" || e.animationName === "circleLeaveInner") {
-        // 确认是离开动画结束 => 还原初始
-        e.target.classList.remove("leave");
-      }
-      // 如果两个都结束 => 容器隐藏
-      if (!outerRing.classList.contains("leave") && !innerCircle.classList.contains("leave")) {
-        splitBtnWrap.classList.remove("active");
+        // 淡出消失
+        twoPartBtn.classList.remove('active');
       }
     }
   });
   </script>
+
 </body>
 </html>
