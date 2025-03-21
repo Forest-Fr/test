@@ -153,21 +153,28 @@ body {
   left: 0;
   width: 100%;
   z-index: 5000;
-  display: none; /* 默认隐藏，由JS添加active显示 */
-  align-items: center;
-  justify-content: space-between;
   background-color: #fff;
   border-bottom: 1px solid #ddd;
-  padding: 10px 20px;
+  /* 默认隐藏，由JS在滚动超过阈值时显示 .active */
+  display: none; 
 }
+
+/* 激活时显示 */
 .mobile-air-nav.active {
+  display: block; /* 或 display: flex; 但这里我们内部再分区 */
+}
+
+/* 顶部导航部分 */
+.mobile-air-top {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;  /* 与原导航保持一致 */
+  border-bottom: 1px solid #ddd;
 }
 .mobile-air-left {
   font-size: 1rem;
   font-weight: 600;
-  margin: 0;
-  padding: 0;
 }
 .mobile-air-right {
   display: flex;
@@ -187,37 +194,11 @@ body {
   border-radius: 4px;
 }
 
-/* ========== 移动端下拉面板 + 模糊背景 ========== */
+/* 下拉面板：与导航同一个容器内，使视觉上成为一体 */
 .mobile-air-panel {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 70%; /* 占屏幕左侧70%，以免遮挡右侧Buy按钮 */
-  height: 0;
-  z-index: 6000;
-  background-color: #fff;
   overflow: hidden;
-  transition: height 0.3s ease;
-}
-.mobile-air-panel.active {
-  height: 100vh;
-  overflow: auto;
-}
-.mobile-air-panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 20px;
-  border-bottom: 1px solid #ddd;
-  background-color: #f8f8f8;
-}
-.mobile-air-panel-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-.mobile-air-close-btn {
-  font-size: 1.5rem;
-  cursor: pointer;
+  max-height: 0; /* 初始收起 */
+  transition: max-height 0.3s ease; /* 平滑展开/收起 */
 }
 .mobile-air-panel-list {
   list-style: none;
@@ -236,17 +217,19 @@ body {
 .mobile-air-panel-list li a:hover {
   background-color: #f2f2f2;
 }
+
+/* 模糊背景层：点击后收起面板 */
 .mobile-air-blur {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 0;
-  z-index: 5500;
+  z-index: 4999; /* 在导航之下 */
   background: rgba(0,0,0,0.3);
   backdrop-filter: blur(8px);
-  transition: height 0.3s ease, opacity 0.3s ease;
   opacity: 0;
+  transition: height 0.3s ease, opacity 0.3s ease;
 }
 .mobile-air-blur.active {
   height: 100vh;
