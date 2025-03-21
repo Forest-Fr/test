@@ -620,52 +620,57 @@
 
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-  // 1) 原主导航 & 新导航
-  const mainHeader = document.getElementById("mainHeader");
-  const mobileAirNav = document.getElementById("mobileAirNav");
+ <script>
+document.addEventListener("DOMContentLoaded", function() {
+  // 获取相关 DOM
+  const mobileAirToggleBtn = document.getElementById("mobileAirToggleBtn"); // 下箭头按钮
+  const mobileAirPanel     = document.getElementById("mobileAirPanel");     // 二级面板
+  const mobileAirCloseBtn  = document.getElementById("mobileAirCloseBtn");  // 面板右上角关闭按钮
+  const mobileAirBlur      = document.getElementById("mobileAirBlur");      // 模糊背景
 
-  window.addEventListener("scroll", function() {
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    if (scrollTop > 200) {
-      // 隐藏原导航
-      mainHeader.style.transform = "translateY(-100%)";
-      mainHeader.style.opacity = "0";
-      // 显示新导航
-      mobileAirNav?.classList.add("active");
-    } else {
-      mainHeader.style.transform = "translateY(0)";
-      mainHeader.style.opacity = "1";
-      mobileAirNav?.classList.remove("active");
-    }
-  });
-
-  // 2) 上下翻逻辑 (与上面示例相同)
-  const mobileAirToggleBtn = document.getElementById("mobileAirToggleBtn");
-  const mobileAirPanel     = document.getElementById("mobileAirPanel");
-  const mobileAirCloseBtn  = document.getElementById("mobileAirCloseBtn");
-  const mobileAirBlur      = document.getElementById("mobileAirBlur");
+  // 用于记录面板当前是否展开
   let panelOpen = false;
 
+  // 打开面板：箭头变上箭头(⌃, U+2303)，面板 & blur 显示
   function openPanel() {
     panelOpen = true;
-    mobileAirToggleBtn.textContent = "\u2303"; // 上箭头
-    mobileAirPanel.classList.add("active");
-    mobileAirBlur.classList.add("active");
-  }
-  function closePanel() {
-    panelOpen = false;
-    mobileAirToggleBtn.textContent = "\u2304"; // 下箭头
-    mobileAirPanel.classList.remove("active");
-    mobileAirBlur.classList.remove("active");
+    if (mobileAirToggleBtn) {
+      // 变成上箭头 ⌃
+      mobileAirToggleBtn.textContent = "\u2303";
+    }
+    mobileAirPanel?.classList.add("active");
+    mobileAirBlur?.classList.add("active");
   }
 
-  mobileAirToggleBtn?.addEventListener("click", () => {
-    panelOpen ? closePanel() : openPanel();
-  });
-  mobileAirCloseBtn?.addEventListener("click", closePanel);
-  mobileAirBlur?.addEventListener("click", closePanel);
+  // 关闭面板：箭头变下箭头(⌄, U+2304)，面板 & blur 隐藏
+  function closePanel() {
+    panelOpen = false;
+    if (mobileAirToggleBtn) {
+      // 变回下箭头 ⌄
+      mobileAirToggleBtn.textContent = "\u2304";
+    }
+    mobileAirPanel?.classList.remove("active");
+    mobileAirBlur?.classList.remove("active");
+  }
+
+  // 切换按钮点击 => 若关闭则打开，若打开则关闭
+  if (mobileAirToggleBtn) {
+    mobileAirToggleBtn.addEventListener("click", function() {
+      panelOpen ? closePanel() : openPanel();
+    });
+  }
+
+  // 点击关闭按钮 => 关闭面板
+  if (mobileAirCloseBtn) {
+    mobileAirCloseBtn.addEventListener("click", closePanel);
+  }
+
+  // 点击模糊背景 => 关闭面板
+  if (mobileAirBlur) {
+    mobileAirBlur.addEventListener("click", closePanel);
+  }
 });
+</script>
 
 
 
