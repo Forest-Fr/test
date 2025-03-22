@@ -44,7 +44,7 @@
 
     /* ========== 横幅 Banner ========== */
     .banner-promo {
-      margin-top: 40px;
+      margin-top: 17px;
       background-color: #EFF7FF;
       border-top: 1px solid #CBD5E1;
       border-bottom: 1px solid #CBD5E1;
@@ -265,198 +265,400 @@
     }
 
 
- /* ========== 轮播区 (Section2) ========== */
-    .section2-highlights {
-      margin-top: 50px; padding: 30px 20px;
-      text-align: center; position: relative;
-    }
-    .section2-title {
-      font-size: 2.5rem; margin-bottom: 50px;
-    }
-    .section2-carousel-wrapper {
-      width: 100%; max-width: 1013px; overflow: hidden; margin: 0 auto;
-    }
-    .section2-carousel-inner {
-      display: flex; gap: 15px;
-      transform: translateX(0); transition: transform 0.6s ease;
-    }
-    .section2-carousel-item {
-      flex: 0 0 1013px; position: relative;
-    }
-    .section2-carousel-item img {
-      width: 100%; display: block;
-    }
-    .section2-caption {
-      position: absolute; top: 20px; left: 20px;
-      font-size: 1.5rem; color: #333;
-    }
-    /* 原有播放+dots+refresh */
-    .section2-controls {
-      display: flex; justify-content: center; align-items: center;
-      opacity: 0; transform: translateY(20px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      margin-top: 20px;
-    }
-    .section2-controls.active {
-      opacity: 1; transform: translateY(0);
-    }
-    .section2-play-btn {
-      font-size: 24px; background: none; border: none; cursor: pointer;
-      margin-right: 16px; opacity: 0; transition: opacity 0.4s ease;
-    }
-    .section2-controls.active .section2-play-btn { opacity: 1; }
-    .section2-dots {
-      background: #f2f2f2; border-radius: 30px; padding: 8px 16px;
-      display: flex; gap: 12px;
-    }
-    .section2-dot {
-      width: 10px; height: 10px; background: #999; border-radius: 50%; cursor: pointer;
-      transition: width 5s linear;
-    }
-    .section2-dot.active {
-      width: 40px; background: #333; border-radius: 4px;
-    }
-    .section2-refresh-btn {
-      margin-left: 16px; font-size: 24px; background: none; border: none; cursor: pointer;
+
+/* === 外部容器，控制整体布局和露出左右部分 === */
+
+.section2-highlights {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 10%; /* 两侧留白 */  /* 上下12px，左右留出空间以露出部分左右图padding12px 60px; */
+  margin: 0 auto;
+  box-sizing: border-box;
+  background: #f9f9f9;
+  overflow: hidden;
+  position: relative;
+}
+
+/* === 轨道容器：横向滚动布局，图片横排 === */
+.section2-carousel {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.section2-track {
+  display: flex;
+  gap: 15px; /* 每张图之间的间距 */
+  transition: transform 0.5s ease-in-out;
+  will-change: transform;
+  justify-content: flex-start;
+}
+
+/* === 单张图片样式 === */
+.section2-track img {
+  flex: 0 0 auto;
+  width: 1013px;
+  height: 520px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+/* ✅ 可选：当前图片放大，左右图缩小，可增加视觉引导感 */
+/* .section2-track img:not(.active-slide) {
+  transform: scale(0.95);
+  opacity: 0.6;
+}
+.section2-track img.active-slide {
+  transform: scale(1);
+  opacity: 1;
+} */
+
+
+
+    /* ======== 按钮行容器 ======== */
+    .section2-buttonRow {
+      width: 90%;
+      max-width: 800px;
+      margin: 20px auto;
+      position: sticky;
+      top: 30px; /* 默认距离视口顶部30px */
+      height: 80px;
+      transition: transform 0.3s ease;
+      /* 可调背景色调试 */
+      /* background: rgba(0,0,0,0.05); */
+z-index:999
     }
 
-    /* ========== 分裂式圆圈按钮 ========== */
-    /* 先把外容器放在轮播区“绝对定位” => 初始在容器中央 (top:50%...),
-       动画结束后移动到底部30px */
-    .split-circle-wrap {
+    /* ======== 左右按钮容器（独立在按钮行内） ======== */
+    .btn-container {
       position: absolute;
-      width: 80px; height: 80px;
-      pointer-events: none; /* 初始不可点 */
-      opacity: 0;           /* 初始透明 */
+      /* 初始时放在按钮行中央 */
       top: 50%; left: 50%;
       transform: translate(-50%, -50%) scale(0);
-      z-index: 9999;        /* 确保在图片上层 */
+      opacity: 0;
+      transition: transform 0.6s ease, opacity 0.6s ease;
+      pointer-events: auto;
+      z-index: 999;
     }
-    .split-circle-wrap.active {
-      pointer-events: auto; /* 激活后可点击 */
+    .btn-hidden {
+      pointer-events: none;
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+z-index:999
+    }
+    /* 最终合并状态：在中央，scale(1.3) */
+    .btn-merged {
+      transform: translate(-50%, -50%) scale(1.3);
+      opacity: 1;
+z-index:999
+    }
+    /* 分裂状态：左右各偏移150px，scale降为1 */
+    .btn-left-final {
+      transform: translate(calc(-50% - 150px), -50%) scale(1);
+      opacity: 1;
+z-index:999
+    }
+    .btn-right-final {
+      transform: translate(calc(-50% + 150px), -50%) scale(1);
+      opacity: 1;
+z-index:999
     }
 
-    /* 外圈+内圈 => 分裂动画 */
-    .outer-ring,
-    .inner-circle {
-      position: absolute; top: 0; left: 0;
-      width: 80px; height: 80px;
+    /* 关键帧动画：从隐藏到合并再到分裂 */
+    .btn-left-animate {
+      animation: leftEntry 1s forwards;
+    }
+    .btn-right-animate {
+      animation: rightEntry 1s forwards;
+    }
+    @keyframes leftEntry {
+      0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+      40% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+      100% { transform: translate(calc(-50% - 150px), -50%) scale(1); opacity: 1; }
+    }
+    @keyframes rightEntry {
+      0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+      40% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+      100% { transform: translate(calc(-50% + 150px), -50%) scale(1); opacity: 1; }
+    }
+
+    /* ======== 左侧胶囊（含圆点） ======== */
+    #section2-leftCapsule {
+      width: 250px;
+      height: 50px;
+      background: #f2f2f2;
+      border: 2px solid #007aff;
+      border-radius: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+z-index:999
+    }
+    .dots {
+      display: flex; gap: 8px;
+z-index:999
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      background: #ccc;
       border-radius: 50%;
-    }
-    .outer-ring {
-      border: 3px solid #007aff; background: transparent;
-    }
-    .inner-circle {
-      background: #444;
+      transition: width 0.3s, background-color 0.3s;
+      cursor: pointer;
+z-index:999
     }
 
-    /* ========== Keyframes for the container's position/scale ========== */
-    @keyframes circleContainerEnter {
+    /* ======== 右侧圆形按钮 ======== */
+    #section2-rightButton {
+      width: 60px;
+      height: 60px;
+      background: #fff;
+      border: 2px solid #007aff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 24px;
+      color: #007aff;
+z-index:999
+    }
+  
+
+
+/* === 五颜色部分 === */
+
+  .section3-carousel-container {
+      width: 100%;
+      padding: 0 10%;
+      margin: 0 auto;
+      box-sizing: border-box;
+      background: #f9f9f9;
+      overflow-x: clip;
+      overflow-y: visible;
+      position: relative;
+      height: 520px;
+    }
+
+    .section3-carousel-track {
+      display: flex;
+      gap: 15px; /* 图片之间间隔 15px */
+      transition: transform 0.5s ease-in-out;
+      justify-content: flex-start;
+    }
+
+    .section3-slide {
+      flex: 0 0 auto;
+      width: 100%;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .section3-slide img {
+      width: 1013px;
+      height: 520px;
+      object-fit: cover;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      transition: transform 0.4s ease, opacity 0.4s ease;
+    }
+
+    .section3-picker-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      position: relative;
+      z-index: 20;
+      height: 80px;
+      will-change: transform;
+      transition: transform 0.4s ease;
+    }
+
+    .section3-picker-wrapper.move-up {
+      transform: translateY(-90px);
+    }
+
+    .section3-picker-animate-wrapper {
+      width: 60px;
+      height: 60px;
+      background-color: #f0f0f4;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: visible;
+      position: relative;
+      opacity: 0;
+      transform: scale(1);
+    }
+
+    .section3-picker-animate-wrapper.expand {
+      animation: expandPickerEnhanced 0.7s forwards cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .section3-picker-animate-wrapper.collapse {
+      animation: collapsePickerEnhanced 0.6s forwards ease-in;
+    }
+
+    @keyframes expandPickerEnhanced {
       0% {
-        transform: translate(-50%, -50%) scale(0);
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
         opacity: 0;
+        transform: scale(0.9);
       }
-      30% {
-        transform: translate(-50%, -50%) scale(1);
+      50% {
+        width: 120px;
+        border-radius: 60px;
         opacity: 1;
+        transform: scale(1.05);
       }
-      /* 到60%时仍在中央; 让内圈与外圈内部clip-path分裂 */
-      60% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-      }
-      /* 动画最后移动到底部 30px 处 (本示例假设容器高度~520px, 你可微调) */
       100% {
-        /* 这里让 Y 平移到 ~ (containerHeight - 30) - (80/2) = 230px 仅示例 */
-        /* 真实项目请微调 translateY( 200px / 300px ) 以贴合实际 */
-        transform: translate(-50%, calc( -50% + 200px )) scale(1);
+        width: 360px;
+        height: 60px;
+        border-radius: 999px;
         opacity: 1;
+        transform: scale(1);
       }
     }
-    @keyframes circleContainerLeave {
+
+    @keyframes collapsePickerEnhanced {
       0% {
-        /* 从底部位置开始 */
-        transform: translate(-50%, calc( -50% + 200px )) scale(1);
+        width: 360px;
+        height: 60px;
+        border-radius: 999px;
         opacity: 1;
+        transform: scale(1);
       }
-      40% {
-        /* 先回到中央 */
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
+      50% {
+        width: 120px;
+        border-radius: 60px;
+        transform: scale(0.95);
       }
       100% {
-        transform: translate(-50%, -50%) scale(0);
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
         opacity: 0;
+        transform: scale(0.9);
       }
     }
 
-    /* ========== Keyframes for the “split” ========== */
-    @keyframes circleEnter {
-      0%   { transform: scale(0); }
-      30%  { transform: scale(1); }
-      60%  { clip-path: inset(0 50% 0 0); }
-      100% { clip-path: inset(0 50% 0 0); }
-    }
-    @keyframes circleEnterInner {
-      0%   { transform: scale(0); }
-      30%  { transform: scale(1); }
-      60%  { clip-path: inset(0 0 0 50%); }
-      100% { clip-path: inset(0 0 0 50%); }
-    }
-    @keyframes circleLeave {
-      0%   { clip-path: inset(0 50% 0 0); transform: scale(1); }
-      40%  { clip-path: inset(0); }
-      100% { transform: scale(0); }
-    }
-    @keyframes circleLeaveInner {
-      0%   { clip-path: inset(0 0 0 50%); transform: scale(1); }
-      40%  { clip-path: inset(0); }
-      100% { transform: scale(0); }
+    .section3-style-label {
+      position: absolute;
+      top: -32px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: white;
+      padding: 4px 12px;
+      font-weight: bold;
+      font-size: 14px;
+      border-radius: 6px;
+      color: #222;
+      white-space: nowrap;
+      z-index: 30;
+      opacity: 0;
+      transition: opacity 0.4s ease 0.5s;
     }
 
-    /* 容器 position 动画: enter / leave */
-    .split-circle-wrap.enter {
-      animation: circleContainerEnter 1.1s forwards ease-in-out;
-    }
-    .split-circle-wrap.leave {
-      animation: circleContainerLeave 1.1s forwards ease-in-out;
-    }
-    /* 外圈 & 内圈: clip-path 分裂 / 合并 */
-    .outer-ring.enter {
-      animation: circleEnter 1.1s forwards ease-in-out;
-    }
-    .inner-circle.enter {
-      animation: circleEnterInner 1.1s forwards ease-in-out;
-    }
-    .outer-ring.leave {
-      animation: circleLeave 1.1s forwards ease-in-out;
-    }
-    .inner-circle.leave {
-      animation: circleLeaveInner 1.1s forwards ease-in-out;
+    .section3-picker-animate-wrapper.expand .section3-style-label {
+      opacity: 1;
     }
 
+    .section3-color-picker {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.5s ease 0.5s;
+    }
+
+    .section3-picker-animate-wrapper.expand .section3-color-picker {
+      opacity: 1;
+    }
+
+    .section3-color-button {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .section3-color-button.active {
+      border: 2px solid black;
+      box-shadow: 0 0 0 3px white, 0 0 0 5px dodgerblue;
+    }
+
+    .section3-nav-fixed-wrapper {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      right: 85px;
+      gap: 15px;
+      bottom: -55px;
+      z-index: 2000;
+    }
+
+    .section3-nav-button {
+      width: 40px;
+      height: 40px;
+      background-color: #f0f0f4;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      color: #888;
+    }
+
+    .section3-nav-button.disabled {
+      opacity: 0.3;
+      pointer-events: none;
+      cursor: default;
+    }
 
 
+    /* ========== 新增：移动端响应式布局 ========== */
+    @media (max-width: 768px) {
+      /* 让容器高度自动撑开，便于单图纵向展示 */
+      .section3-carousel-container {
+        width: 100%;
+        padding: 0 0;
+        margin: 0 auto;
+        box-sizing: border-box;
+        background: #f9f9f9;
+        overflow: hidden; /* 若想展示“peek preview”，可改为可见 */
+        position: relative;
+        height: auto;
+      }
 
+      /* 每个轮播图上下 12px 间距，宽度为容器宽度（或可略留边） */
+      .section3-slide {
+        width: 100%;
+        margin: 12px 0; /* 上下留 12px */
+      }
 
+      /* 图片之间继续保持 15px gap */
+      .section3-carousel-track {
+        gap: 15px;
+      }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      /* 让图片自适应宽度、高度 */
+      .section3-slide img {
+        width: 100%;
+        height: auto;
+      }
+  }
+    
 
 
 
@@ -1290,40 +1492,67 @@ list-style: none;
       <p class="section1-price">From $599 or $49.91/mo. for 12 mo.*</p>
     </div>
   </section>
-  <!-- 这里放置页面主体内容（示例） -->
-  <!-- section2-highlights 轮播区 + 分裂按钮 -->
-  <section id="section2-highlights" class="section2-highlights">
-    <!-- 轮播容器 -->
-    <div class="section2-carousel-wrap">
-      <div id="section2-images" class="section2-images">
-        <img src="MeFan Pro.png" class="section2-img" alt="section2-MeFanPro">
-        <img src="MeFan Lite.png" class="section2-img" alt="section2-MeFanLite">
-        <img src="A nice girl wearing headphones.png" class="section2-img" alt="section2-NiceGirl">
-        <img src="A slim lady in forest.png" class="section2-img" alt="section2-SlimLady">
-      </div>
-    </div>
 
-    <!-- 左胶囊(4个dot), 右播放圆(初始播放图标 / 播完刷新图标) -->
-    <div id="section2-leftPill" class="section2-leftPill section2-hidden">
-      <div class="section2-dot" data-index="0">
-        <div class="section2-dot-inner"></div>
+  <h1>HIghlights</h1>
+  </div>
+
+  <!-- 轮播容器 -->
+  <section id="section2-highlights" class="section2-highlights">
+    <div class="section2-carousel">
+      <div class="section2-track">
+        <img src="MeFan Pro.png" alt="MeFan Pro">
+        <img src="MeFan Lite.png" alt="MeFan Lite">
+        <img src="A nice girl wearing headphones.png" alt="Headphones">
+        <img src="A slim lady in forest.png" alt="Forest">
       </div>
-      <div class="section2-dot" data-index="1">
-        <div class="section2-dot-inner"></div>
-      </div>
-      <div class="section2-dot" data-index="2">
-        <div class="section2-dot-inner"></div>
-      </div>
-      <div class="section2-dot" data-index="3">
-        <div class="section2-dot-inner"></div>
-      </div>
-    </div>
-    <div id="section2-rightCircle" class="section2-rightCircle section2-hidden">
-      <!-- 播放 or 刷新图标 -->
-      <div id="section2-circleIcon" class="circle-icon-play"></div>
     </div>
   </section>
 
+  <!-- 按钮行容器 -->
+  <div id="section2-buttonRow" class="section2-buttonRow">
+    <!-- 左侧按钮容器 -->
+    <div id="leftBtnContainer" class="btn-container btn-hidden">
+      <div id="section2-leftCapsule">
+        <div class="dots">
+          <div class="dot" data-index="0"></div>
+          <div class="dot" data-index="1"></div>
+          <div class="dot" data-index="2"></div>
+          <div class="dot" data-index="3"></div>
+        </div>
+      </div>
+    </div>
+    <!-- 右侧按钮容器 -->
+    <div id="rightBtnContainer" class="btn-container btn-hidden">
+      <div id="section2-rightButton">
+        <span id="section2-playIcon">►</span>
+      </div>
+    </div>
+  </div>
+<div class="section3-carousel-container" id="section3-container">
+    <div class="section3-carousel-track" id="section3-track">
+      <div class="section3-slide"><img src="A beautiful asia lady.png" alt="Image 1" /></div>
+      <div class="section3-slide"><img src="A slim lady in forest.png" alt="Image 2" /></div>
+      <div class="section3-slide"><img src="A tall woman in high heel.png" alt="Image 3" /></div>
+      <div class="section3-slide"><img src="A beautiful European girl in stroll.png" alt="Image 4" /></div>
+      <div class="section3-slide"><img src="A beautiful asia lady.png" alt="Image 5" /></div>
+    </div>
+    <div class="section3-nav-fixed-wrapper">
+      <button class="section3-nav-button" id="section3-prev">&#x276E;</button>
+      <button class="section3-nav-button" id="section3-next">&#x276F;</button>
+    </div>
+  </div>
+  <div class="section3-picker-wrapper" id="section3-picker-wrapper">
+    <div class="section3-picker-animate-wrapper" id="section3-animate-wrapper">
+      <div class="section3-style-label" id="section3-style-label">Style 1</div>
+      <div class="section3-color-picker" id="section3-color-picker">
+        <button class="section3-color-button active" data-index="0" style="background-image: radial-gradient(circle, #ccc, #aaa);"></button>
+        <button class="section3-color-button" data-index="1" style="background-color: #555;"></button>
+        <button class="section3-color-button" data-index="2" style="background-color: #cce8e5;"></button>
+        <button class="section3-color-button" data-index="3" style="background-color: #e7dced;"></button>
+        <button class="section3-color-button" data-index="4" style="background-color: #f3e7d8;"></button>
+      </div>
+    </div>
+  </div>
     <!-- 桌面端新导航 (Mefan Air) 包裹容器 -->
   <div class="mefan-air-wrap" id="mefanAirWrap">
     <nav class="mefan-air-nav" id="mefanAirNavDesktop">
@@ -1358,11 +1587,7 @@ list-style: none;
     </div>
   </nav>
   <div id="mobileAirBlur" class="mobile-air-blur"></div>
-<!-- 这里放置页面主体内容（示例） -->
-  <main style="height: 2000px; padding: 20px;">
-    <h1>Welcome to Mefan</h1>
-    <p>向下滚动 400px 后可以看到导航切换效果。</p>
-  </main>
+
 <!-- 其余页面内容... -->
   <!-- 原有移动端多级菜单 (保留) -->
   <div id="mobileNavLevel2Home" class="menu-panel menu-panel--level2">
@@ -1394,156 +1619,687 @@ list-style: none;
       </div>
     </div>
   </div>
+
+   <!-- 横线部分 -->
+  <div class="divider"></div>
+  <div class="footer-extend">
+    <p>&copy; 2025 MeFan@Oliver F. All rights reserved.</p>
+  </div>
+
+
+
   <!-- 其它多级菜单面板省略 -->
-
-  <!-- 页面主体内容 -->
-  <main>
-    <h1>Welcome to Mefan</h1>
-    <p>这里是页面主体内容……</p>
-  </main>
-
   
   <!-- -------------------- 主功能脚本 -------------------- -->
 <script>
+  // ====================== 模块1：搜索逻辑、移动端菜单、桌面导航悬停、多级菜单 ======================
+  document.addEventListener("DOMContentLoaded", function() {
+    (function() {
+      // 1) 搜索逻辑
+      const body          = document.body;
+      const mainHeader    = document.getElementById('mainHeader');
+      const desktopSearch = document.getElementById('desktopSearchIcon');
+      const mobileSearch  = document.getElementById('mobileSearchIcon');
+      const searchPanel   = document.getElementById('searchPanel');
+      const searchClose   = document.getElementById('searchClose');
+      const searchTitle   = document.getElementById('searchTitle');
+      const searchResults = document.getElementById('searchResults');
 
+      // 模拟本网站可搜索内容 (示例)
+      const siteContents = [
+        { text: "About MeFan", url: "about.html" },
+        { text: "MeFan Lite - Wireless Earbuds", url: "product-lite.html" },
+        { text: "MeFan X1 - Noise Canceling Headphones", url: "product-x1.html" },
+        { text: "MeFan Pro - Premium Audio", url: "product-pro.html" },
+        { text: "Earbud Tips & Support", url: "support.html" },
+        { text: "Contact Us", url: "contact.html" },
+        { text: "Products Overview", url: "products.html" }
+        // ...更多...
+      ];
 
-/* ========== 轮播 + 分裂按钮脚本 ========== */
-document.addEventListener('DOMContentLoaded', function(){
-  const section2        = document.getElementById('section2-highlights');
-  const carouselInner   = document.getElementById('section2-carouselInner');
-  const leftPill        = document.getElementById('leftPill');
-  const rightCircle     = document.getElementById('rightCircle');
-  const playIcon        = document.getElementById('section2-playIcon');
-  const dotsContainer   = document.getElementById('section2-progressDots');
-  const dots            = dotsContainer.querySelectorAll('.dot');
-
-  // 轮播状态
-  let currentIndex = 0;       // 当前图片索引
-  let isPlaying    = false;   // 是否在自动播放中
-  let parted       = false;   // 是否已经分裂(出现)
-  let timer        = null;    // 播放定时器
-
-  const totalImages = 4;      // 4 张图片
-
-  // ========== 监听滚动，控制“分裂按钮”出现/隐藏 ==========
-  window.addEventListener('scroll', onScroll);
-  function onScroll(){
-    const rect = section2.getBoundingClientRect();
-    const distance = rect.bottom - window.innerHeight;
-    // 当底部 <= -180 => parted
-    if(distance <= -180){
-      if(!parted) {
-        parted = true;
-        showSplittedButtons();
+      function openSearch() {
+        body.classList.add('search-open');
+        searchTitle.textContent = "";
+        searchResults.innerHTML = "";
       }
-    } else {
-      if(parted){
-        parted = false;
-        hideSplittedButtons();
+      function closeSearch() {
+        body.classList.remove('search-open');
       }
-    }
-  }
 
-  function showSplittedButtons(){
-    // 先移除 hidden, add parted
-    leftPill.classList.remove('hidden','merged');
-    leftPill.classList.add('parted');
-    rightCircle.classList.remove('hidden','merged');
-    rightCircle.classList.add('parted');
-  }
-  function hideSplittedButtons(){
-    // 先合并 => hidden
-    leftPill.classList.remove('parted');
-    rightCircle.classList.remove('parted');
-    leftPill.classList.add('merged');
-    rightCircle.classList.add('merged');
-    setTimeout(()=>{
-      leftPill.classList.remove('merged');
-      rightCircle.classList.remove('merged');
-      leftPill.classList.add('hidden');
-      rightCircle.classList.add('hidden');
-    },400);
-    // 同时若在播放 => 停止
-    stopAutoPlay();
-  }
+      if (desktopSearch) desktopSearch.addEventListener('click', openSearch);
+      if (mobileSearch)  mobileSearch.addEventListener('click', openSearch);
+      if (searchClose)   searchClose.addEventListener('click', closeSearch);
 
-  // ========== 轮播相关 ========== 
-  function goToImage(index){
-    if(index<0) index=0;
-    if(index>=totalImages) index=totalImages-1;
-    currentIndex = index;
-    carouselInner.style.transform = `translateX(-${index*(1013+15)}px)`;
-    updateDots();
-  }
-  function updateDots(){
-    dots.forEach((dot, i)=>{
-      dot.classList.remove('active','playing');
-      if(i===currentIndex) {
-        dot.classList.add('active');
+      document.addEventListener('keydown', function(e){
+        if (e.key === "Escape") {
+          closeSearch();
+        }
+      });
+
+      document.addEventListener('click', function(e){
+        // 若点击在 searchPanel 外部，且不是搜索图标，就关闭
+        if (!searchPanel.contains(e.target)
+            && e.target !== desktopSearch
+            && e.target !== mobileSearch) {
+          closeSearch();
+        }
+      });
+
+      // 当用户输入时，动态生成搜索结果
+      if (searchTitle && searchResults) {
+        searchTitle.addEventListener('input', function(){
+          const query = searchTitle.innerText.trim().toLowerCase();
+          if (!query) {
+            searchResults.innerHTML = "";
+            return;
+          }
+          const matched = siteContents.filter(item =>
+            item.text.toLowerCase().includes(query)
+          );
+          searchResults.innerHTML = "";
+          if (matched.length > 0) {
+            matched.forEach(obj => {
+              const div = document.createElement('div');
+              div.classList.add('search-item');
+              // 用 <a> 链接实现真实跳转
+              const link = document.createElement('a');
+              link.href = obj.url;
+              link.textContent = obj.text;
+              link.style.textDecoration = "none";
+              link.style.color = "#333";
+              link.target = "_self";  // 同窗跳转
+              div.appendChild(link);
+              searchResults.appendChild(div);
+            });
+          } else {
+            const noRes = document.createElement('div');
+            noRes.classList.add('no-result');
+            noRes.textContent = "Sorry, no results found.";
+            searchResults.appendChild(noRes);
+          }
+        });
       }
-    });
-  }
+    })();
 
-  dots.forEach(dot=>{
-    dot.addEventListener('click', ()=>{
-      const idx = +dot.dataset.dot;
-      goToImage(idx);
-      stopAutoPlay(); // 点击圆点 => 手动切换 => 暂停自动播放
-    });
-  });
+    (function () {
+      // 2) 移动端菜单逻辑 (基础)
+      const menuIcon  = document.getElementById('menuIcon');
+      const closeBtn  = document.getElementById('closeBtn');
+      const mobileNav = document.getElementById('mobileNav');
 
-  // ========== 播放按钮点击，启动/停止播放 ==========
-  rightCircle.addEventListener('click', ()=> {
-    if(!isPlaying){
-      startAutoPlay();
-    } else {
-      // 如果正在播放 => 点击可改成“暂停” 或 “刷新”
-      // 这里直接“停止”播放
-      stopAutoPlay();
-      // 你也可让 playIcon 变成 refreshIcon
-      playIcon.textContent = "↻"; 
-    }
-  });
+      if (menuIcon && closeBtn && mobileNav) {
+        menuIcon.addEventListener('click', () => {
+          mobileNav.classList.add('active');
+        });
+        closeBtn.addEventListener('click', () => {
+          mobileNav.classList.remove('active');
+        });
+        document.querySelectorAll('#mobileNav ul li a').forEach(link => {
+          link.addEventListener('click', () => {
+            // 点击任意链接后关闭菜单
+            mobileNav.classList.remove('active');
+          });
+        });
+      }
+    })();
 
-  function startAutoPlay(){
-    if(isPlaying) return;
-    isPlaying = true;
-    // 恢复图标 => 播放三角
-    playIcon.textContent="";  // 恢复三角
-    playIcon.className="play-icon";
-    playNextImage();
-  }
-  function stopAutoPlay(){
-    if(timer){
-      clearTimeout(timer);
-      timer=null;
-    }
-    isPlaying=false;
-  }
+    (function(){
+      // 5) 桌面导航栏悬停 (Desktop Nav Hover)
+      const header         = document.getElementById('mainHeader');
+      const navLinks       = document.querySelectorAll('.desktop-nav .nav-list > li > a');
+      const hoverOverlay   = document.getElementById('hover1Overlay');
+      const hoverContent   = document.getElementById('hover1Content');
+      const blurBg         = document.getElementById('blur1Bg'); // 模糊背景层
 
-  function playNextImage(){
-    // 给当前 dot 做“进度”动画
-    const dot = dots[currentIndex];
-    dot.classList.add('playing'); 
-    // 模拟3秒一张
-    timer = setTimeout(()=>{
-      dot.classList.remove('playing'); 
-      currentIndex++;
-      if(currentIndex >= totalImages){
-        // 播放完 => stop & show refresh
-        stopAutoPlay();
-        playIcon.textContent="↻"; 
+      const sectionsMap = {
+        'Home':     document.getElementById('hover1Home'),
+        'Products': document.getElementById('hover1Products'),
+        'About':    document.getElementById('hover1About'),
+        'Contact':  document.getElementById('hover1Contact')
+      };
+
+      function hideAllSections() {
+        Object.values(sectionsMap).forEach(sec => sec && sec.classList.remove('active'));
+      }
+
+      function showHover() {
+        hoverOverlay.classList.add('active');
+        hoverContent.classList.add('active');
+        header.classList.add('nav-white'); // 导航变白
+        if (blurBg) blurBg.classList.add('active'); // 显示模糊背景
+      }
+
+      function hideHover() {
+        hoverOverlay.classList.remove('active');
+        hoverContent.classList.remove('active');
+        header.classList.remove('nav-white');
+        if (blurBg) blurBg.classList.remove('active'); // 隐藏模糊背景
+        hideAllSections();
+      }
+
+      // 鼠标移到导航链接 => 显示对应悬停面板
+      navLinks.forEach(link => {
+        link.addEventListener('mouseenter', () => {
+          const text = link.textContent.trim();
+          hideAllSections();
+          if (sectionsMap[text]) {
+            sectionsMap[text].classList.add('active');
+            showHover();
+          } else {
+            hideHover();
+          }
+        });
+      });
+
+      // 鼠标离开悬停面板 => 关闭
+      hoverContent.addEventListener('mouseleave', () => {
+        hideHover();
+      });
+
+      // 鼠标移动到遮罩层 => 关闭
+      hoverOverlay.addEventListener('mousemove', () => {
+        hideHover();
+      });
+
+      // 鼠标离开模糊背景层 => 关闭
+      if (blurBg) {
+        blurBg.addEventListener('mousemove', () => {
+          hideHover();
+        });
+      }
+    })();
+
+    (function(){
+      // 6) 移动端多级菜单 (若需要)
+      const mobileNav     = document.getElementById('mobileNav');
+      const homePanel     = document.getElementById('mobileNavLevel2Home');
+      const productsPanel = document.getElementById('mobileNavLevel2Products');
+      const aboutPanel    = document.getElementById('mobileNavLevel2About');
+      const contactPanel  = document.getElementById('mobileNavLevel2Contact');
+
+      // 若这些面板不存在，就跳过
+      if (!mobileNav || !homePanel || !productsPanel || !aboutPanel || !contactPanel) {
+        console.log("多级菜单面板未找到，若不需要此功能可删除本脚本。");
         return;
       }
-      goToImage(currentIndex);
-      // 继续下一张
-      playNextImage();
-    },3000);
-  }
 
-  // 初始不播放 => goToImage(0)
-  goToImage(0);
-});
-  </script>
-</body>
-</html>
+      function showSubPanel(panel){
+        mobileNav.classList.remove('active');
+        homePanel.classList.remove('active');
+        productsPanel.classList.remove('active');
+        aboutPanel.classList.remove('active');
+        contactPanel.classList.remove('active');
+        panel.classList.add('active');
+      }
+      function showMainNav(){
+        homePanel.classList.remove('active');
+        productsPanel.classList.remove('active');
+        aboutPanel.classList.remove('active');
+        contactPanel.classList.remove('active');
+        mobileNav.classList.add('active');
+      }
+      const navLinks = mobileNav.querySelectorAll('ul li a');
+      navLinks.forEach(link => {
+        const level = link.getAttribute('data-level');
+        if(level === 'home'){
+          link.addEventListener('click', function(e){
+            e.preventDefault();
+            showSubPanel(homePanel);
+          });
+        } else if(level === 'products'){
+          link.addEventListener('click', function(e){
+            e.preventDefault();
+            showSubPanel(productsPanel);
+          });
+        } else if(level === 'about'){
+          link.addEventListener('click', function(e){
+            e.preventDefault();
+            showSubPanel(aboutPanel);
+          });
+        } else if(level === 'contact'){
+          link.addEventListener('click', function(e){
+            e.preventDefault();
+            showSubPanel(contactPanel);
+          });
+        }
+      });
+      const backButtons = document.querySelectorAll('.menu-panel__back');
+      backButtons.forEach(btn => {
+        btn.addEventListener('click', function(e){
+          e.preventDefault();
+          showMainNav();
+        });
+      });
+      const subCloseButtons = document.querySelectorAll('.menu-panel__close');
+      subCloseButtons.forEach(btn => {
+        btn.addEventListener('click', function(e){
+          e.preventDefault();
+          mobileNav.classList.remove('active');
+          homePanel.classList.remove('active');
+          productsPanel.classList.remove('active');
+          aboutPanel.classList.remove('active');
+          contactPanel.classList.remove('active');
+        });
+      });
+    })();
+  });
+</script>
+
+<script>
+  // ====================== 模块2：桌面端 & 移动端 Mefan Air 导航滚动切换 & 移动端上下翻功能 ======================
+  document.addEventListener("DOMContentLoaded", function() {
+    (function(){
+      const mainHeader = document.getElementById("mainHeader");
+      const mefanAirWrap = document.getElementById("mefanAirWrap");
+      const mobileAirNav = document.getElementById("mobileAirNav");
+
+      window.addEventListener("scroll", function() {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const isMobile = window.innerWidth <= 768;
+        if (!isMobile) {
+          if (scrollTop > 400) {
+            mainHeader.style.transform = "translateY(-100%)";
+            mainHeader.style.opacity = "0";
+            if (mefanAirWrap) mefanAirWrap.classList.add("active");
+          } else {
+            mainHeader.style.transform = "translateY(0)";
+            mainHeader.style.opacity = "1";
+            if (mefanAirWrap) mefanAirWrap.classList.remove("active");
+          }
+        } else {
+          if (scrollTop > 200) {
+            mainHeader.style.transform = "translateY(-100%)";
+            mainHeader.style.opacity = "0";
+            if (mobileAirNav) mobileAirNav.classList.add("active");
+          } else {
+            mainHeader.style.transform = "translateY(0)";
+            mainHeader.style.opacity = "1";
+            if (mobileAirNav) mobileAirNav.classList.remove("active");
+          }
+        }
+      });
+
+      /**********************
+       * 移动端上下翻功能 (下拉面板展开/收起)
+       * - 初始状态：按钮显示下箭头 (⌄, U+2304)
+       * - 展开时：按钮变上箭头 (⌃, U+2303)，下拉面板的 max-height 设为内容高度
+       **********************/
+      if (window.innerWidth <= 768) {
+        const mobileAirToggleBtn = document.getElementById("mobileAirToggleBtn");
+        const mobileAirPanel = document.getElementById("mobileAirPanel");
+        const mobileAirBlur = document.getElementById("mobileAirBlur");
+        let panelOpen = false;
+        function openPanel() {
+          panelOpen = true;
+          if (mobileAirToggleBtn) {
+            mobileAirToggleBtn.textContent = "\u2303"; // 上箭头 (⌃)
+          }
+          if (mobileAirPanel) {
+            mobileAirPanel.style.maxHeight = mobileAirPanel.scrollHeight + "px";
+          }
+          if (mobileAirBlur) {
+            mobileAirBlur.classList.add("active");
+          }
+        }
+        function closePanel() {
+          panelOpen = false;
+          if (mobileAirToggleBtn) {
+            mobileAirToggleBtn.textContent = "\u2304"; // 下箭头 (⌄)
+          }
+          if (mobileAirPanel) {
+            mobileAirPanel.style.maxHeight = "0";
+          }
+          if (mobileAirBlur) {
+            mobileAirBlur.classList.remove("active");
+          }
+        }
+        if (mobileAirToggleBtn && mobileAirPanel) {
+          mobileAirToggleBtn.addEventListener("click", function() {
+            panelOpen ? closePanel() : openPanel();
+          });
+        }
+        if (mobileAirBlur) {
+          mobileAirBlur.addEventListener("click", closePanel);
+        }
+      }
+      // 其它功能（搜索、汉堡菜单、多级菜单等）保留不变
+    })();
+  });
+</script>
+
+<script>
+  // ====================== 模块3：Section2 卡片样式轮播 ======================
+  (function(){
+    const track = document.querySelector('.section2-track'); 
+    const slides = track.querySelectorAll('img');
+    const totalSlides = slides.length;
+    let currentIndex = 0;
+    // 👇 新增关键尺寸
+    const slideWidth = 1013 + 15; // 图片宽度 + 间隔
+
+    function updateCarousel() {
+      // ✅ 卡片样式轮播：滑动式切换
+      const offset = currentIndex * slideWidth;
+      track.style.transform = `translateX(-${offset}px)`;
+      updateDots();
+    }
+
+    const dotElements = document.querySelectorAll('.dot');
+    const slideDuration = 3000;
+    let isPlaying = false;
+    let autoPlayTimer = null;
+    let progressStartTime = null;
+    let progressAnimationId = null;
+
+    function animateActiveDot(timestamp) {
+      if (!progressStartTime) progressStartTime = timestamp;
+      const elapsed = timestamp - progressStartTime;
+      const progress = Math.min(elapsed / slideDuration, 1);
+      const activeDot = dotElements[currentIndex];
+      const newWidth = 12 + (28 * progress);
+      activeDot.style.width = newWidth + 'px';
+      if (progress < 1 && isPlaying) {
+        progressAnimationId = requestAnimationFrame(animateActiveDot);
+      }
+    }
+
+    function resetDots() {
+      dotElements.forEach((dot, idx) => {
+        dot.style.width = '12px';
+        dot.style.backgroundColor = (idx === currentIndex) ? '#007aff' : '#ccc';
+      });
+    }
+
+    function updateDots() {
+      dotElements.forEach((dot, idx) => {
+        dot.style.backgroundColor = (idx === currentIndex) ? '#007aff' : '#ccc';
+        if (idx !== currentIndex) dot.style.width = '12px';
+      });
+    }
+
+    dotElements.forEach(dot => {
+      dot.addEventListener('click', () => {
+        pauseAutoPlay();
+        currentIndex = parseInt(dot.getAttribute('data-index'));
+        progressStartTime = null;
+        resetDots();
+        updateCarousel();
+        startAutoPlay();
+      });
+    });
+
+    /********** 新增：手机端触摸滑动左右切换 **********/
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    track.addEventListener("touchstart", function(e) {
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+
+    track.addEventListener("touchend", function(e) {
+      touchEndX = e.changedTouches[0].clientX;
+      const deltaX = touchEndX - touchStartX;
+
+      // 判定滑动距离是否足够触发切换
+      if (Math.abs(deltaX) > 50) {
+        pauseAutoPlay(); // 停止自动播放
+        if (deltaX < 0) {
+          // 向左滑，下一张
+          currentIndex = (currentIndex + 1) % totalSlides;
+        } else {
+          // 向右滑，上一张
+          currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+        }
+        updateCarousel(); // 更新图片
+      }
+    });
+
+    /********** 自动播放逻辑 **********/
+    const rightButton = document.getElementById('section2-rightButton');
+    const playIcon = document.getElementById('section2-playIcon');
+
+    function startAutoPlay() {
+      isPlaying = true;
+      playIcon.textContent = '❚❚';
+      progressStartTime = null;
+      progressAnimationId = requestAnimationFrame(animateActiveDot);
+      autoPlayTimer = setTimeout(nextSlide, slideDuration);
+    }
+
+    function pauseAutoPlay() {
+      isPlaying = false;
+      playIcon.textContent = '►';
+      clearTimeout(autoPlayTimer);
+      autoPlayTimer = null;
+      cancelAnimationFrame(progressAnimationId);
+      resetDots();
+    }
+
+    function nextSlide() {
+      resetDots();
+      currentIndex++;
+      if (currentIndex < totalSlides) {
+        updateCarousel();
+        progressStartTime = null;
+        progressAnimationId = requestAnimationFrame(animateActiveDot);
+        autoPlayTimer = setTimeout(nextSlide, slideDuration);
+      } else {
+        isPlaying = false;
+        playIcon.textContent = '↻';
+      }
+    }
+
+    rightButton.addEventListener('click', () => {
+      if (playIcon.textContent === '↻') {
+        currentIndex = 0;
+        updateCarousel();
+        resetDots();
+        playIcon.textContent = '►';
+        return;
+      }
+      if (isPlaying) {
+        pauseAutoPlay();
+      } else {
+        if (currentIndex >= totalSlides) {
+          currentIndex = 0;
+          updateCarousel();
+          resetDots();
+        }
+        startAutoPlay();
+      }
+    });
+
+    /********** 按钮进出动画 + 自适应移动 **********/
+    const highlights = document.getElementById('section2-highlights');
+    const buttonRow = document.getElementById('section2-buttonRow');
+    const leftBtnContainer = document.getElementById('leftBtnContainer');
+    const rightBtnContainer = document.getElementById('rightBtnContainer');
+
+    function triggerButtonEntry() {
+      leftBtnContainer.classList.remove('btn-hidden');
+      rightBtnContainer.classList.remove('btn-hidden');
+      leftBtnContainer.classList.add('btn-merged');
+      rightBtnContainer.classList.add('btn-merged');
+      setTimeout(() => {
+        leftBtnContainer.classList.remove('btn-merged');
+        rightBtnContainer.classList.remove('btn-merged');
+        leftBtnContainer.classList.add('btn-left-animate');
+        rightBtnContainer.classList.add('btn-right-animate');
+        leftBtnContainer.style.pointerEvents = "auto";
+        rightBtnContainer.style.pointerEvents = "auto";
+      }, 600);
+    }
+
+    function triggerButtonExit() {
+      leftBtnContainer.classList.remove('btn-left-animate');
+      rightBtnContainer.classList.remove('btn-right-animate');
+      leftBtnContainer.classList.add('btn-merged');
+      rightBtnContainer.classList.add('btn-merged');
+      setTimeout(() => {
+        leftBtnContainer.classList.remove('btn-merged');
+        rightBtnContainer.classList.remove('btn-merged');
+        leftBtnContainer.classList.add('btn-hidden');
+        rightBtnContainer.classList.add('btn-hidden');
+      }, 600);
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          triggerButtonEntry();
+        } else {
+          triggerButtonExit();
+        }
+      });
+    }, { threshold: 0 });
+
+    observer.observe(highlights);
+
+    function adjustButtonRowPosition() {
+      const brRect = buttonRow.getBoundingClientRect();
+      if (brRect.bottom > window.innerHeight) {
+        buttonRow.style.transform = "translateY(-90px)";
+      } else {
+        buttonRow.style.transform = "";
+      }
+    }
+    window.addEventListener("scroll", adjustButtonRowPosition);
+
+    // 若 DOM 加载已完成则立即更新轮播
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCarousel();
+    });
+  })();
+</script>
+
+<script>
+  // ====================== 模块4：Section3 滑动切换（样式、交互） ======================
+  (function(){
+    const track = document.getElementById("section3-track");
+    const buttons = document.querySelectorAll(".section3-color-button");
+    const prev = document.getElementById("section3-prev");
+    const next = document.getElementById("section3-next");
+    const pickerWrapper = document.getElementById("section3-picker-wrapper");
+    const animateWrapper = document.getElementById("section3-animate-wrapper");
+    const container = document.getElementById("section3-container");
+    const styleLabel = document.getElementById("section3-style-label");
+
+    let currentIndex = 0;
+    let lastMoveState = false;
+
+    // ==========================
+    // 保留原有的 updateSlide() 逻辑
+    // ==========================
+    function updateSlide(index) {
+      // 这里仍然用 track.offsetWidth 作为单张图宽度计算，
+      // 可能需要根据你的布局改为 container.offsetWidth 或某个 slide 的 offsetWidth
+      const slideWidth = track.offsetWidth;
+      track.style.transform = `translateX(-${index * slideWidth}px)`;
+
+      buttons.forEach((btn, i) => {
+        btn.classList.toggle("active", i === index);
+      });
+
+      currentIndex = index;
+      updateButtonStates();
+
+      // 同步更新上方的 styleLabel
+      styleLabel.textContent = `Style ${index + 1}`;
+    }
+
+    function updateButtonStates() {
+      prev.classList.toggle("disabled", currentIndex === 0);
+      next.classList.toggle("disabled", currentIndex === buttons.length - 1);
+    }
+
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        const index = parseInt(button.getAttribute("data-index"));
+        updateSlide(index);
+      });
+    });
+
+    prev.addEventListener("click", () => {
+      if (currentIndex > 0) updateSlide(currentIndex - 1);
+    });
+
+    next.addEventListener("click", () => {
+      if (currentIndex < buttons.length - 1) updateSlide(currentIndex + 1);
+    });
+
+    // ==========================
+    // IntersectionObserver 保留
+    // ==========================
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateWrapper.classList.remove("collapse");
+          animateWrapper.classList.add("expand");
+        } else {
+          animateWrapper.classList.remove("expand");
+          animateWrapper.classList.add("collapse");
+        }
+      });
+    }, { threshold: 0.5 });
+
+    observer.observe(container);
+
+    function adjustPickerPosition() {
+      const pickerRect = pickerWrapper.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+      const pickerHeight = pickerWrapper.offsetHeight;
+      const distanceFromBottom = window.innerHeight - containerRect.bottom;
+      const shouldMoveUp = pickerRect.bottom > containerRect.bottom || distanceFromBottom < pickerHeight + 20;
+      if (shouldMoveUp !== lastMoveState) {
+        pickerWrapper.classList.toggle("move-up", shouldMoveUp);
+        lastMoveState = shouldMoveUp;
+      }
+    }
+
+    let scrollTimer;
+    window.addEventListener("scroll", () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => requestAnimationFrame(adjustPickerPosition), 80);
+    });
+
+    window.addEventListener("resize", () => requestAnimationFrame(adjustPickerPosition));
+
+    // ==========================
+    // 新增：移动端触摸左右滑动支持
+    // ==========================
+    let startX = 0;
+    let isDragging = false;
+    const swipeThreshold = 50; // 滑动多少像素后算一次有效切换
+
+    track.addEventListener("touchstart", (e) => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+    });
+
+    track.addEventListener("touchmove", (e) => {
+      if (!isDragging) return;
+      // 可在这里做实时位移预览，但若要保留原逻辑，可只在 touchend 时判断
+    });
+
+    track.addEventListener("touchend", (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      const endX = e.changedTouches[0].clientX;
+      const diff = endX - startX;
+
+      if (diff > swipeThreshold && currentIndex > 0) {
+        // 右滑 -> 看前一张
+        updateSlide(currentIndex - 1);
+      } else if (diff < -swipeThreshold && currentIndex < buttons.length - 1) {
+        // 左滑 -> 看后一张
+        updateSlide(currentIndex + 1);
+      }
+    });
+
+    window.addEventListener("load", () => {
+      adjustPickerPosition();
+      updateButtonStates();
+      updateSlide(currentIndex);
+    });
+  })();
+</script>
