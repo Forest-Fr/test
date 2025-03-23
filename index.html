@@ -22,7 +22,7 @@
       padding-top: 40px; /* 原主导航高度 */
     }
 
-     /* ========== 原主导航 ========== */
+    /* ========== 原主导航 ========== */
     .header-gradient {
       position: fixed;
       top: 0;
@@ -249,18 +249,6 @@
       height: 100vh;
       opacity: 1;
     }
-.mefan-air-wrap {
-  display: block !important;
-  min-height: 60px;
-  transform: translateY(-60px);
-  opacity: 0;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  background: #fff;
-}
-.mefan-air-wrap.active {
-  transform: translateY(0);
-  opacity: 1;
-}
 
     /* ========== 媒体查询 ========== */
     /* 桌面端：屏幕宽度 ≥769px 显示桌面端新导航，隐藏移动端新导航 */
@@ -277,6 +265,7 @@
         display: none !important;
       }
     }
+
 
 
 /* === 外部容器，控制整体布局和露出左右部分 === */
@@ -1525,41 +1514,8 @@ list-style: none;
   </section>
 
   <h1>HIghlights</h1>
- <!-- 桌面端新导航 (Mefan Air) 包裹容器 -->
+  </div>
 
-<div class="mefan-air-wrap" id="mefanAirWrap">
-  <nav class="mefan-air-nav" id="mefanAirNavDesktop">
-    <div class="mefan-air-left">Mefan Air</div>
-    <ul class="mefan-air-list">
-      <li><a href="sample.html">Overview</a></li>
-      <li><a href="sample.html">Tech Specs</a></li>
-      <li><a href="sample.html">Compare</a></li>
-      <li><a href="sample.html">Why mefan</a></li>
-      <li><a href="sample.html">Buy</a></li>
-    </ul>
-  </nav>
-</div>
-
-  <!-- 移动端新导航 (Mefan Air) 悬停式下拉 -->
-  <nav id="mobileAirNav" class="mobile-air-nav">
-    <div class="mobile-air-top">
-      <div class="mobile-air-left">Mefan Air</div>
-      <div class="mobile-air-right">
-        <!-- 初始下箭头 (⌄, U+2304) -->
-        <span id="mobileAirToggleBtn" class="mobile-air-toggle-btn">&#x2304;</span>
-        <a href="sample.html" target="_blank" class="mobile-air-buy">Buy</a>
-      </div>
-    </div>
-    <div id="mobileAirPanel" class="mobile-air-panel">
-      <ul class="mobile-air-panel-list">
-        <li><a href="sample.html" target="_blank">Overview</a></li>
-        <li><a href="sample.html" target="_blank">Tech Specs</a></li>
-        <li><a href="sample.html" target="_blank">Compare</a></li>
-        <li><a href="sample.html" target="_blank">Why mefan</a></li>
-      </ul>
-    </div>
-  </nav>
-  <div id="mobileAirBlur" class="mobile-air-blur"></div>
   <!-- 轮播容器 -->
   <section id="section2-highlights" class="section2-highlights">
     <div class="section2-carousel">
@@ -1617,7 +1573,40 @@ list-style: none;
       </div>
     </div>
   </div>
-   
+    <!-- 桌面端新导航 (Mefan Air) 包裹容器 -->
+  <div class="mefan-air-wrap" id="mefanAirWrap">
+    <nav class="mefan-air-nav" id="mefanAirNavDesktop">
+      <div class="mefan-air-left">Mefan Air</div>
+      <ul class="mefan-air-list">
+        <li><a href="sample.html">Overview</a></li>
+        <li><a href="sample.html">Tech Specs</a></li>
+        <li><a href="sample.html">Compare</a></li>
+        <li><a href="sample.html">Why mefan</a></li>
+        <li><a href="sample.html">Buy</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- 移动端新导航 (Mefan Air) 悬停式下拉 -->
+  <nav id="mobileAirNav" class="mobile-air-nav">
+    <div class="mobile-air-top">
+      <div class="mobile-air-left">Mefan Air</div>
+      <div class="mobile-air-right">
+        <!-- 初始下箭头 (⌄, U+2304) -->
+        <span id="mobileAirToggleBtn" class="mobile-air-toggle-btn">&#x2304;</span>
+        <a href="sample.html" target="_blank" class="mobile-air-buy">Buy</a>
+      </div>
+    </div>
+    <div id="mobileAirPanel" class="mobile-air-panel">
+      <ul class="mobile-air-panel-list">
+        <li><a href="sample.html" target="_blank">Overview</a></li>
+        <li><a href="sample.html" target="_blank">Tech Specs</a></li>
+        <li><a href="sample.html" target="_blank">Compare</a></li>
+        <li><a href="sample.html" target="_blank">Why mefan</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div id="mobileAirBlur" class="mobile-air-blur"></div>
 
 <!-- 其余页面内容... -->
   <!-- 原有移动端多级菜单 (保留) -->
