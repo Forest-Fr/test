@@ -21,27 +21,7 @@
     }
 
     /* ========== 原主导航 ========== */
-    .header-gradient {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 3000;
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: linear-gradient(to right, #DEEFFF, #B2D8FF);
-      transition: background 0.2s ease, transform 0.3s ease, opacity 0.3s ease;
-    }
-    .header-gradient.nav-white {
-      background: #fff !important;
-    }
-    .logo-img {
-      width: 60px;
-      margin-right: 20px;
- margin-left: 0;           /* ✅ 强制靠左对齐 */后来加的
-  flex-shrink: 0;           /* ✅ 不被压缩 */后来加的
+  
     }
 /* 新增：用于隐藏主导航内容，但保留 logo */
 .hide-header-items .desktop-nav,
@@ -161,8 +141,7 @@ margin-bottom:-20px;
       width: 100%;
       margin: 0;
       padding: 0;
-padding-left: 20px;后来加的
-  padding-right: 20px;后来加的
+
     }
   .mefan-air-left {
   font-size: 1.2rem;
@@ -190,21 +169,7 @@ padding-left: 20px;后来加的
   font-weight: bold;
   transition: background 0.3s ease;
 }
-/* 移动端顶部 logo 容器 */后来加的
-@media (max-width: 768px) {
-  .header-gradient .logo-img {
-    margin-left: 10px;    /* 恢复左边距 */
-  }
 
-  .mobile-air-left {
-    margin-left: 0;
-    padding-left: 0;
-  }
-
-  .mobile-air-nav {
-    padding-left: 10px;   /* 给 Logo 留空间 */
-  }
-}
 
     /* ========== 移动端新导航 (Mefan Air) 悬停式下拉 ==========
          包含上下翻按钮和下拉面板，统一背景颜色与新导航一致 */
@@ -745,7 +710,7 @@ margin-top: 55px; /* 把原本的间距拉近 */
       overflow-y: hidden;
     margin: 0 auto;
   position: relative !important;
-padding-top:36px;
+margin-top:36px;
   }
   .section3-carousel-container::-webkit-scrollbar {
     display: none;
