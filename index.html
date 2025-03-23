@@ -158,6 +158,14 @@
       text-decoration: none;
       color: #0071e3;
     }
+.mefan-air-list li a.mefan-air-buy {
+  background: linear-gradient(to bottom, #007aff, #0066cc); /* 渐变蓝 */
+  color: white; /* 字体白色 */
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
 
     /* ========== 移动端新导航 (Mefan Air) 悬停式下拉 ==========
          包含上下翻按钮和下拉面板，统一背景颜色与新导航一致 */
@@ -247,6 +255,25 @@
       height: 100vh;
       opacity: 1;
     }
+@media (max-width: 768px) {
+  /* 优化汉堡菜单菜单样式冲突：当新导航显示时隐藏 #mobileNav */
+  .mobile-air-nav.active + #mobileNav {
+    display: none !important;
+  }
+
+  /* 避免顶部 Buy 按钮遮挡菜单文字 */
+  #mobileNav ul {
+    margin-top: 60px;  /* 留出顶部空间 */
+  }
+
+  /* 恢复关闭按钮样式位置 */
+  #mobileNav .close-btn {
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    color: #333;
+  }
+}
 
     /* ========== 媒体查询 ========== */
     /* 桌面端：屏幕宽度 ≥769px 显示桌面端新导航，隐藏移动端新导航 */
@@ -480,6 +507,7 @@ z-index:999;
       overflow-y: visible;
       position: relative;
       height: 520px;
+top:12px
     }
 
     .section3-carousel-track {
@@ -670,6 +698,8 @@ z-index:999;
  @media (max-width: 768px) {
   .section3-carousel-container {
     width: 100vw;
+   padding-left: calc((100vw - 90vw) / 2);
+    padding-right: calc((100vw - 90vw) / 2);
    overflow-x: clip;
       overflow-y: hidden;
     margin: 0 auto;
@@ -1621,7 +1651,7 @@ list-style: none;
         <li><a href="sample.html">Tech Specs</a></li>
         <li><a href="sample.html">Compare</a></li>
         <li><a href="sample.html">Why mefan</a></li>
-        <li><a href="sample.html">Buy</a></li>
+        <li><a href="sample.html" class="mefan-air-buy">Buy</a></li> <!-- ✅ 加 class -->
       </ul>
     </nav>
   </div>
@@ -2528,7 +2558,24 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   })();
 
-}); // ← 只保留一次 DOMContentLoaded
+}); 
+(function () {
+  const mobileNav = document.getElementById("mobileNav");
+  const mobileAirNav = document.getElementById("mobileAirNav");
+
+  // 当新导航出现时强制隐藏原 mobileNav，避免重叠
+  const observer = new MutationObserver(() => {
+    if (mobileAirNav.classList.contains("active")) {
+      mobileNav.classList.remove("active");
+    }
+  });
+
+  if (mobileAirNav) {
+    observer.observe(mobileAirNav, { attributes: true, attributeFilter: ["class"] });
+  }
+})();
+
+// ← 只保留一次 DOMContentLoaded
 </script>
 
 
