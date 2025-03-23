@@ -5,46 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="description" content="MeFan - 提供高品质无线蓝牙耳机，带给您卓越的音频体验" />
   <meta name="author" content="MeFan Solutions" />
-
+  <title>MeFan - 让体验无线自由</title>
   <link rel="icon" href="MeFan Logo.png" type="image/x-icon"/>
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@400;600&display=swap"
-    rel="stylesheet"
-  >
-
-  <!-- 样式与脚本 -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
   <script src="scripts.js" defer></script>
-  <script src="scroll.js" defer></script> <!-- 引入优化的滚动脚本 -->
+  <script src="scroll.js" defer></script> 
 </head>
 <body>
-  <!-- 原主导航 -->
-<!-- 顶部：淡色背景/渐变（默认示例：浅蓝渐变） -->
-  <header class="header-gradient" id="mainHeader">
-    <!-- 左侧 Logo -->
-    <img src="MeFan Logo.png" alt="MeFan Logo" class="logo-img" />
 
-    <!-- 桌面端导航列表，居中对齐，带 Home / Products / About / Contact / 搜索按钮 -->
+  <!-- 顶部导航 -->
+  <header class="header-gradient" id="mainHeader">
+    <img src="MeFan Logo.png" alt="MeFan Logo" class="logo-img" />
     <nav class="desktop-nav">
       <ul class="nav-list">
         <li><a href="index.html" class="active">Home</a></li>
         <li><a href="products.html">Products</a></li>
         <li><a href="about.html">About</a></li>
         <li><a href="contact.html">Contact</a></li>
-        <!-- 桌面搜索图标 -->
-        <li>
-          <div class="search-icon" id="desktopSearchIcon">🔍</div>
-        </li>
+        <li><div class="search-icon" id="desktopSearchIcon">🔍</div></li>
       </ul>
     </nav>
 
-    <!-- 移动端图标区：搜索 + 汉堡菜单 -->
     <div class="mobile-icons">
-      <!-- 搜索图标，与汉堡菜单相距 30px -->
       <span id="mobileSearchIcon" class="mobile-search-icon">🔍</span>
-
-      <!-- 汉堡菜单：三条水平线，竖向堆叠，类似小号“三”字形 -->
       <div class="vertical-hamburger" id="menuIcon">
         <div class="v-bar"></div>
         <div class="v-bar"></div>
@@ -52,11 +36,9 @@
       </div>
     </div>
 
-    <!-- 移动端全屏菜单 -->
     <nav id="mobileNav">
       <div class="close-btn" id="closeBtn">&times;</div>
       <ul>
-      <!-- 修改为触发二级面板，增加 data-level 属性 -->
         <li><a href="javascript:void(0);" data-level="home">Home</a></li>
         <li><a href="javascript:void(0);" data-level="products">Products</a></li>
         <li><a href="javascript:void(0);" data-level="about">About</a></li>
@@ -64,12 +46,11 @@
       </ul>
     </nav>
   </header>
-  <!-- 横幅 Banner -->
+
   <div class="banner-promo">
     Buy now with special offers! <a href="sample.html" target="_blank">Shop &gt;</a>
   </div>
 
-  <!-- MeFan X1 图片区 -->
   <section class="section1-hero">
     <img src="MeFan X1.png" alt="MeFan X1" class="section1-hero-img">
     <div class="section1-hero-content">
@@ -81,9 +62,8 @@
   </section>
 
   <h1>HIghlights</h1>
-  </div>
+  </div> <!-- ⚠️ 无对应开启标签，建议检查是否多余 -->
 
-  <!-- 轮播容器 -->
   <section id="section2-highlights" class="section2-highlights">
     <div class="section2-carousel">
       <div class="section2-track">
@@ -94,6 +74,8 @@
       </div>
     </div>
   </section>
+
+
 
   <!-- 按钮行容器 -->
   <div id="section2-buttonRow" class="section2-buttonRow">
@@ -376,7 +358,6 @@
       </ul>
     </div>
   </div>
-
 
   <!-- 横线部分 -->
   <div class="divider"></div>
