@@ -163,17 +163,16 @@
 padding-left: 20px;后来加的
   padding-right: 20px;后来加的
     }
-    .mefan-air-left {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin: 0;
-      padding: 0;
-      margin-right: auto;
-margin-left: 0;           /* ✅ 去掉默认空隙 */后来加的
-  padding-left: 0;          /* ✅ 让它贴边显示 */后来加的
-display: flex;后来加的
-  align-items: center;后来加的
-    }
+  .mefan-air-left {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  margin-left: 80px;       /* ✅ 控制水平偏移，避开 logo */
+  margin-right: auto;
+  display: flex;           /* ✅ 让文字垂直居中 */
+  align-items: center;
+}
+
     .mefan-air-list {
       list-style: none;
       display: flex;
