@@ -1,12 +1,23 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="MeFan - 提供高品质无线蓝牙耳机，带给您卓越的音频体验" />
+  <meta name="author" content="MeFan Solutions" />
   <title>MeFan - 让体验无线自由</title>
+  <link rel="icon" href="MeFan Logo.png" type="image/x-icon"/>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@400;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- 样式与脚本 -->
+  <link rel="stylesheet" href="styles.css" />
+  <script src="scripts.js" defer></script>
+  <script src="scroll.js" defer></script> 
   <style>
-    /* ========== Reset & 基础 ========== */
-      /* ========== Reset & 基础 ========== */
     * {
       margin: 0;
       padding: 0;
@@ -426,7 +437,86 @@ z-index:999
       color: #007aff;
 z-index:999
     }
-  
+  @media (max-width: 768px) {
+  .section2-highlights {
+    width: 100vw;
+    padding-left: calc((100vw - 90vw) / 2);
+    padding-right: calc((100vw -90vw) / 2);
+  overflow-x: hidden; 
+    margin: 0 auto;
+  position: relative !important;
+  }
+  .section2-highlights::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 2) 轮播轨道 */
+  .section2-carousel {
+   width: 100%;
+  height: 100%;
+  overflow: visible;
+  }
+
+  .section2-track{
+    flex: 0 0 auto;
+    width:90vw;
+    aspect-ratio: 9 / 16;/* 宽高比例9:16 */
+    scroll-snap-align: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* 4) 图片：铺满整个卡片区域 */
+  .section2-track img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: none !important;
+    opacity: 1 !important;
+.section2-buttonRow {
+    height: 60px;
+    margin: 12px auto;
+    top: 20px;
+  }
+
+  #section2-leftCapsule {
+    width: 180px;
+    height: 40px;
+    border-radius: 20px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  #section2-rightButton {
+    width: 46px;
+    height: 46px;
+    font-size: 18px;
+  }
+
+  .btn-left-final {
+    transform: translate(calc(-50% - 90px), -50%) scale(1);
+  }
+
+  .btn-right-final {
+    transform: translate(calc(-50% + 90px), -50%) scale(1);
+  }
+
+  @keyframes leftEntry {
+    0%   { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    40%  { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    100% { transform: translate(calc(-50% - 90px), -50%) scale(1); opacity: 1; }
+  }
+
+  @keyframes rightEntry {
+    0%   { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    40%  { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    100% { transform: translate(calc(-50% + 90px), -50%) scale(1); opacity: 1; }
+  }
+  }
 
 
 /* === 五颜色部分 === */
@@ -625,40 +715,137 @@ z-index:999
       pointer-events: none;
       cursor: default;
     }
-
-
     /* ========== 新增：移动端响应式布局 ========== */
     @media (max-width: 768px) {
       /* 让容器高度自动撑开，便于单图纵向展示 */
       .section3-carousel-container {
-        width: 100%;
-        padding: 0 0;
-        margin: 0 auto;
-        box-sizing: border-box;
-        background: #f9f9f9;
-        overflow: hidden; /* 若想展示“peek preview”，可改为可见 */
-        position: relative;
-        height: auto;
+        width: 100vw;
+    padding-left: calc((100vw - 90vw) / 2);
+    padding-right: calc((100vw -90vw) / 2);
+  overflow-x: hidden; 
+    margin: 0 auto;
+  position: relative !important;
+  }
+  .section2-highlights::-webkit-scrollbar {
+    display: none;
       }
 
       /* 每个轮播图上下 12px 间距，宽度为容器宽度（或可略留边） */
       .section3-slide {
-        width: 100%;
-        margin: 12px 0; /* 上下留 12px */
+         flex: 0 0 auto;
+    width:90vw;
+    aspect-ratio: 9 / 16;/* 宽高比例9:16 */
+    scroll-snap-align: center;
+    overflow: hidden;
+    position: relative;
       }
 
       /* 图片之间继续保持 15px gap */
       .section3-carousel-track {
-        gap: 15px;
+        display: flex;
+    gap: 15px;
+    align-items: center;
+    transition: transform 0.5s ease-in-out;
       }
 
       /* 让图片自适应宽度、高度 */
       .section3-slide img {
         width: 100%;
-        height: auto;
-      }
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: none !important;
+    opacity: 1 !important;
+.section2-buttonRow {
+    height: 60px;
+    margin: 12px auto;
+    top: 20px;
   }
-    
+  .section3-picker-wrapper {
+    height: 60px;
+    margin-top: 10px;
+  }
+
+  .section3-picker-animate-wrapper {
+    width: 48px;
+    height: 48px;
+  }
+
+  .section3-style-label {
+    font-size: 12px;
+    top: -28px;
+    padding: 3px 10px;
+  }
+
+  .section3-color-picker {
+    gap: 10px;
+  }
+
+  .section3-color-button {
+    width: 24px;
+    height: 24px;
+  }
+
+  .section3-nav-fixed-wrapper {
+    right: 20px; /* 原本 85px 过远 */
+    bottom: -45px;
+    gap: 10px;
+  }
+
+  .section3-nav-button {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  /* 修正展开动画宽度（适配小屏） */
+  @keyframes expandPickerEnhanced {
+    0% {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    50% {
+      width: 100px;
+      border-radius: 50px;
+      opacity: 1;
+      transform: scale(1.05);
+    }
+    100% {
+      width: 260px;
+      height: 48px;
+      border-radius: 999px;
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes collapsePickerEnhanced {
+    0% {
+      width: 260px;
+      height: 48px;
+      border-radius: 999px;
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      width: 100px;
+      border-radius: 50px;
+      transform: scale(0.95);
+    }
+    100% {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      opacity: 0;
+      transform: scale(0.9);
+    }
+  }
+}
+
+   
 
 
 
@@ -1442,7 +1629,7 @@ list-style: none;
 
 
 
-  </style>
+ </style>
 </head>
 <body>
 
