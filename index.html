@@ -90,6 +90,7 @@
       overflow: hidden;
       text-align: center;
       background-color: #000;
+margin-bottom:-20px;
     }
     .section1-hero-img {
       width: 100%;
@@ -165,12 +166,10 @@ padding-left: 20px;后来加的
     }
   .mefan-air-left {
   font-size: 1.2rem;
-  font-weight: 600;
-  margin: 0;
-  margin-left: 80px;       /* ✅ 控制水平偏移，避开 logo */
-  margin-right: auto;
-  display: flex;           /* ✅ 让文字垂直居中 */
-  align-items: center;
+      font-weight: 600;
+      margin: 0;
+      padding: 0;
+      margin-right: auto;
 }
 
     .mefan-air-list {
@@ -286,8 +285,8 @@ padding-left: 20px;后来加的
       width: 100%;
       height: 0;
       z-index: 4500;
-  background: rgba(255, 255, 255, 0.6); /* 半透明 */ /* 原来background和rgba(0,0,0,0.3) */
-backdrop-filter:blur(20px);/* 原来backdrop-filter和blur(8px) */
+  background: rgba(255, 255, 255, 0.6); /* 半透明 */ /* 原来backgroundYUANrgba(0,0,0,0.3) */
+backdrop-filter:blur(20px);/* 原来backdrop-filterYUANblur(8px) */
       transition: height 0.3s ease, opacity 0.3s ease;
       opacity: 0;
     }
@@ -344,6 +343,7 @@ backdrop-filter:blur(20px);/* 原来backdrop-filter和blur(8px) */
   background: #f9f9f9;
   overflow: hidden;
   position: relative;
+margin-top:-10px;
 }
 
 /* === 轨道容器：横向滚动布局，图片横排 === */
@@ -390,7 +390,7 @@ backdrop-filter:blur(20px);/* 原来backdrop-filter和blur(8px) */
       max-width: 800px;
       margin: 20px auto;
       position: sticky;
-      top: 30px; /* 默认距离视口顶部30px */
+      top: 30px; /* 默认距离视口顶部30px */原30px
       height: 80px;
       transition: transform 0.3s ease;
       /* 可调背景色调试 */
@@ -547,7 +547,7 @@ z-index:999;
       overflow-y: visible;
       position: relative;
       height: 520px;
-top:12px
+margin-top: 55px; /* 把原本的间距拉近 */
     }
 
     .section3-carousel-track {
@@ -1622,8 +1622,8 @@ list-style: none;
     </div>
   </section>
 
-  <h1>HIghlights</h1>
-  </div>
+  <h1>Highlights</h1>
+
 
   <!-- 轮播容器 -->
   <section id="section2-highlights" class="section2-highlights">
