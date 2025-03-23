@@ -41,6 +41,13 @@
       width: 60px;
       margin-right: 20px;
     }
+/* 新增：仅隐藏主导航条视觉样式，不影响其子级结构 */
+.hide-header {
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  pointer-events: none; /* 避免误点 */
+}
 
     /* ========== 横幅 Banner ========== */
     .banner-promo {
@@ -2155,31 +2162,37 @@ document.addEventListener("DOMContentLoaded", function() {
     const mefanAirWrap = document.getElementById("mefanAirWrap");
     const mobileAirNav = document.getElementById("mobileAirNav");
 
-    window.addEventListener("scroll", function() {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const isMobile = window.innerWidth <= 768;
-      if (!isMobile) {
-        if (scrollTop > 400) {
-          mainHeader.style.transform = "translateY(-100%)";
-          mainHeader.style.opacity = "0";
-          if (mefanAirWrap) mefanAirWrap.classList.add("active");
-        } else {
-          mainHeader.style.transform = "translateY(0)";
-          mainHeader.style.opacity = "1";
-          if (mefanAirWrap) mefanAirWrap.classList.remove("active");
-        }
-      } else {
-        if (scrollTop > 200) {
-          mainHeader.style.transform = "translateY(-100%)";
-          mainHeader.style.opacity = "0";
-          if (mobileAirNav) mobileAirNav.classList.add("active");
-        } else {
-          mainHeader.style.transform = "translateY(0)";
-          mainHeader.style.opacity = "1";
-          if (mobileAirNav) mobileAirNav.classList.remove("active");
-        }
+window.addEventListener("scroll", function () {
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  const isMobile = window.innerWidth <= 768;
+
+  if (!isMobile) {
+    if (scrollTop > 400) {
+      // 仅隐藏主导航条，但不隐藏 mobileNav
+      if (mainHeader) {
+        mainHeader.classList.add("hide-header");
       }
-    });
+      if (mefanAirWrap) mefanAirWrap.classList.add("active");
+    } else {
+      if (mainHeader) {
+        mainHeader.classList.remove("hide-header");
+      }
+      if (mefanAirWrap) mefanAirWrap.classList.remove("active");
+    }
+  } else {
+    if (scrollTop > 200) {
+      if (mainHeader) {
+        mainHeader.classList.add("hide-header");
+      }
+      if (mobileAirNav) mobileAirNav.classList.add("active");
+    } else {
+      if (mainHeader) {
+        mainHeader.classList.remove("hide-header");
+      }
+      if (mobileAirNav) mobileAirNav.classList.remove("active");
+    }
+  }
+});
 
     /**********************
      * 移动端上下翻功能 (下拉面板展开/收起)
