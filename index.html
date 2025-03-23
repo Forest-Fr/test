@@ -269,40 +269,43 @@
 /* === 外部容器，控制整体布局和露出左右部分 === */
 
 .section2-highlights {
-  width: 100%;
-  max-width: 100%;
-  padding: 0 10%; /* 两侧留白 */  /* 上下12px，左右留出空间以露出部分左右图padding12px 60px; */
-  margin: 0 auto;
-  box-sizing: border-box;
-  background: #f9f9f9;
-  overflow: hidden;
-  position: relative;
-}
-
-/* === 轨道容器：横向滚动布局，图片横排 === */
-.section2-carousel {
-  width: 100%;
+width: 100%;
   height: 100%;
   overflow: visible;
 }
+/* === 轨道容器：横向滚动布局，图片横排 === */
+.section2-carousel {
+ position: relative;
+    width: 100%;
+    height: 520px; /* 固定高度 */
+    overflow: hidden;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10%; /* 两侧留白 */
+}
 
 .section2-track {
-  display: flex;
-  gap: 15px; /* 每张图之间的间距 */
-  transition: transform 0.5s ease-in-out;
-  will-change: transform;
-  justify-content: flex-start;
+ flex: 0 0 auto;
+    width: 100%;
+    position: relative; /* Relative positioning to position the overlay */
+    opacity: 1 !important;
+    transition: opacity 0.3s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* 若用 ::before 需要父级 position: relative */ /* 原没有触发去阴影 */
 }
 
 /* === 单张图片样式 === */
 .section2-track img {
-  flex: 0 0 auto;
-  width: 1013px;
-  height: 520px;
-  object-fit: cover;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-  transition: transform 0.4s ease, opacity 0.4s ease;
+   width: 100%; /* Ensure the image adapts to the container's width */
+    height: auto; /* Maintain the aspect ratio of the images */
+    display: block;
+    border-radius: 10px;
+    filter: none !important;
+    opacity: 1 !important;
 }
 
 /* ✅ 可选：当前图片放大，左右图缩小，可增加视觉引导感 */
@@ -432,40 +435,43 @@ z-index:999
 /* === 五颜色部分 === */
 
   .section3-carousel-container {
-      width: 100%;
-      padding: 0 10%;
-      margin: 0 auto;
-      box-sizing: border-box;
-      background: #f9f9f9;
-      overflow-x: clip;
-      overflow-y: visible;
-      position: relative;
-      height: 520px;
+    position: relative;
+    width: 100%;
+    height: 520px; /* 固定高度 */
+    overflow: hidden;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10%; /* 两侧留白 */
     }
 
     .section3-carousel-track {
-      display: flex;
-      gap: 15px; /* 图片之间间隔 15px */
-      transition: transform 0.5s ease-in-out;
-      justify-content: flex-start;
+       display: flex; /* 使用 flex 布局 */
+    gap: 15px; /* 图片之间的间隔 */
+    transition: transform 0.5s ease-in-out;
+    justify-content: flex-start; /* 确保图片从左开始排列 */
     }
 
     .section3-slide {
-      flex: 0 0 auto;
-      width: 100%;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+       flex: 0 0 auto;
+    width: 100%;
+    position: relative; /* Relative positioning to position the overlay */
+    opacity: 1 !important;
+    transition: opacity 0.3s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* 若用 ::before 需要父级 position: relative */ /* 原没有触发去阴影 */
     }
 
     .section3-slide img {
-      width: 1013px;
-      height: 520px;
-      object-fit: cover;
-      border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-      transition: transform 0.4s ease, opacity 0.4s ease;
+      width: 100%; /* Ensure the image adapts to the container's width */
+    height: auto; /* Maintain the aspect ratio of the images */
+    display: block;
+    border-radius: 10px;
+    filter: none !important;
+    opacity: 1 !important;
     }
 
     .section3-picker-wrapper {
