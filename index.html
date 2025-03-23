@@ -43,6 +43,17 @@
  margin-left: 0;           /* ✅ 强制靠左对齐 */后来加的
   flex-shrink: 0;           /* ✅ 不被压缩 */后来加的
     }
+/* 新增：用于隐藏主导航内容，但保留 logo */
+.hide-header-items .desktop-nav,
+.hide-header-items .mobile-icons,
+.hide-header-items .search-icon {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* ✅ logo 保持原位置，不添加任何位移 */
+
 /* 新增：仅隐藏主导航条视觉样式，不影响其子级结构 */
 .hide-header {
   transform: translateY(-100%);
@@ -2217,6 +2228,7 @@ window.addEventListener("scroll", function () {
   }
 });
 
+
     /**********************
      * 移动端上下翻功能 (下拉面板展开/收起)
      **********************/
@@ -2610,6 +2622,9 @@ window.addEventListener("scroll", function () {
     observer.observe(mobileAirNav, { attributes: true, attributeFilter: ["class"] });
   }
 })();
+
+
+ 
 
 // ← 只保留一次 DOMContentLoaded
 </script>
