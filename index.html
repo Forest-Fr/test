@@ -283,10 +283,11 @@
 /* === 轨道容器：横向滚动布局，图片横排 === */
 .section2-carousel {
 
- width: 100%;
-  height: 100%;
-  overflow: visible;
 
+display: flex; /* 使用 flex 布局 */
+    gap: 15px; /* 图片之间的间隔 */
+    transition: transform 0.5s ease-in-out;
+    justify-content: flex-start; /* 确保图片从左开始排列 */
 }
 
 .section2-track {
@@ -303,12 +304,13 @@
 
 /* === 单张图片样式 === */
 .section2-track img {
-   width: 100%; /* Ensure the image adapts to the container's width */
-    height: auto; /* Maintain the aspect ratio of the images */
-    display: block;
-    border-radius: 10px;
-    filter: none !important;
-    opacity: 1 !important;
+  flex: 0 0 auto;
+  width: 1013px;
+  height: 520px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
 /* ✅ 可选：当前图片放大，左右图缩小，可增加视觉引导感 */
