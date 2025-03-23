@@ -1,12 +1,23 @@
-<!DOCTYPE html>
+tml> 
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="MeFan - 提供高品质无线蓝牙耳机，带给您卓越的音频体验" />
+  <meta name="author" content="MeFan Solutions" />
   <title>MeFan - 让体验无线自由</title>
+  <link rel="icon" href="MeFan Logo.png" type="image/x-icon"/>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@400;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- 样式与脚本 -->
+  <link rel="stylesheet" href="styles.css" />
+  <script src="scripts.js" defer></script>
+  <script src="scroll.js" defer></script> 
   <style>
-    /* ========== Reset & 基础 ========== */
-      /* ========== Reset & 基础 ========== */
     * {
       margin: 0;
       padding: 0;
@@ -63,7 +74,8 @@
     }
 
     /* ========== MeFan X1 图片区 ========== */
-    .section1-hero {
+   @media (max-width: 1024px) {
+ .section1-hero {
       position: relative;
       width: 100%;
       margin: 0 auto;
@@ -267,7 +279,6 @@
 
 
 /* === 外部容器，控制整体布局和露出左右部分 === */
-
 .section2-highlights {
   width: 100%;
   max-width: 100%;
@@ -314,6 +325,7 @@
   transform: scale(1);
   opacity: 1;
 } */
+
 
 
 
@@ -411,26 +423,11 @@ z-index:999
 z-index:999
     }
 
-    /* ======== 右侧圆形按钮 ======== */
-    #section2-rightButton {
-      width: 60px;
-      height: 60px;
-      background: #fff;
-      border: 2px solid #007aff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 24px;
-      color: #007aff;
-z-index:999
-    }
-  
-
-
+ 
+ 
+ 
+ 
 /* === 五颜色部分 === */
-
   .section3-carousel-container {
       width: 100%;
       padding: 0 10%;
@@ -627,38 +624,9 @@ z-index:999
     }
 
 
-    /* ========== 新增：移动端响应式布局 ========== */
-    @media (max-width: 768px) {
-      /* 让容器高度自动撑开，便于单图纵向展示 */
-      .section3-carousel-container {
-        width: 100%;
-        padding: 0 0;
-        margin: 0 auto;
-        box-sizing: border-box;
-        background: #f9f9f9;
-        overflow: hidden; /* 若想展示“peek preview”，可改为可见 */
-        position: relative;
-        height: auto;
-      }
+   
 
-      /* 每个轮播图上下 12px 间距，宽度为容器宽度（或可略留边） */
-      .section3-slide {
-        width: 100%;
-        margin: 12px 0; /* 上下留 12px */
-      }
-
-      /* 图片之间继续保持 15px gap */
-      .section3-carousel-track {
-        gap: 15px;
-      }
-
-      /* 让图片自适应宽度、高度 */
-      .section3-slide img {
-        width: 100%;
-        height: auto;
-      }
-  }
-    
+   
 
 
 
@@ -1442,33 +1410,48 @@ list-style: none;
 
 
 
-  </style>
+ </style>
 </head>
 <body>
 
   <!-- 原主导航 -->
+ <!-- 顶部：淡色背景/渐变（默认示例：浅蓝渐变） -->
   <header class="header-gradient" id="mainHeader">
-    <img src="MeFan Logo.png" alt="MeFan Logo" class="logo-img">
+    <!-- 左侧 Logo -->
+    <img src="MeFan Logo.png" alt="MeFan Logo" class="logo-img" />
+
+    <!-- 桌面端导航列表，居中对齐，带 Home / Products / About / Contact / 搜索按钮 -->
     <nav class="desktop-nav">
       <ul class="nav-list">
         <li><a href="index.html" class="active">Home</a></li>
         <li><a href="products.html">Products</a></li>
         <li><a href="about.html">About</a></li>
         <li><a href="contact.html">Contact</a></li>
-        <li><div class="search-icon" id="desktopSearchIcon">🔍</div></li>
+        <!-- 桌面搜索图标 -->
+        <li>
+          <div class="search-icon" id="desktopSearchIcon">🔍</div>
+        </li>
       </ul>
     </nav>
+
+    <!-- 移动端图标区：搜索 + 汉堡菜单 -->
     <div class="mobile-icons">
+      <!-- 搜索图标，与汉堡菜单相距 30px -->
       <span id="mobileSearchIcon" class="mobile-search-icon">🔍</span>
+
+      <!-- 汉堡菜单：三条水平线，竖向堆叠，类似小号“三”字形 -->
       <div class="vertical-hamburger" id="menuIcon">
         <div class="v-bar"></div>
         <div class="v-bar"></div>
         <div class="v-bar"></div>
       </div>
     </div>
+
+    <!-- 移动端全屏菜单 -->
     <nav id="mobileNav">
       <div class="close-btn" id="closeBtn">&times;</div>
       <ul>
+      <!-- 修改为触发二级面板，增加 data-level 属性 -->
         <li><a href="javascript:void(0);" data-level="home">Home</a></li>
         <li><a href="javascript:void(0);" data-level="products">Products</a></li>
         <li><a href="javascript:void(0);" data-level="about">About</a></li>
@@ -1476,7 +1459,6 @@ list-style: none;
       </ul>
     </nav>
   </header>
-
   <!-- 横幅 Banner -->
   <div class="banner-promo">
     Buy now with special offers! <a href="sample.html" target="_blank">Shop &gt;</a>
@@ -1493,7 +1475,7 @@ list-style: none;
     </div>
   </section>
 
-  <h1>HIghlights</h1>
+  <h1>Highlights</h1>
   </div>
 
   <!-- 轮播容器 -->
@@ -1587,9 +1569,7 @@ list-style: none;
     </div>
   </nav>
   <div id="mobileAirBlur" class="mobile-air-blur"></div>
-
-<!-- 其余页面内容... -->
-  <!-- 原有移动端多级菜单 (保留) -->
+  <!-- 新增：移动端二级菜单面板（仅手机端有效） -->
   <div id="mobileNavLevel2Home" class="menu-panel menu-panel--level2">
     <div class="menu-panel__header">
       <div class="menu-panel__back">&lt; 返回</div>
@@ -1602,6 +1582,7 @@ list-style: none;
       </ul>
     </div>
   </div>
+
   <div id="mobileNavLevel2Products" class="menu-panel menu-panel--level2">
     <div class="menu-panel__header">
       <div class="menu-panel__back">&lt; 返回</div>
@@ -1609,6 +1590,7 @@ list-style: none;
       <div class="menu-panel__close">&times;</div>
     </div>
     <div class="menu-panel__content">
+      <!-- 分组1：Mefan Series -->
       <div class="menu-panel__group">
         <div class="menu-panel__group-title">MEFAN SERIES</div>
         <ul class="menu-panel__group-list">
@@ -1617,11 +1599,183 @@ list-style: none;
           <li><a href="product-pro.html" target="_blank">MeFan Pro</a></li>
         </ul>
       </div>
+      <!-- 分组2：Mefan Premium Series -->
+      <div class="menu-panel__group">
+        <div class="menu-panel__group-title">MEFAN PREMIUM SERIES</div>
+        <ul class="menu-panel__group-list">
+          <li><a href="example.html" target="_blank">Premium p1</a></li>
+          <li><a href="example.html" target="_blank">Premium p2</a></li>
+          <li><a href="example.html" target="_blank">Premium p3</a></li>
+        </ul>
+      </div>
+      <!-- 分组3：Mefan Classic Series -->
+      <div class="menu-panel__group">
+        <div class="menu-panel__group-title">MEFAN CLASSIC SERIES</div>
+        <ul class="menu-panel__group-list">
+          <li><a href="example.html" target="_blank">Classic c1</a></li>
+          <li><a href="example.html" target="_blank">Classic c2</a></li>
+          <li><a href="example.html" target="_blank">Classic c3</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+   <!-- About 二级面板 -->
+  <div id="mobileNavLevel2About" class="menu-panel menu-panel--level2">
+    <div class="menu-panel__header">
+      <div class="menu-panel__back">&lt; 返回</div>
+      <div class="menu-panel__title">About</div>
+      <div class="menu-panel__close">&times;</div>
+    </div>
+    <div class="menu-panel__content">
+      <!-- 分组1：PERSONAL -->
+      <div class="menu-panel__group">
+        <div class="menu-panel__group-title">PERSONAL</div>
+        <ul class="menu-panel__group-list">
+          <li><a href="http://mefan.42web.io" target="_blank">mefan.42web.io</a></li>
+        </ul>
+      </div>
+      <!-- 分组2：OPPORTUNITY & CHALLENGE -->
+      <div class="menu-panel__group">
+        <div class="menu-panel__group-title">OPPORTUNITY &amp; CHALLENGE</div>
+        <ul class="menu-panel__group-list">
+          <li><a href="http://mefan.42web.io" target="_blank">mefan.42web.io</a></li>
+          <li><a href="example.html" target="_blank">example.html</a></li>
+          <li><a href="http://mefan.42web.io/example.html" target="_blank">example.html</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 
-   <!-- 横线部分 -->
+  <!-- Contact 二级面板 -->
+  <div id="mobileNavLevel2Contact" class="menu-panel menu-panel--level2">
+    <div class="menu-panel__header">
+      <div class="menu-panel__back">&lt; 返回</div>
+      <div class="menu-panel__title">Contact</div>
+      <div class="menu-panel__close">&times;</div>
+    </div>
+    <div class="menu-panel__content">
+      <!-- 分组：CONTACT -->
+      <div class="menu-panel__group">
+        <div class="menu-panel__group-title">CONTACT</div>
+        <ul class="menu-panel__group-list">
+          <li><a href="contact.html" target="_blank">Contact us</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+ <!-- 全屏阴影层，用于点击/移动关闭大面板 -->
+<div class="hover1-overlay" id="hover1Overlay"></div>
+
+<!-- 模糊背景层 -->
+<div class="blur1-bg" id="blur1Bg"></div>
+
+<!-- 悬停面板容器（固定在导航下方） -->
+<div class="hover1-content" id="hover1Content">
+  <!-- 首页面板 -->
+  <div class="hover1-section" id="hover1Home">
+    <div class="home1-horizontal-row">
+      <div class="home1-intro-col">
+        <h3>Home - 特别推荐</h3>
+        <p>欢迎回到首页，看看 MeFan 最新动态。</p>
+      </div>
+      <div class="home1-links-col">
+        <ul>
+          <li><a href="https://mefan.42web.io" target="_blank" rel="noopener noreferrer">MeFan</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 产品面板 -->
+  <div class="hover1-section" id="hover1Products">
+    <div class="products-horizontal-row">
+      <div class="products-intro-col">
+        <h3>Products - 产品阵列</h3>
+        <p>在这里可以直接预览或跳转到各产品介绍，体验更多。</p>
+        <ul>
+          <li><a href="product-lite.html">MeFan Lite</a></li>
+          <li><a href="product-x1.html">MeFan X1</a></li>
+          <li><a href="product-pro.html">MeFan Pro</a></li>
+        </ul>
+      </div>
+      <div class="premium1-column">
+        <h4 class="premium1-title">Premium</h4>
+        <ul class="premium1-list">
+          <li><a href="example.html">p1</a></li>
+          <li><a href="example.html">p2</a></li>
+          <li><a href="example.html">p3</a></li>
+        </ul>
+      </div>
+      <div class="classic1-column">
+        <h4 class="classic1-title">Classic</h4>
+        <ul class="classic1-list">
+          <li><a href="example.html">c1</a></li>
+          <li><a href="example.html">c2</a></li>
+          <li><a href="example.html">c3</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- About 面板 -->
+  <div class="hover1-section" id="hover1About">
+    <div class="about1-horizontal-row">
+      <div class="about1-intro-col">
+        <h3>About - 关于我们</h3>
+        <p>认识 MeFan 团队，了解我们的背景、理念与愿景。</p>
+      </div>
+      <div class="about1-links-col">
+        <ul>
+          <li><a href="about.html">About us</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact 面板 -->
+  <div class="hover1-section" id="hover1Contact">
+    <div class="contact1-horizontal-row">
+      <div class="contact1-intro-col">
+        <h3>Contact - 联系我们</h3>
+        <p>问题咨询、商务合作，请在此找到联系方式。</p>
+      </div>
+      <div class="contact1-links-col">
+        <ul>
+          <li><a href="contact.html">Contact us</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- ===== 全屏搜索界面 ===== -->
+  <div class="search-panel" id="searchPanel">
+    <!-- 关闭按钮 (在手机端靠上右侧,避免文字遮挡) -->
+    <span class="search-close-btn" id="searchClose">&times;</span>
+
+    <!-- 大标题(可编辑)，同时用伪元素显示提示“🔍 Search mefan.42web.io” -->
+    <h2 class="search-title" id="searchTitle" contenteditable="true" data-placeholder="🔍 Search oliverfr.com"></h2>	
+
+    <!-- 搜索结果列表 -->
+    <div class="search-results" id="searchResults"></div>
+
+    <!-- Quick Links 区域（固定展示） -->
+    <div class="quick-links">
+      <p>Quick Links</p>
+      <ul>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="mefan.42web.io">Support</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+
+    <!-- 横线部分 -->
   <div class="divider"></div>
+
+  <!-- 公司信息和社交媒体 -->
   <div class="footer-extend">
     <p>&copy; 2025 MeFan@Oliver F. All rights reserved.</p>
   </div>
