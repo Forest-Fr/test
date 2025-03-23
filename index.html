@@ -1,11 +1,13 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="MeFan - 提供高品质无线蓝牙耳机，带给您卓越的音频体验" />
+  <meta name="author" content="MeFan Solutions" />
   <title>MeFan - 让体验无线自由</title>
-  <style>
-    /* ========== Reset & 基础 ========== */
+<style>
+/* ========== Reset & 基础 ========== */
       /* ========== Reset & 基础 ========== */
     * {
       margin: 0;
@@ -20,7 +22,7 @@
       padding-top: 40px; /* 原主导航高度 */
     }
 
-    /* ========== 原主导航 ========== */
+     /* ========== 原主导航 ========== */
     .header-gradient {
       position: fixed;
       top: 0;
@@ -247,6 +249,18 @@
       height: 100vh;
       opacity: 1;
     }
+.mefan-air-wrap {
+  display: block !important;
+  min-height: 60px;
+  transform: translateY(-60px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  background: #fff;
+}
+.mefan-air-wrap.active {
+  transform: translateY(0);
+  opacity: 1;
+}
 
     /* ========== 媒体查询 ========== */
     /* 桌面端：屏幕宽度 ≥769px 显示桌面端新导航，隐藏移动端新导航 */
@@ -263,7 +277,6 @@
         display: none !important;
       }
     }
-
 
 
 /* === 外部容器，控制整体布局和露出左右部分 === */
@@ -658,18 +671,6 @@ z-index:999
         height: auto;
       }
   }
-    
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1439,36 +1440,67 @@ list-style: none;
 
 
 
-
-
-
-  </style>
+</style>
 </head>
 <body>
 
-  <!-- 原主导航 -->
+
+
+
+
+
+  <link rel="icon" href="MeFan Logo.png" type="image/x-icon"/>
+
+  <!-- 引入字体 -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@400;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- 样式与脚本 -->
+  <link rel="stylesheet" href="styles.css" />
+  <script src="scripts.js" defer></script>
+  <script src="scroll.js" defer></script> 
+</head>
+<body>
+
+  <!-- 顶部：淡色背景/渐变（默认示例：浅蓝渐变） -->
   <header class="header-gradient" id="mainHeader">
-    <img src="MeFan Logo.png" alt="MeFan Logo" class="logo-img">
+    <!-- 左侧 Logo -->
+    <img src="MeFan Logo.png" alt="MeFan Logo" class="logo-img" />
+
+    <!-- 桌面端导航列表，居中对齐，带 Home / Products / About / Contact / 搜索按钮 -->
     <nav class="desktop-nav">
       <ul class="nav-list">
         <li><a href="index.html" class="active">Home</a></li>
         <li><a href="products.html">Products</a></li>
         <li><a href="about.html">About</a></li>
         <li><a href="contact.html">Contact</a></li>
-        <li><div class="search-icon" id="desktopSearchIcon">🔍</div></li>
+        <!-- 桌面搜索图标 -->
+        <li>
+          <div class="search-icon" id="desktopSearchIcon">🔍</div>
+        </li>
       </ul>
     </nav>
+
+    <!-- 移动端图标区：搜索 + 汉堡菜单 -->
     <div class="mobile-icons">
+      <!-- 搜索图标，与汉堡菜单相距 30px -->
       <span id="mobileSearchIcon" class="mobile-search-icon">🔍</span>
+
+      <!-- 汉堡菜单：三条水平线，竖向堆叠，类似小号“三”字形 -->
       <div class="vertical-hamburger" id="menuIcon">
         <div class="v-bar"></div>
         <div class="v-bar"></div>
         <div class="v-bar"></div>
       </div>
     </div>
+
+    <!-- 移动端全屏菜单 -->
     <nav id="mobileNav">
       <div class="close-btn" id="closeBtn">&times;</div>
       <ul>
+      <!-- 修改为触发二级面板，增加 data-level 属性 -->
         <li><a href="javascript:void(0);" data-level="home">Home</a></li>
         <li><a href="javascript:void(0);" data-level="products">Products</a></li>
         <li><a href="javascript:void(0);" data-level="about">About</a></li>
@@ -1476,7 +1508,6 @@ list-style: none;
       </ul>
     </nav>
   </header>
-
   <!-- 横幅 Banner -->
   <div class="banner-promo">
     Buy now with special offers! <a href="sample.html" target="_blank">Shop &gt;</a>
@@ -1494,8 +1525,41 @@ list-style: none;
   </section>
 
   <h1>HIghlights</h1>
-  </div>
+ <!-- 桌面端新导航 (Mefan Air) 包裹容器 -->
 
+<div class="mefan-air-wrap" id="mefanAirWrap">
+  <nav class="mefan-air-nav" id="mefanAirNavDesktop">
+    <div class="mefan-air-left">Mefan Air</div>
+    <ul class="mefan-air-list">
+      <li><a href="sample.html">Overview</a></li>
+      <li><a href="sample.html">Tech Specs</a></li>
+      <li><a href="sample.html">Compare</a></li>
+      <li><a href="sample.html">Why mefan</a></li>
+      <li><a href="sample.html">Buy</a></li>
+    </ul>
+  </nav>
+</div>
+
+  <!-- 移动端新导航 (Mefan Air) 悬停式下拉 -->
+  <nav id="mobileAirNav" class="mobile-air-nav">
+    <div class="mobile-air-top">
+      <div class="mobile-air-left">Mefan Air</div>
+      <div class="mobile-air-right">
+        <!-- 初始下箭头 (⌄, U+2304) -->
+        <span id="mobileAirToggleBtn" class="mobile-air-toggle-btn">&#x2304;</span>
+        <a href="sample.html" target="_blank" class="mobile-air-buy">Buy</a>
+      </div>
+    </div>
+    <div id="mobileAirPanel" class="mobile-air-panel">
+      <ul class="mobile-air-panel-list">
+        <li><a href="sample.html" target="_blank">Overview</a></li>
+        <li><a href="sample.html" target="_blank">Tech Specs</a></li>
+        <li><a href="sample.html" target="_blank">Compare</a></li>
+        <li><a href="sample.html" target="_blank">Why mefan</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div id="mobileAirBlur" class="mobile-air-blur"></div>
   <!-- 轮播容器 -->
   <section id="section2-highlights" class="section2-highlights">
     <div class="section2-carousel">
@@ -1553,40 +1617,7 @@ list-style: none;
       </div>
     </div>
   </div>
-    <!-- 桌面端新导航 (Mefan Air) 包裹容器 -->
-  <div class="mefan-air-wrap" id="mefanAirWrap">
-    <nav class="mefan-air-nav" id="mefanAirNavDesktop">
-      <div class="mefan-air-left">Mefan Air</div>
-      <ul class="mefan-air-list">
-        <li><a href="sample.html">Overview</a></li>
-        <li><a href="sample.html">Tech Specs</a></li>
-        <li><a href="sample.html">Compare</a></li>
-        <li><a href="sample.html">Why mefan</a></li>
-        <li><a href="sample.html">Buy</a></li>
-      </ul>
-    </nav>
-  </div>
-
-  <!-- 移动端新导航 (Mefan Air) 悬停式下拉 -->
-  <nav id="mobileAirNav" class="mobile-air-nav">
-    <div class="mobile-air-top">
-      <div class="mobile-air-left">Mefan Air</div>
-      <div class="mobile-air-right">
-        <!-- 初始下箭头 (⌄, U+2304) -->
-        <span id="mobileAirToggleBtn" class="mobile-air-toggle-btn">&#x2304;</span>
-        <a href="sample.html" target="_blank" class="mobile-air-buy">Buy</a>
-      </div>
-    </div>
-    <div id="mobileAirPanel" class="mobile-air-panel">
-      <ul class="mobile-air-panel-list">
-        <li><a href="sample.html" target="_blank">Overview</a></li>
-        <li><a href="sample.html" target="_blank">Tech Specs</a></li>
-        <li><a href="sample.html" target="_blank">Compare</a></li>
-        <li><a href="sample.html" target="_blank">Why mefan</a></li>
-      </ul>
-    </div>
-  </nav>
-  <div id="mobileAirBlur" class="mobile-air-blur"></div>
+   
 
 <!-- 其余页面内容... -->
   <!-- 原有移动端多级菜单 (保留) -->
@@ -1620,477 +1651,634 @@ list-style: none;
     </div>
   </div>
 
-   <!-- 横线部分 -->
-  <div class="divider"></div>
-  <div class="footer-extend">
-    <p>&copy; 2025 MeFan@Oliver F. All rights reserved.</p>
+  <!-- 新增：移动端二级菜单面板（仅手机端有效） -->
+  <div id="mobileNavLevel2Home" class="menu-panel menu-panel--level2">
+    <div class="menu-panel__header">
+      <div class="menu-panel__back">&lt; 返回</div>
+      <div class="menu-panel__title">Explore the Mefan</div>
+      <div class="menu-panel__close">&times;</div>
+    </div>
+    <div class="menu-panel__content">
+      <ul>
+        <li><a href="http://mefan.42web.io" target="_blank">Explore the Mefan</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="mobileNavLevel2Products" class="menu-panel menu-panel--level2">
+    <div class="menu-panel__header">
+      <div class="menu-panel__back">&lt; 返回</div>
+      <div class="menu-panel__title">Products</div>
+      <div class="menu-panel__close">&times;</div>
+    </div>
+    <div class="menu-panel__content">
+      <!-- 分组1：Mefan Series -->
+      <div class="menu-panel__group">
+        <div class="menu-panel__group-title">MEFAN SERIES</div>
+        <ul class="menu-panel__group-list">
+          <li><a href="product-lite.html" target="_blank">MeFan Lite</a></li>
+          <li><a href="product-x1.html" target="_blank">MeFan X1</a></li>
+          <li><a href="product-pro.html" target="_blank">MeFan Pro</a></li>
+        </ul>
+      </div>
+      <!-- 分组2：Mefan Premium Series -->
+      <div class="menu-panel__group">
+        <div class="menu-panel__group-title">MEFAN PREMIUM SERIES</div>
+        <ul class="menu-panel__group-list">
+          <li><a href="example.html" target="_blank">Premium p1</a></li>
+          <li><a href="example.html" target="_blank">Premium p2</a></li>
+          <li><a href="example.html" target="_blank">Premium p3</a></li>
+        </ul>
+      </div>
+      <!-- 分组3：Mefan Classic Series -->
+      <div class="menu-panel__group">
+        <div class="menu-panel__group-title">MEFAN CLASSIC SERIES</div>
+        <ul class="menu-panel__group-list">
+          <li><a href="example.html" target="_blank">Classic c1</a></li>
+          <li><a href="example.html" target="_blank">Classic c2</a></li>
+          <li><a href="example.html" target="_blank">Classic c3</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+   <!-- About 二级面板 -->
+  <div id="mobileNavLevel2About" class="menu-panel menu-panel--level2">
+    <div class="menu-panel__header">
+      <div class="menu-panel__back">&lt; 返回</div>
+      <div class="menu-panel__title">About</div>
+      <div class="menu-panel__close">&times;</div>
+    </div>
+    <div class="menu-panel__content">
+      <!-- 分组1：PERSONAL -->
+      <div class="menu-panel__group">
+        <div class="menu-panel__group-title">PERSONAL</div>
+        <ul class="menu-panel__group-list">
+          <li><a href="http://mefan.42web.io" target="_blank">mefan.42web.io</a></li>
+        </ul>
+      </div>
+      <!-- 分组2：OPPORTUNITY & CHALLENGE -->
+      <div class="menu-panel__group">
+        <div class="menu-panel__group-title">OPPORTUNITY &amp; CHALLENGE</div>
+        <ul class="menu-panel__group-list">
+          <li><a href="http://mefan.42web.io" target="_blank">mefan.42web.io</a></li>
+          <li><a href="example.html" target="_blank">example.html</a></li>
+         <li><a href="http://mefan.42web.io/example.html" target="_blank">example.html</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact 二级面板 -->
+  <div id="mobileNavLevel2Contact" class="menu-panel menu-panel--level2">
+    <div class="menu-panel__header">
+      <div class="menu-panel__back">&lt; 返回</div>
+      <div class="menu-panel__title">Contact</div>
+      <div class="menu-panel__close">&times;</div>
+    </div>
+    <div class="menu-panel__content">
+      <!-- 分组：CONTACT -->
+      <div class="menu-panel__group">
+        <div class="menu-panel__group-title">CONTACT</div>
+        <ul class="menu-panel__group-list">
+          <li><a href="contact.html" target="_blank">Contact us</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+ <!-- 全屏阴影层，用于点击/移动关闭大面板 -->
+<div class="hover1-overlay" id="hover1Overlay"></div>
+
+<!-- 模糊背景层 -->
+<div class="blur1-bg" id="blur1Bg"></div>
+
+<!-- 悬停面板容器（固定在导航下方） -->
+<div class="hover1-content" id="hover1Content">
+  <!-- 首页面板 -->
+  <div class="hover1-section" id="hover1Home">
+    <div class="home1-horizontal-row">
+      <div class="home1-intro-col">
+        <h3>Home - 特别推荐</h3>
+        <p>欢迎回到首页，看看 MeFan 最新动态。</p>
+      </div>
+      <div class="home1-links-col">
+        <ul>
+          <li><a href="https://mefan.42web.io" target="_blank" rel="noopener noreferrer">MeFan</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 产品面板 -->
+  <div class="hover1-section" id="hover1Products">
+    <div class="products-horizontal-row">
+      <div class="products-intro-col">
+        <h3>Products - 产品阵列</h3>
+        <p>在这里可以直接预览或跳转到各产品介绍，体验更多。</p>
+        <ul>
+          <li><a href="product-lite.html">MeFan Lite</a></li>
+          <li><a href="product-x1.html">MeFan X1</a></li>
+          <li><a href="product-pro.html">MeFan Pro</a></li>
+        </ul>
+      </div>
+      <div class="premium1-column">
+        <h4 class="premium1-title">Premium</h4>
+        <ul class="premium1-list">
+          <li><a href="example.html">p1</a></li>
+          <li><a href="example.html">p2</a></li>
+          <li><a href="example.html">p3</a></li>
+        </ul>
+      </div>
+      <div class="classic1-column">
+        <h4 class="classic1-title">Classic</h4>
+        <ul class="classic1-list">
+          <li><a href="example.html">c1</a></li>
+          <li><a href="example.html">c2</a></li>
+          <li><a href="example.html">c3</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- About 面板 -->
+  <div class="hover1-section" id="hover1About">
+    <div class="about1-horizontal-row">
+      <div class="about1-intro-col">
+        <h3>About - 关于我们</h3>
+        <p>认识 MeFan 团队，了解我们的背景、理念与愿景。</p>
+      </div>
+      <div class="about1-links-col">
+        <ul>
+          <li><a href="about.html">About us</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact 面板 -->
+  <div class="hover1-section" id="hover1Contact">
+    <div class="contact1-horizontal-row">
+      <div class="contact1-intro-col">
+        <h3>Contact - 联系我们</h3>
+        <p>问题咨询、商务合作，请在此找到联系方式。</p>
+      </div>
+      <div class="contact1-links-col">
+        <ul>
+          <li><a href="contact.html">Contact us</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- ===== 全屏搜索界面 ===== -->
+  <div class="search-panel" id="searchPanel">
+    <!-- 关闭按钮 (在手机端靠上右侧,避免文字遮挡) -->
+    <span class="search-close-btn" id="searchClose">&times;</span>
+
+    <!-- 大标题(可编辑)，同时用伪元素显示提示“🔍 Search mefan.42web.io” -->
+    <h2 class="search-title" id="searchTitle" contenteditable="true" data-placeholder="🔍 Search mefan.42web.io"></h2>	
+
+    <!-- 搜索结果列表 -->
+    <div class="search-results" id="searchResults"></div>
+
+    <!-- Quick Links 区域（固定展示） -->
+    <div class="quick-links">
+      <p>Quick Links</p>
+      <ul>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="mefan.42web.io">Support</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
   </div>
 
 
 
-  <!-- 其它多级菜单面板省略 -->
-  
-  <!-- -------------------- 主功能脚本 -------------------- -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script>
-  // ====================== 模块1：搜索逻辑、移动端菜单、桌面导航悬停、多级菜单 ======================
-  document.addEventListener("DOMContentLoaded", function() {
-    (function() {
-      // 1) 搜索逻辑
-      const body          = document.body;
-      const mainHeader    = document.getElementById('mainHeader');
-      const desktopSearch = document.getElementById('desktopSearchIcon');
-      const mobileSearch  = document.getElementById('mobileSearchIcon');
-      const searchPanel   = document.getElementById('searchPanel');
-      const searchClose   = document.getElementById('searchClose');
-      const searchTitle   = document.getElementById('searchTitle');
-      const searchResults = document.getElementById('searchResults');
+/* ====================== 模块1：搜索逻辑 + 移动端菜单 + 桌面导航悬停 + 多级菜单 ====================== */
+(function(){
+  // ====== A) 搜索逻辑 ======
+  const body          = document.body;
+  const mainHeader    = document.getElementById('mainHeader');
+  const desktopSearch = document.getElementById('desktopSearchIcon');
+  const mobileSearch  = document.getElementById('mobileSearchIcon');
+  const searchPanel   = document.getElementById('searchPanel');
+  const searchClose   = document.getElementById('searchClose');
+  const searchTitle   = document.getElementById('searchTitle');
+  const searchResults = document.getElementById('searchResults');
 
-      // 模拟本网站可搜索内容 (示例)
-      const siteContents = [
-        { text: "About MeFan", url: "about.html" },
-        { text: "MeFan Lite - Wireless Earbuds", url: "product-lite.html" },
-        { text: "MeFan X1 - Noise Canceling Headphones", url: "product-x1.html" },
-        { text: "MeFan Pro - Premium Audio", url: "product-pro.html" },
-        { text: "Earbud Tips & Support", url: "support.html" },
-        { text: "Contact Us", url: "contact.html" },
-        { text: "Products Overview", url: "products.html" }
-        // ...更多...
-      ];
+  // 模拟搜索内容 (仅示例)
+  const siteContents = [
+    { text: "About MeFan", url: "about.html" },
+    { text: "MeFan Lite - Wireless Earbuds", url: "product-lite.html" },
+    { text: "MeFan X1 - Noise Canceling Headphones", url: "product-x1.html" },
+    { text: "MeFan Pro - Premium Audio", url: "product-pro.html" },
+    { text: "Earbud Tips & Support", url: "support.html" },
+    { text: "Contact Us", url: "contact.html" },
+    { text: "Products Overview", url: "products.html" }
+  ];
 
-      function openSearch() {
-        body.classList.add('search-open');
-        searchTitle.textContent = "";
+  function openSearch() {
+    body.classList.add('search-open');
+    if (searchTitle)  searchTitle.textContent = "";
+    if (searchResults) searchResults.innerHTML = "";
+  }
+  function closeSearch() {
+    body.classList.remove('search-open');
+  }
+
+  if (desktopSearch) desktopSearch.addEventListener('click', openSearch);
+  if (mobileSearch)  mobileSearch.addEventListener('click', openSearch);
+  if (searchClose)   searchClose.addEventListener('click', closeSearch);
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === "Escape") {
+      closeSearch();
+    }
+  });
+
+  // 点击页面空白处关闭搜索
+  document.addEventListener('click', function(e){
+    // 若点击在 searchPanel 外部，且也不是搜索图标，则关闭
+    if (
+      searchPanel &&
+      !searchPanel.contains(e.target) &&
+      e.target !== desktopSearch &&
+      e.target !== mobileSearch
+    ) {
+      closeSearch();
+    }
+  });
+
+  // 输入时动态生成搜索结果
+  if (searchTitle && searchResults) {
+    searchTitle.addEventListener('input', function(){
+      const query = searchTitle.innerText.trim().toLowerCase();
+      if (!query) {
         searchResults.innerHTML = "";
-      }
-      function closeSearch() {
-        body.classList.remove('search-open');
-      }
-
-      if (desktopSearch) desktopSearch.addEventListener('click', openSearch);
-      if (mobileSearch)  mobileSearch.addEventListener('click', openSearch);
-      if (searchClose)   searchClose.addEventListener('click', closeSearch);
-
-      document.addEventListener('keydown', function(e){
-        if (e.key === "Escape") {
-          closeSearch();
-        }
-      });
-
-      document.addEventListener('click', function(e){
-        // 若点击在 searchPanel 外部，且不是搜索图标，就关闭
-        if (!searchPanel.contains(e.target)
-            && e.target !== desktopSearch
-            && e.target !== mobileSearch) {
-          closeSearch();
-        }
-      });
-
-      // 当用户输入时，动态生成搜索结果
-      if (searchTitle && searchResults) {
-        searchTitle.addEventListener('input', function(){
-          const query = searchTitle.innerText.trim().toLowerCase();
-          if (!query) {
-            searchResults.innerHTML = "";
-            return;
-          }
-          const matched = siteContents.filter(item =>
-            item.text.toLowerCase().includes(query)
-          );
-          searchResults.innerHTML = "";
-          if (matched.length > 0) {
-            matched.forEach(obj => {
-              const div = document.createElement('div');
-              div.classList.add('search-item');
-              // 用 <a> 链接实现真实跳转
-              const link = document.createElement('a');
-              link.href = obj.url;
-              link.textContent = obj.text;
-              link.style.textDecoration = "none";
-              link.style.color = "#333";
-              link.target = "_self";  // 同窗跳转
-              div.appendChild(link);
-              searchResults.appendChild(div);
-            });
-          } else {
-            const noRes = document.createElement('div');
-            noRes.classList.add('no-result');
-            noRes.textContent = "Sorry, no results found.";
-            searchResults.appendChild(noRes);
-          }
-        });
-      }
-    })();
-
-    (function () {
-      // 2) 移动端菜单逻辑 (基础)
-      const menuIcon  = document.getElementById('menuIcon');
-      const closeBtn  = document.getElementById('closeBtn');
-      const mobileNav = document.getElementById('mobileNav');
-
-      if (menuIcon && closeBtn && mobileNav) {
-        menuIcon.addEventListener('click', () => {
-          mobileNav.classList.add('active');
-        });
-        closeBtn.addEventListener('click', () => {
-          mobileNav.classList.remove('active');
-        });
-        document.querySelectorAll('#mobileNav ul li a').forEach(link => {
-          link.addEventListener('click', () => {
-            // 点击任意链接后关闭菜单
-            mobileNav.classList.remove('active');
-          });
-        });
-      }
-    })();
-
-    (function(){
-      // 5) 桌面导航栏悬停 (Desktop Nav Hover)
-      const header         = document.getElementById('mainHeader');
-      const navLinks       = document.querySelectorAll('.desktop-nav .nav-list > li > a');
-      const hoverOverlay   = document.getElementById('hover1Overlay');
-      const hoverContent   = document.getElementById('hover1Content');
-      const blurBg         = document.getElementById('blur1Bg'); // 模糊背景层
-
-      const sectionsMap = {
-        'Home':     document.getElementById('hover1Home'),
-        'Products': document.getElementById('hover1Products'),
-        'About':    document.getElementById('hover1About'),
-        'Contact':  document.getElementById('hover1Contact')
-      };
-
-      function hideAllSections() {
-        Object.values(sectionsMap).forEach(sec => sec && sec.classList.remove('active'));
-      }
-
-      function showHover() {
-        hoverOverlay.classList.add('active');
-        hoverContent.classList.add('active');
-        header.classList.add('nav-white'); // 导航变白
-        if (blurBg) blurBg.classList.add('active'); // 显示模糊背景
-      }
-
-      function hideHover() {
-        hoverOverlay.classList.remove('active');
-        hoverContent.classList.remove('active');
-        header.classList.remove('nav-white');
-        if (blurBg) blurBg.classList.remove('active'); // 隐藏模糊背景
-        hideAllSections();
-      }
-
-      // 鼠标移到导航链接 => 显示对应悬停面板
-      navLinks.forEach(link => {
-        link.addEventListener('mouseenter', () => {
-          const text = link.textContent.trim();
-          hideAllSections();
-          if (sectionsMap[text]) {
-            sectionsMap[text].classList.add('active');
-            showHover();
-          } else {
-            hideHover();
-          }
-        });
-      });
-
-      // 鼠标离开悬停面板 => 关闭
-      hoverContent.addEventListener('mouseleave', () => {
-        hideHover();
-      });
-
-      // 鼠标移动到遮罩层 => 关闭
-      hoverOverlay.addEventListener('mousemove', () => {
-        hideHover();
-      });
-
-      // 鼠标离开模糊背景层 => 关闭
-      if (blurBg) {
-        blurBg.addEventListener('mousemove', () => {
-          hideHover();
-        });
-      }
-    })();
-
-    (function(){
-      // 6) 移动端多级菜单 (若需要)
-      const mobileNav     = document.getElementById('mobileNav');
-      const homePanel     = document.getElementById('mobileNavLevel2Home');
-      const productsPanel = document.getElementById('mobileNavLevel2Products');
-      const aboutPanel    = document.getElementById('mobileNavLevel2About');
-      const contactPanel  = document.getElementById('mobileNavLevel2Contact');
-
-      // 若这些面板不存在，就跳过
-      if (!mobileNav || !homePanel || !productsPanel || !aboutPanel || !contactPanel) {
-        console.log("多级菜单面板未找到，若不需要此功能可删除本脚本。");
         return;
       }
+      const matched = siteContents.filter(item =>
+        item.text.toLowerCase().includes(query)
+      );
+      searchResults.innerHTML = "";
+      if (matched.length > 0) {
+        matched.forEach(obj => {
+          const div  = document.createElement('div');
+          div.classList.add('search-item');
+          const link = document.createElement('a');
+          link.href = obj.url;
+          link.textContent = obj.text;
+          div.appendChild(link);
+          searchResults.appendChild(div);
+        });
+      } else {
+        const noRes = document.createElement('div');
+        noRes.classList.add('no-result');
+        noRes.textContent = "Sorry, no results found.";
+        searchResults.appendChild(noRes);
+      }
+    });
+  }
 
-      function showSubPanel(panel){
+  // ====== B) 移动端一级菜单逻辑 ======
+  const menuIcon  = document.getElementById('menuIcon');
+  const closeBtn  = document.getElementById('closeBtn');
+  const mobileNav = document.getElementById('mobileNav');
+  if (menuIcon && closeBtn && mobileNav) {
+    menuIcon.addEventListener('click', () => {
+      mobileNav.classList.add('active');
+    });
+    closeBtn.addEventListener('click', () => {
+      mobileNav.classList.remove('active');
+    });
+    document.querySelectorAll('#mobileNav ul li a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileNav.classList.remove('active');
+      });
+    });
+  }
+
+  // ====== C) 桌面导航悬停 (含 blur) ======
+  const navLinks     = document.querySelectorAll('.desktop-nav .nav-list > li > a');
+  const hoverOverlay = document.getElementById('hover1Overlay');
+  const hoverContent = document.getElementById('hover1Content');
+  const blurBg       = document.getElementById('blur1Bg'); // 模糊背景
+
+  const sectionsMap = {
+    'Home':     document.getElementById('hover1Home'),
+    'Products': document.getElementById('hover1Products'),
+    'About':    document.getElementById('hover1About'),
+    'Contact':  document.getElementById('hover1Contact')
+  };
+
+  function hideAllSections() {
+    Object.values(sectionsMap).forEach(sec => sec?.classList.remove('active'));
+  }
+  function showHover() {
+    hoverOverlay?.classList.add('active');
+    hoverContent?.classList.add('active');
+    mainHeader?.classList.add('nav-white');
+    blurBg?.classList.add('active');
+  }
+  function hideHover() {
+    hoverOverlay?.classList.remove('active');
+    hoverContent?.classList.remove('active');
+    mainHeader?.classList.remove('nav-white');
+    blurBg?.classList.remove('active');
+    hideAllSections();
+  }
+
+  navLinks.forEach(link => {
+    link.addEventListener('mouseenter', () => {
+      hideAllSections();
+      const text = link.textContent.trim();
+      if (sectionsMap[text]) {
+        sectionsMap[text].classList.add('active');
+        showHover();
+      } else {
+        hideHover();
+      }
+    });
+  });
+  if (hoverContent) {
+    hoverContent.addEventListener('mouseleave', () => {
+      hideHover();
+    });
+  }
+  if (hoverOverlay) {
+    hoverOverlay.addEventListener('mousemove', () => {
+      hideHover();
+    });
+  }
+  if (blurBg) {
+    blurBg.addEventListener('mousemove', () => {
+      hideHover();
+    });
+  }
+
+  // ====== D) 移动端多级菜单 (可选) ======
+  const homePanel     = document.getElementById('mobileNavLevel2Home');
+  const productsPanel = document.getElementById('mobileNavLevel2Products');
+  const aboutPanel    = document.getElementById('mobileNavLevel2About');
+  const contactPanel  = document.getElementById('mobileNavLevel2Contact');
+  if (mobileNav && homePanel && productsPanel && aboutPanel && contactPanel) {
+    function showSubPanel(panel){
+      mobileNav.classList.remove('active');
+      homePanel.classList.remove('active');
+      productsPanel.classList.remove('active');
+      aboutPanel.classList.remove('active');
+      contactPanel.classList.remove('active');
+      panel.classList.add('active');
+    }
+    function showMainNav(){
+      homePanel.classList.remove('active');
+      productsPanel.classList.remove('active');
+      aboutPanel.classList.remove('active');
+      contactPanel.classList.remove('active');
+      mobileNav.classList.add('active');
+    }
+    mobileNav.querySelectorAll('ul li a').forEach(link => {
+      const level = link.getAttribute('data-level');
+      link.addEventListener('click', (e)=>{
+        if (level === 'home') {
+          e.preventDefault(); showSubPanel(homePanel);
+        } else if (level === 'products') {
+          e.preventDefault(); showSubPanel(productsPanel);
+        } else if (level === 'about') {
+          e.preventDefault(); showSubPanel(aboutPanel);
+        } else if (level === 'contact') {
+          e.preventDefault(); showSubPanel(contactPanel);
+        }
+      });
+    });
+    document.querySelectorAll('.menu-panel__back').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault(); showMainNav();
+      });
+    });
+    document.querySelectorAll('.menu-panel__close').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
         mobileNav.classList.remove('active');
         homePanel.classList.remove('active');
         productsPanel.classList.remove('active');
         aboutPanel.classList.remove('active');
         contactPanel.classList.remove('active');
-        panel.classList.add('active');
-      }
-      function showMainNav(){
-        homePanel.classList.remove('active');
-        productsPanel.classList.remove('active');
-        aboutPanel.classList.remove('active');
-        contactPanel.classList.remove('active');
-        mobileNav.classList.add('active');
-      }
-      const navLinks = mobileNav.querySelectorAll('ul li a');
-      navLinks.forEach(link => {
-        const level = link.getAttribute('data-level');
-        if(level === 'home'){
-          link.addEventListener('click', function(e){
-            e.preventDefault();
-            showSubPanel(homePanel);
-          });
-        } else if(level === 'products'){
-          link.addEventListener('click', function(e){
-            e.preventDefault();
-            showSubPanel(productsPanel);
-          });
-        } else if(level === 'about'){
-          link.addEventListener('click', function(e){
-            e.preventDefault();
-            showSubPanel(aboutPanel);
-          });
-        } else if(level === 'contact'){
-          link.addEventListener('click', function(e){
-            e.preventDefault();
-            showSubPanel(contactPanel);
-          });
-        }
-      });
-      const backButtons = document.querySelectorAll('.menu-panel__back');
-      backButtons.forEach(btn => {
-        btn.addEventListener('click', function(e){
-          e.preventDefault();
-          showMainNav();
-        });
-      });
-      const subCloseButtons = document.querySelectorAll('.menu-panel__close');
-      subCloseButtons.forEach(btn => {
-        btn.addEventListener('click', function(e){
-          e.preventDefault();
-          mobileNav.classList.remove('active');
-          homePanel.classList.remove('active');
-          productsPanel.classList.remove('active');
-          aboutPanel.classList.remove('active');
-          contactPanel.classList.remove('active');
-        });
-      });
-    })();
-  });
-</script>
-
-<script>
-  // ====================== 模块2：桌面端 & 移动端 Mefan Air 导航滚动切换 & 移动端上下翻功能 ======================
-  document.addEventListener("DOMContentLoaded", function() {
-    (function(){
-      const mainHeader = document.getElementById("mainHeader");
-      const mefanAirWrap = document.getElementById("mefanAirWrap");
-      const mobileAirNav = document.getElementById("mobileAirNav");
-
-      window.addEventListener("scroll", function() {
-        const scrollTop = window.scrollY || document.documentElement.scrollTop;
-        const isMobile = window.innerWidth <= 768;
-        if (!isMobile) {
-          if (scrollTop > 400) {
-            mainHeader.style.transform = "translateY(-100%)";
-            mainHeader.style.opacity = "0";
-            if (mefanAirWrap) mefanAirWrap.classList.add("active");
-          } else {
-            mainHeader.style.transform = "translateY(0)";
-            mainHeader.style.opacity = "1";
-            if (mefanAirWrap) mefanAirWrap.classList.remove("active");
-          }
-        } else {
-          if (scrollTop > 200) {
-            mainHeader.style.transform = "translateY(-100%)";
-            mainHeader.style.opacity = "0";
-            if (mobileAirNav) mobileAirNav.classList.add("active");
-          } else {
-            mainHeader.style.transform = "translateY(0)";
-            mainHeader.style.opacity = "1";
-            if (mobileAirNav) mobileAirNav.classList.remove("active");
-          }
-        }
-      });
-
-      /**********************
-       * 移动端上下翻功能 (下拉面板展开/收起)
-       * - 初始状态：按钮显示下箭头 (⌄, U+2304)
-       * - 展开时：按钮变上箭头 (⌃, U+2303)，下拉面板的 max-height 设为内容高度
-       **********************/
-      if (window.innerWidth <= 768) {
-        const mobileAirToggleBtn = document.getElementById("mobileAirToggleBtn");
-        const mobileAirPanel = document.getElementById("mobileAirPanel");
-        const mobileAirBlur = document.getElementById("mobileAirBlur");
-        let panelOpen = false;
-        function openPanel() {
-          panelOpen = true;
-          if (mobileAirToggleBtn) {
-            mobileAirToggleBtn.textContent = "\u2303"; // 上箭头 (⌃)
-          }
-          if (mobileAirPanel) {
-            mobileAirPanel.style.maxHeight = mobileAirPanel.scrollHeight + "px";
-          }
-          if (mobileAirBlur) {
-            mobileAirBlur.classList.add("active");
-          }
-        }
-        function closePanel() {
-          panelOpen = false;
-          if (mobileAirToggleBtn) {
-            mobileAirToggleBtn.textContent = "\u2304"; // 下箭头 (⌄)
-          }
-          if (mobileAirPanel) {
-            mobileAirPanel.style.maxHeight = "0";
-          }
-          if (mobileAirBlur) {
-            mobileAirBlur.classList.remove("active");
-          }
-        }
-        if (mobileAirToggleBtn && mobileAirPanel) {
-          mobileAirToggleBtn.addEventListener("click", function() {
-            panelOpen ? closePanel() : openPanel();
-          });
-        }
-        if (mobileAirBlur) {
-          mobileAirBlur.addEventListener("click", closePanel);
-        }
-      }
-      // 其它功能（搜索、汉堡菜单、多级菜单等）保留不变
-    })();
-  });
-</script>
-
-<script>
-  // ====================== 模块3：Section2 卡片样式轮播 ======================
-  (function(){
-    const track = document.querySelector('.section2-track'); 
-    const slides = track.querySelectorAll('img');
-    const totalSlides = slides.length;
-    let currentIndex = 0;
-    // 👇 新增关键尺寸
-    const slideWidth = 1013 + 15; // 图片宽度 + 间隔
-
-    function updateCarousel() {
-      // ✅ 卡片样式轮播：滑动式切换
-      const offset = currentIndex * slideWidth;
-      track.style.transform = `translateX(-${offset}px)`;
-      updateDots();
-    }
-
-    const dotElements = document.querySelectorAll('.dot');
-    const slideDuration = 3000;
-    let isPlaying = false;
-    let autoPlayTimer = null;
-    let progressStartTime = null;
-    let progressAnimationId = null;
-
-    function animateActiveDot(timestamp) {
-      if (!progressStartTime) progressStartTime = timestamp;
-      const elapsed = timestamp - progressStartTime;
-      const progress = Math.min(elapsed / slideDuration, 1);
-      const activeDot = dotElements[currentIndex];
-      const newWidth = 12 + (28 * progress);
-      activeDot.style.width = newWidth + 'px';
-      if (progress < 1 && isPlaying) {
-        progressAnimationId = requestAnimationFrame(animateActiveDot);
-      }
-    }
-
-    function resetDots() {
-      dotElements.forEach((dot, idx) => {
-        dot.style.width = '12px';
-        dot.style.backgroundColor = (idx === currentIndex) ? '#007aff' : '#ccc';
-      });
-    }
-
-    function updateDots() {
-      dotElements.forEach((dot, idx) => {
-        dot.style.backgroundColor = (idx === currentIndex) ? '#007aff' : '#ccc';
-        if (idx !== currentIndex) dot.style.width = '12px';
-      });
-    }
-
-    dotElements.forEach(dot => {
-      dot.addEventListener('click', () => {
-        pauseAutoPlay();
-        currentIndex = parseInt(dot.getAttribute('data-index'));
-        progressStartTime = null;
-        resetDots();
-        updateCarousel();
-        startAutoPlay();
       });
     });
+  }
+})();
 
-    /********** 新增：手机端触摸滑动左右切换 **********/
-    let touchStartX = 0;
-    let touchEndX = 0;
+/* ====================== 模块2：Mefan Air 导航滚动切换 & 移动端上下翻 ====================== */
+(function(){
+  const mainHeader   = document.getElementById("mainHeader");
+  const mefanAirWrap = document.getElementById("mefanAirWrap");
+  const mobileAirNav = document.getElementById("mobileAirNav");
 
-    track.addEventListener("touchstart", function(e) {
-      touchStartX = e.touches[0].clientX;
-    }, { passive: true });
-
-    track.addEventListener("touchend", function(e) {
-      touchEndX = e.changedTouches[0].clientX;
-      const deltaX = touchEndX - touchStartX;
-
-      // 判定滑动距离是否足够触发切换
-      if (Math.abs(deltaX) > 50) {
-        pauseAutoPlay(); // 停止自动播放
-        if (deltaX < 0) {
-          // 向左滑，下一张
-          currentIndex = (currentIndex + 1) % totalSlides;
-        } else {
-          // 向右滑，上一张
-          currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-        }
-        updateCarousel(); // 更新图片
+  window.addEventListener("scroll", function() {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const isMobile  = window.innerWidth <= 768;
+    if (!isMobile) {
+      if (scrollTop > 400) {
+        mainHeader.style.transform = "translateY(-100%)";
+        mainHeader.style.opacity   = "0";
+        mefanAirWrap?.classList.add("active");
+      } else {
+        mainHeader.style.transform = "translateY(0)";
+        mainHeader.style.opacity   = "1";
+        mefanAirWrap?.classList.remove("active");
       }
+    } else {
+      if (scrollTop > 200) {
+        mainHeader.style.transform = "translateY(-100%)";
+        mainHeader.style.opacity   = "0";
+        mobileAirNav?.classList.add("active");
+      } else {
+        mainHeader.style.transform = "translateY(0)";
+        mainHeader.style.opacity   = "1";
+        mobileAirNav?.classList.remove("active");
+      }
+    }
+  });
+
+  // 移动端上下翻功能
+  if (window.innerWidth <= 768) {
+    const mobileAirToggleBtn = document.getElementById("mobileAirToggleBtn");
+    const mobileAirPanel     = document.getElementById("mobileAirPanel");
+    const mobileAirBlur      = document.getElementById("mobileAirBlur");
+    let panelOpen = false;
+
+    function openPanel() {
+      panelOpen = true;
+      if (mobileAirToggleBtn) {
+        mobileAirToggleBtn.textContent = "\u2303"; // 上箭头 (⌃)
+      }
+      if (mobileAirPanel) {
+        mobileAirPanel.style.maxHeight = mobileAirPanel.scrollHeight + "px";
+      }
+      mobileAirBlur?.classList.add("active");
+    }
+    function closePanel() {
+      panelOpen = false;
+      if (mobileAirToggleBtn) {
+        mobileAirToggleBtn.textContent = "\u2304"; // 下箭头 (⌄)
+      }
+      if (mobileAirPanel) {
+        mobileAirPanel.style.maxHeight = "0";
+      }
+      mobileAirBlur?.classList.remove("active");
+    }
+    if (mobileAirToggleBtn && mobileAirPanel) {
+      mobileAirToggleBtn.addEventListener("click", function() {
+        panelOpen ? closePanel() : openPanel();
+      });
+    }
+    if (mobileAirBlur) {
+      mobileAirBlur.addEventListener("click", closePanel);
+    }
+  }
+})();
+
+/* ====================== 模块3：Section2 卡片样式轮播 ====================== */
+(function(){
+  const track = document.querySelector('.section2-track');
+  if (!track) return;
+
+  const slides       = track.querySelectorAll('img');
+  const totalSlides  = slides.length;
+  let currentIndex   = 0;
+  const slideWidth   = 1013 + 15; // 示例：图片宽 + 间隔
+
+  function updateCarousel() {
+    const offset = currentIndex * slideWidth;
+    track.style.transform = `translateX(-${offset}px)`;
+    updateDots();
+  }
+
+  const dotElements  = document.querySelectorAll('.dot');
+  const slideDuration= 3000;
+  let isPlaying      = false;
+  let autoPlayTimer  = null;
+  let progressStartTime = null;
+  let progressAnimationId= null;
+
+  function animateActiveDot(timestamp) {
+    if (!progressStartTime) progressStartTime = timestamp;
+    const elapsed   = timestamp - progressStartTime;
+    const progress  = Math.min(elapsed / slideDuration, 1);
+    const activeDot = dotElements[currentIndex];
+    const newWidth  = 12 + (28 * progress);
+    activeDot.style.width = newWidth + 'px';
+    if (progress < 1 && isPlaying) {
+      progressAnimationId = requestAnimationFrame(animateActiveDot);
+    }
+  }
+
+  function resetDots() {
+    dotElements.forEach((dot, idx) => {
+      dot.style.width = '12px';
+      dot.style.backgroundColor = (idx === currentIndex) ? '#007aff' : '#ccc';
     });
+  }
 
-    /********** 自动播放逻辑 **********/
-    const rightButton = document.getElementById('section2-rightButton');
-    const playIcon = document.getElementById('section2-playIcon');
+  function updateDots() {
+    dotElements.forEach((dot, idx) => {
+      dot.style.backgroundColor = (idx === currentIndex) ? '#007aff' : '#ccc';
+      if (idx !== currentIndex) dot.style.width = '12px';
+    });
+  }
 
-    function startAutoPlay() {
-      isPlaying = true;
-      playIcon.textContent = '❚❚';
+  dotElements.forEach(dot => {
+    dot.addEventListener('click', () => {
+      pauseAutoPlay();
+      currentIndex = parseInt(dot.getAttribute('data-index'));
+      progressStartTime = null;
+      resetDots();
+      updateCarousel();
+      startAutoPlay();
+    });
+  });
+
+  // 手机端触摸滑动
+  let touchStartX = 0;
+  let touchEndX   = 0;
+  track.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  track.addEventListener("touchend", (e) => {
+    touchEndX = e.changedTouches[0].clientX;
+    const deltaX = touchEndX - touchStartX;
+    if (Math.abs(deltaX) > 50) {
+      pauseAutoPlay();
+      if (deltaX < 0) {
+        currentIndex = (currentIndex + 1) % totalSlides;
+      } else {
+        currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+      }
+      updateCarousel();
+    }
+  });
+
+  const rightButton = document.getElementById('section2-rightButton');
+  const playIcon    = document.getElementById('section2-playIcon');
+
+  function startAutoPlay() {
+    isPlaying = true;
+    if (playIcon) playIcon.textContent = '❚❚';
+    progressStartTime = null;
+    progressAnimationId = requestAnimationFrame(animateActiveDot);
+    autoPlayTimer = setTimeout(nextSlide, slideDuration);
+  }
+  function pauseAutoPlay() {
+    isPlaying = false;
+    if (playIcon) playIcon.textContent = '►';
+    clearTimeout(autoPlayTimer);
+    autoPlayTimer = null;
+    cancelAnimationFrame(progressAnimationId);
+    resetDots();
+  }
+  function nextSlide() {
+    resetDots();
+    currentIndex++;
+    if (currentIndex < totalSlides) {
+      updateCarousel();
       progressStartTime = null;
       progressAnimationId = requestAnimationFrame(animateActiveDot);
       autoPlayTimer = setTimeout(nextSlide, slideDuration);
-    }
-
-    function pauseAutoPlay() {
+    } else {
       isPlaying = false;
-      playIcon.textContent = '►';
-      clearTimeout(autoPlayTimer);
-      autoPlayTimer = null;
-      cancelAnimationFrame(progressAnimationId);
-      resetDots();
+      if (playIcon) playIcon.textContent = '↻';
     }
+  }
 
-    function nextSlide() {
-      resetDots();
-      currentIndex++;
-      if (currentIndex < totalSlides) {
-        updateCarousel();
-        progressStartTime = null;
-        progressAnimationId = requestAnimationFrame(animateActiveDot);
-        autoPlayTimer = setTimeout(nextSlide, slideDuration);
-      } else {
-        isPlaying = false;
-        playIcon.textContent = '↻';
-      }
-    }
-
+  if (rightButton) {
     rightButton.addEventListener('click', () => {
-      if (playIcon.textContent === '↻') {
+      // 如果已经播放结束，重置回起点
+      if (playIcon && playIcon.textContent === '↻') {
         currentIndex = 0;
         updateCarousel();
         resetDots();
@@ -2108,198 +2296,187 @@ list-style: none;
         startAutoPlay();
       }
     });
+  }
 
-    /********** 按钮进出动画 + 自适应移动 **********/
-    const highlights = document.getElementById('section2-highlights');
-    const buttonRow = document.getElementById('section2-buttonRow');
-    const leftBtnContainer = document.getElementById('leftBtnContainer');
-    const rightBtnContainer = document.getElementById('rightBtnContainer');
+  // 按钮进出动画 + 自适应移动
+  const highlights       = document.getElementById('section2-highlights');
+  const buttonRow        = document.getElementById('section2-buttonRow');
+  const leftBtnContainer = document.getElementById('leftBtnContainer');
+  const rightBtnContainer= document.getElementById('rightBtnContainer');
 
-    function triggerButtonEntry() {
-      leftBtnContainer.classList.remove('btn-hidden');
-      rightBtnContainer.classList.remove('btn-hidden');
-      leftBtnContainer.classList.add('btn-merged');
-      rightBtnContainer.classList.add('btn-merged');
-      setTimeout(() => {
-        leftBtnContainer.classList.remove('btn-merged');
-        rightBtnContainer.classList.remove('btn-merged');
-        leftBtnContainer.classList.add('btn-left-animate');
-        rightBtnContainer.classList.add('btn-right-animate');
-        leftBtnContainer.style.pointerEvents = "auto";
-        rightBtnContainer.style.pointerEvents = "auto";
-      }, 600);
-    }
+  function triggerButtonEntry() {
+    leftBtnContainer?.classList.remove('btn-hidden');
+    rightBtnContainer?.classList.remove('btn-hidden');
+    leftBtnContainer?.classList.add('btn-merged');
+    rightBtnContainer?.classList.add('btn-merged');
+    setTimeout(() => {
+      leftBtnContainer?.classList.remove('btn-merged');
+      rightBtnContainer?.classList.remove('btn-merged');
+      leftBtnContainer?.classList.add('btn-left-animate');
+      rightBtnContainer?.classList.add('btn-right-animate');
+      if (leftBtnContainer)  leftBtnContainer.style.pointerEvents  = "auto";
+      if (rightBtnContainer) rightBtnContainer.style.pointerEvents = "auto";
+    }, 600);
+  }
+  function triggerButtonExit() {
+    leftBtnContainer?.classList.remove('btn-left-animate');
+    rightBtnContainer?.classList.remove('btn-right-animate');
+    leftBtnContainer?.classList.add('btn-merged');
+    rightBtnContainer?.classList.add('btn-merged');
+    setTimeout(() => {
+      leftBtnContainer?.classList.remove('btn-merged');
+      rightBtnContainer?.classList.remove('btn-merged');
+      leftBtnContainer?.classList.add('btn-hidden');
+      rightBtnContainer?.classList.add('btn-hidden');
+    }, 600);
+  }
 
-    function triggerButtonExit() {
-      leftBtnContainer.classList.remove('btn-left-animate');
-      rightBtnContainer.classList.remove('btn-right-animate');
-      leftBtnContainer.classList.add('btn-merged');
-      rightBtnContainer.classList.add('btn-merged');
-      setTimeout(() => {
-        leftBtnContainer.classList.remove('btn-merged');
-        rightBtnContainer.classList.remove('btn-merged');
-        leftBtnContainer.classList.add('btn-hidden');
-        rightBtnContainer.classList.add('btn-hidden');
-      }, 600);
-    }
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          triggerButtonEntry();
-        } else {
-          triggerButtonExit();
-        }
-      });
-    }, { threshold: 0 });
-
-    observer.observe(highlights);
-
-    function adjustButtonRowPosition() {
-      const brRect = buttonRow.getBoundingClientRect();
-      if (brRect.bottom > window.innerHeight) {
-        buttonRow.style.transform = "translateY(-90px)";
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        triggerButtonEntry();
       } else {
-        buttonRow.style.transform = "";
+        triggerButtonExit();
       }
-    }
-    window.addEventListener("scroll", adjustButtonRowPosition);
-
-    // 若 DOM 加载已完成则立即更新轮播
-    document.addEventListener('DOMContentLoaded', () => {
-      updateCarousel();
     });
-  })();
-</script>
+  }, { threshold: 0 });
+  if (highlights) {
+    observer.observe(highlights);
+  }
 
-<script>
-  // ====================== 模块4：Section3 滑动切换（样式、交互） ======================
-  (function(){
-    const track = document.getElementById("section3-track");
-    const buttons = document.querySelectorAll(".section3-color-button");
-    const prev = document.getElementById("section3-prev");
-    const next = document.getElementById("section3-next");
-    const pickerWrapper = document.getElementById("section3-picker-wrapper");
-    const animateWrapper = document.getElementById("section3-animate-wrapper");
-    const container = document.getElementById("section3-container");
-    const styleLabel = document.getElementById("section3-style-label");
+  function adjustButtonRowPosition() {
+    if (!buttonRow) return;
+    const brRect = buttonRow.getBoundingClientRect();
+    if (brRect.bottom > window.innerHeight) {
+      buttonRow.style.transform = "translateY(-90px)";
+    } else {
+      buttonRow.style.transform = "";
+    }
+  }
+  window.addEventListener("scroll", adjustButtonRowPosition);
 
-    let currentIndex = 0;
-    let lastMoveState = false;
+  // 初始执行一次
+  updateCarousel();
+})();
 
-    // ==========================
-    // 保留原有的 updateSlide() 逻辑
-    // ==========================
-    function updateSlide(index) {
-      // 这里仍然用 track.offsetWidth 作为单张图宽度计算，
-      // 可能需要根据你的布局改为 container.offsetWidth 或某个 slide 的 offsetWidth
+/* ====================== 模块4：Section3 滑动切换（样式、交互） ====================== */
+(function(){
+  const track          = document.getElementById("section3-track");
+  const buttons        = document.querySelectorAll(".section3-color-button");
+  const prev           = document.getElementById("section3-prev");
+  const next           = document.getElementById("section3-next");
+  const pickerWrapper  = document.getElementById("section3-picker-wrapper");
+  const animateWrapper = document.getElementById("section3-animate-wrapper");
+  const container      = document.getElementById("section3-container");
+  const styleLabel     = document.getElementById("section3-style-label");
+
+  let currentIndex  = 0;
+  let lastMoveState = false;
+
+  // 更新展示
+  function updateSlide(index) {
+    if (track) {
       const slideWidth = track.offsetWidth;
       track.style.transform = `translateX(-${index * slideWidth}px)`;
-
-      buttons.forEach((btn, i) => {
-        btn.classList.toggle("active", i === index);
-      });
-
-      currentIndex = index;
-      updateButtonStates();
-
-      // 同步更新上方的 styleLabel
+    }
+    buttons.forEach((btn, i) => {
+      btn.classList.toggle("active", i === index);
+    });
+    currentIndex = index;
+    updateButtonStates();
+    if (styleLabel) {
       styleLabel.textContent = `Style ${index + 1}`;
     }
+  }
+  function updateButtonStates() {
+    prev?.classList.toggle("disabled", currentIndex === 0);
+    next?.classList.toggle("disabled", currentIndex === buttons.length - 1);
+  }
 
-    function updateButtonStates() {
-      prev.classList.toggle("disabled", currentIndex === 0);
-      next.classList.toggle("disabled", currentIndex === buttons.length - 1);
-    }
-
-    buttons.forEach(button => {
-      button.addEventListener("click", () => {
-        const index = parseInt(button.getAttribute("data-index"));
-        updateSlide(index);
-      });
+  buttons.forEach(button => {
+    button.addEventListener("click", () => {
+      const index = parseInt(button.getAttribute("data-index"));
+      updateSlide(index);
     });
+  });
+  prev?.addEventListener("click", () => {
+    if (currentIndex > 0) updateSlide(currentIndex - 1);
+  });
+  next?.addEventListener("click", () => {
+    if (currentIndex < buttons.length - 1) updateSlide(currentIndex + 1);
+  });
 
-    prev.addEventListener("click", () => {
-      if (currentIndex > 0) updateSlide(currentIndex - 1);
-    });
-
-    next.addEventListener("click", () => {
-      if (currentIndex < buttons.length - 1) updateSlide(currentIndex + 1);
-    });
-
-    // ==========================
-    // IntersectionObserver 保留
-    // ==========================
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          animateWrapper.classList.remove("collapse");
-          animateWrapper.classList.add("expand");
-        } else {
-          animateWrapper.classList.remove("expand");
-          animateWrapper.classList.add("collapse");
-        }
-      });
-    }, { threshold: 0.5 });
-
-    observer.observe(container);
-
-    function adjustPickerPosition() {
-      const pickerRect = pickerWrapper.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-      const pickerHeight = pickerWrapper.offsetHeight;
-      const distanceFromBottom = window.innerHeight - containerRect.bottom;
-      const shouldMoveUp = pickerRect.bottom > containerRect.bottom || distanceFromBottom < pickerHeight + 20;
-      if (shouldMoveUp !== lastMoveState) {
-        pickerWrapper.classList.toggle("move-up", shouldMoveUp);
-        lastMoveState = shouldMoveUp;
+  // IntersectionObserver
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateWrapper?.classList.remove("collapse");
+        animateWrapper?.classList.add("expand");
+      } else {
+        animateWrapper?.classList.remove("expand");
+        animateWrapper?.classList.add("collapse");
       }
-    }
-
-    let scrollTimer;
-    window.addEventListener("scroll", () => {
-      clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(() => requestAnimationFrame(adjustPickerPosition), 80);
     });
+  }, { threshold: 0.5 });
+  if (container) {
+    observer.observe(container);
+  }
 
-    window.addEventListener("resize", () => requestAnimationFrame(adjustPickerPosition));
+  // 位置微调
+  function adjustPickerPosition() {
+    if (!pickerWrapper || !container) return;
+    const pickerRect        = pickerWrapper.getBoundingClientRect();
+    const containerRect     = container.getBoundingClientRect();
+    const pickerHeight      = pickerWrapper.offsetHeight;
+    const distanceFromBottom= window.innerHeight - containerRect.bottom;
+    const shouldMoveUp      = pickerRect.bottom > containerRect.bottom 
+                           || distanceFromBottom < (pickerHeight + 20);
+    if (shouldMoveUp !== lastMoveState) {
+      pickerWrapper.classList.toggle("move-up", shouldMoveUp);
+      lastMoveState = shouldMoveUp;
+    }
+  }
+  let scrollTimer;
+  window.addEventListener("scroll", () => {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => requestAnimationFrame(adjustPickerPosition), 80);
+  });
+  window.addEventListener("resize", () => {
+    requestAnimationFrame(adjustPickerPosition);
+  });
 
-    // ==========================
-    // 新增：移动端触摸左右滑动支持
-    // ==========================
-    let startX = 0;
-    let isDragging = false;
-    const swipeThreshold = 50; // 滑动多少像素后算一次有效切换
-
+  // 移动端触摸左右滑动
+  let startX      = 0;
+  let isDragging  = false;
+  const swipeThreshold = 50;
+  if (track) {
     track.addEventListener("touchstart", (e) => {
       startX = e.touches[0].clientX;
       isDragging = true;
     });
-
-    track.addEventListener("touchmove", (e) => {
+    track.addEventListener("touchmove", () => {
       if (!isDragging) return;
-      // 可在这里做实时位移预览，但若要保留原逻辑，可只在 touchend 时判断
     });
-
     track.addEventListener("touchend", (e) => {
       if (!isDragging) return;
       isDragging = false;
       const endX = e.changedTouches[0].clientX;
       const diff = endX - startX;
-
       if (diff > swipeThreshold && currentIndex > 0) {
-        // 右滑 -> 看前一张
         updateSlide(currentIndex - 1);
       } else if (diff < -swipeThreshold && currentIndex < buttons.length - 1) {
-        // 左滑 -> 看后一张
         updateSlide(currentIndex + 1);
       }
     });
+  }
 
-    window.addEventListener("load", () => {
-      adjustPickerPosition();
-      updateButtonStates();
-      updateSlide(currentIndex);
-    });
-  })();
+  // 初始化
+  updateButtonStates();
+  updateSlide(currentIndex);
+
+  // 页面加载完再微调一次
+  window.addEventListener("load", () => {
+    requestAnimationFrame(adjustPickerPosition);
+  });
+})();
 </script>
