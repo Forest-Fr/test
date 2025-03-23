@@ -269,12 +269,7 @@
 /* === 外部容器，控制整体布局和露出左右部分 === */
 
 .section2-highlights {
-width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-/* === 轨道容器：横向滚动布局，图片横排 === */
-.section2-carousel {
+
  position: relative;
     width: 100%;
     height: 520px; /* 固定高度 */
@@ -284,6 +279,13 @@ width: 100%;
     justify-content: center;
     align-items: center;
     padding: 0 10%; /* 两侧留白 */
+}
+/* === 轨道容器：横向滚动布局，图片横排 === */
+.section2-carousel {
+display: flex; /* 使用 flex 布局 */
+    gap: 15px; /* 图片之间的间隔 */
+    transition: transform 0.5s ease-in-out;
+    justify-content: flex-start; /* 确保图片从左开始排列 */
 }
 
 .section2-track {
@@ -427,9 +429,48 @@ z-index:999
       cursor: pointer;
       font-size: 24px;
       color: #007aff;
-z-index:999
+z-index:999;
     }
-  
+  @media (max-width: 768px) {
+  .section2-highlights {
+    width: 100vw;
+  overflow-x: hidden; 
+    margin: 0 auto;
+  position: relative !important;
+  }
+  .section2-highlights::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 2) 轮播轨道 */
+.section2-carousel {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    /* 保留 transform 过渡（若脚本依然用 transform 切换） */
+    transition: transform 0.5s ease-in-out;
+  }
+  .section2-track {
+    flex: 0 0 auto;
+    width:90vw;
+    aspect-ratio: 9 / 16;/* 宽高比例9:16 */
+    scroll-snap-align: center;
+    overflow: hidden;
+    position: relative;
+  }
+.section2-track img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+}
+
+
+
+
 
 
 /* === 五颜色部分 === */
@@ -633,37 +674,42 @@ z-index:999
     }
 
 
-    /* ========== 新增：移动端响应式布局 ========== */
-    @media (max-width: 768px) {
-      /* 让容器高度自动撑开，便于单图纵向展示 */
-      .section3-carousel-container {
-        width: 100%;
-        padding: 0 0;
-        margin: 0 auto;
-        box-sizing: border-box;
-        background: #f9f9f9;
-        overflow: hidden; /* 若想展示“peek preview”，可改为可见 */
-        position: relative;
-        height: auto;
-      }
-
-      /* 每个轮播图上下 12px 间距，宽度为容器宽度（或可略留边） */
-      .section3-slide {
-        width: 100%;
-        margin: 12px 0; /* 上下留 12px */
-      }
-
-      /* 图片之间继续保持 15px gap */
-      .section3-carousel-track {
-        gap: 15px;
-      }
-
-      /* 让图片自适应宽度、高度 */
-      .section3-slide img {
-        width: 100%;
-        height: auto;
-      }
+ @media (max-width: 768px) {
+  .section3-carousel-container {
+    width: 100vw;
+  overflow-x: hidden; 
+    margin: 0 auto;
+  position: relative !important;
   }
+  .section3-carousel-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 2) 轮播轨道 */
+.section3-carousel-track {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    /* 保留 transform 过渡（若脚本依然用 transform 切换） */
+    transition: transform 0.5s ease-in-out;
+  }
+  .section3-slide {
+    flex: 0 0 auto;
+    width:90vw;
+    aspect-ratio: 9 / 16;/* 宽高比例9:16 */
+    scroll-snap-align: center;
+    overflow: hidden;
+    position: relative;
+  }
+.section3-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+}
     
 
 
