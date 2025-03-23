@@ -18,7 +18,7 @@ tml>
   <script src="scripts.js" defer></script>
   <script src="scroll.js" defer></script> 
   <style>
-    * {
+     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
@@ -74,8 +74,7 @@ tml>
     }
 
     /* ========== MeFan X1 图片区 ========== */
-   @media (max-width: 1024px) {
- .section1-hero {
+    .section1-hero {
       position: relative;
       width: 100%;
       margin: 0 auto;
@@ -279,6 +278,7 @@ tml>
 
 
 /* === 外部容器，控制整体布局和露出左右部分 === */
+
 .section2-highlights {
   width: 100%;
   max-width: 100%;
@@ -325,7 +325,6 @@ tml>
   transform: scale(1);
   opacity: 1;
 } */
-
 
 
 
@@ -423,11 +422,26 @@ z-index:999
 z-index:999
     }
 
- 
- 
- 
- 
+    /* ======== 右侧圆形按钮 ======== */
+    #section2-rightButton {
+      width: 60px;
+      height: 60px;
+      background: #fff;
+      border: 2px solid #007aff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 24px;
+      color: #007aff;
+z-index:999
+    }
+  
+
+
 /* === 五颜色部分 === */
+
   .section3-carousel-container {
       width: 100%;
       padding: 0 10%;
@@ -624,9 +638,39 @@ z-index:999
     }
 
 
-   
+    /* ========== 新增：移动端响应式布局 ========== */
+    @media (max-width: 768px) {
+      /* 让容器高度自动撑开，便于单图纵向展示 */
+      .section3-carousel-container {
+        width: 100%;
+        padding: 0 0;
+        margin: 0 auto;
+        box-sizing: border-box;
+        background: #f9f9f9;
+        overflow: hidden; /* 若想展示“peek preview”，可改为可见 */
+        position: relative;
+        height: auto;
+      }
 
-   
+      /* 每个轮播图上下 12px 间距，宽度为容器宽度（或可略留边） */
+      .section3-slide {
+        width: 100%;
+        margin: 12px 0; /* 上下留 12px */
+      }
+
+      /* 图片之间继续保持 15px gap */
+      .section3-carousel-track {
+        gap: 15px;
+      }
+
+      /* 让图片自适应宽度、高度 */
+      .section3-slide img {
+        width: 100%;
+        height: auto;
+      }
+  }
+    
+
 
 
 
