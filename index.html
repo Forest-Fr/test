@@ -181,7 +181,7 @@ margin-bottom:-20px;
       z-index: 5000;
       display: none; /* 默认隐藏，由 JS 控制 active */
       background-color: #fff;
-      border-bottom: 1px solid #ddd;xi
+      border-bottom: 1px solid #ddd;
       padding: 10px 20px;
     }
     .mobile-air-nav.active {
@@ -241,6 +241,23 @@ margin-bottom:-20px;
     }
     .mobile-air-panel-list li a:hover {
       background-color: #f2f2f2;
+    }
+    /* 模糊背景层 */
+    .mobile-air-blur {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+      z-index: 4500;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(8px);
+      transition: height 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+    .mobile-air-blur.active {
+      height: 100vh;
+      opacity: 1;
     }
     /* 模糊背景层 */
     .mobile-air-blur {
@@ -2589,7 +2606,19 @@ window.addEventListener("scroll", function () {
   }
 })();
 
-
+document.addEventListener("DOMContentLoaded", function() {
+      const backToTop = document.getElementById("backToTop");
+      window.addEventListener("scroll", function() {
+        if (window.scrollY > 500) {
+          backToTop.style.display = "flex";
+        } else {
+          backToTop.style.display = "none";
+        }
+      });
+      backToTop.addEventListener("click", function() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
  
 
 // ← 只保留一次 DOMContentLoaded
