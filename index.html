@@ -250,8 +250,8 @@ margin-bottom:-20px;
       width: 100%;
       height: 0;
       z-index: 4500;
-  background: rgba(255, 255, 255, 0.6); /* 半透明 */ /* 原来backgroundYUANrgba(0,0,0,0.3) */
-backdrop-filter:blur(20px);/* 原来backdrop-filterYUANblur(8px) */
+  background: rgba(255, 255, 255, 0.6);
+backdrop-filter:blur(20px);
       transition: height 0.3s ease, opacity 0.3s ease;
       opacity: 0;
     }
@@ -706,11 +706,10 @@ margin-top: 55px; /* 把原本的间距拉近 */
     width: 100vw;
    padding-left: calc((100vw - 90vw) / 2);
     padding-right: calc((100vw - 90vw) / 2);
-   overflow-x: clip;
-      overflow-y: hidden;
+      overflow: hidden;
     margin: 0 auto;
   position: relative !important;
-margin-top:36px;
+margin-top:56px;
   }
   .section3-carousel-container::-webkit-scrollbar {
     display: none;
