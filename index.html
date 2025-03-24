@@ -231,13 +231,16 @@ margin-bottom:-20px;
       padding: 0;
     }
     .mobile-air-panel-list li {
-      border-bottom: 1px solid #eee;
+ border-bottom: none; /* ✅ 去掉横线 *原1px solid #eee/
     }
     .mobile-air-panel-list li a {
-      display: block;
-      padding: 14px 20px;
-      text-decoration: none;
-      color: #333;
+       padding: 14px 20px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 400;
+  font-size: 16px;
+  border-radius: 0;      /* 不加圆角 */
+  border-bottom: none;   /* 明确去掉底线 */
     }
     .mobile-air-panel-list li a:hover {
       background-color: #f2f2f2;
@@ -526,7 +529,7 @@ z-index:999;
       margin: 0 auto;
       box-sizing: border-box;
       background: #f9f9f9;
-      overflow-x: clip;
+      overflow-x:clip;
       overflow-y: visible;
       position: relative;
       height: 520px;
@@ -723,8 +726,8 @@ margin-top: 55px; /* 把原本的间距拉近 */
     width: 100vw;
    padding-left: calc((100vw - 90vw) / 2);
     padding-right: calc((100vw - 90vw) / 2);
-   overflow-x: clip;
-      overflow-y: hidden;
+   overflow-x: hidden;
+    
     margin: 0 auto;
   position: relative !important;
 margin-top:36px;
