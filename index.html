@@ -231,33 +231,16 @@ margin-bottom:-20px;
       padding: 0;
     }
     .mobile-air-panel-list li {
- border-bottom: none; /* ✅ 去掉横线 *原1px solid #eee/
+      border-bottom: none;
     }
     .mobile-air-panel-list li a {
-     display: block;
+      display: block;
       padding: 14px 20px;
       text-decoration: none;
       color: #333;
     }
     .mobile-air-panel-list li a:hover {
       background-color: #f2f2f2;
-    }
-    /* 模糊背景层 */
-    .mobile-air-blur {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 0;
-      z-index: 4500;
-      background: rgba(0,0,0,0.3);
-      backdrop-filter: blur(8px);
-      transition: height 0.3s ease, opacity 0.3s ease;
-      opacity: 0;
-    }
-    .mobile-air-blur.active {
-      height: 100vh;
-      opacity: 1;
     }
     /* 模糊背景层 */
     .mobile-air-blur {
@@ -526,7 +509,7 @@ z-index:999;
       margin: 0 auto;
       box-sizing: border-box;
       background: #f9f9f9;
-      overflow-x:clip;
+      overflow-x: clip;
       overflow-y: visible;
       position: relative;
       height: 520px;
@@ -723,8 +706,8 @@ margin-top: 55px; /* 把原本的间距拉近 */
     width: 100vw;
    padding-left: calc((100vw - 90vw) / 2);
     padding-right: calc((100vw - 90vw) / 2);
-   overflow-x: hidden;
-    
+   overflow-x: clip;
+      overflow-y: hidden;
     margin: 0 auto;
   position: relative !important;
 margin-top:36px;
