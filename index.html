@@ -1,115 +1,99 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-  <meta charset="UTF-8">
-  <title>Carousel with Alpha Shift</title>
+<!-- HTML Scroll Snap Peek Preview Carousel -->
+<section class="native1-carousel-wrapper">
+  <h2 class="native1-title">landscape</h2>
+  <div class="native1-carousel-container">
+    <div class="native1-carousel-track">
+      <div class="native1-slide">
+        <img src="fish in pond.png" alt="鱼吸氧">
+        <div class="native1-caption">鱼吸氧</div>
+      </div>
+      <div class="native1-slide">
+        <img src="tour in Huang Mei county.png" alt="游黄梅五祖">
+        <div class="native1-caption">游黄梅五祖</div>
+      </div>
+      <div class="native1-slide">
+        <img src="shou zhua xiao bai cai.png" alt="地抓小白菜">
+        <div class="native1-caption">地抓小白菜</div>
+      </div>
+      <div class="native1-slide">
+        <img src="hong cai tai cai di.png" alt="掐红菜苔">
+        <div class="native1-caption">掐红菜苔</div>
+      </div>
+      <div class="native1-slide">
+        <img src="Mu Lan Shan.png" alt="木兰山">
+        <div class="native1-caption">木兰山</div>
+      </div>
+    </div>
+    <button class="native1-nav-btn native1-prev" aria-label="Previous">‹</button>
+    <button class="native1-nav-btn native1-next" aria-label="Next">›</button>
+  </div>
+</section>
 
-  <script src="scroll.js" defer></script> <!-- 引入优化的滚动脚本 -->
-  <style>
-    /* ========== 全局基础样式 ========== */
-    body {
-      margin: 0; padding: 0;
-      background: #f0f0f0;
-      font-family: Arial, sans-serif;
-    }
-    h2 { text-align: center; margin: 20px 0; }
-
-    /* ========== 桌面端样式 ========== */
-    .native1-wrapper {
-  margin-top: 12px;
-  margin-bottom: 80px;
-  text-align: center;
+<style>
+.native1-carousel-wrapper {
+  position: relative;
+  margin: 12px 0 80px;
 }
 .native1-title {
-  font-size: 1.5rem;
-  margin-bottom: 16px;
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 12px;
 }
-
 .native1-carousel-container {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-}
-
-.native1-carousel {
-  display: flex;
-  gap: 15px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
+  display: flex;
+  flex-direction: row;
   scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 10px;
+  position: relative;
+  padding: 0 10%;
 }
-.native1-carousel::-webkit-scrollbar {
-  display: none;
+.native1-carousel-track {
+  display: flex;
+  gap: 15px;
 }
-
 .native1-slide {
   scroll-snap-align: center;
   flex: 0 0 auto;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-
 .native1-slide img {
   width: 100%;
-  height: auto;
-  border-radius: 12px;
-  display: block;
+  height: 495px;
+  object-fit: cover;
+  border-radius: 6px;
 }
-
 .native1-caption {
   margin-top: 8px;
-  font-size: 14px;
-  color: #444;
+  font-size: 16px;
+  text-align: center;
 }
-
-/* === 按钮样式 === */
-.native1-arrow {
+.native1-nav-btn {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 5;
-  background: #f0f0f0;
+  bottom: 20px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  width: 48px;
-  height: 48px;
+  background: #f2f2f2;
+  color: #555;
+  font-size: 24px;
   border: none;
-  font-size: 20px;
-  color: #666;
-  opacity: 1;
-  transition: opacity 0.3s;
+  cursor: pointer;
+  z-index: 10;
+  transition: opacity 0.3s ease;
 }
-.native1-arrow:disabled {
+.native1-prev { right: 140px; }
+.native1-next { right: 80px; }
+.native1-nav-btn.disabled {
   opacity: 0.3;
-}
-.native1-left {
-  left: 8px;
-}
-.native1-right {
-  right: 8px;
+  pointer-events: none;
 }
 
-/* === 桌面端 === */
-@media (min-width: 769px) {
-  .native1-carousel {
-    padding: 0 10%;
-  }
-  .native1-slide {
-    width: auto;
-    height: 495px;
-  }
-  .native1-slide img {
-    height: 100%;
-    object-fit: cover;
-  }
-}
-
-/* === 手机端 === */
 @media (max-width: 768px) {
-  .native1-carousel {
-    width: 100vw;
+  .native1-carousel-container {
     padding-left: calc((100vw - 66vw) / 2);
     padding-right: calc((100vw - 66vw) / 2);
   }
@@ -120,84 +104,39 @@
   .native1-slide img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
   }
 }
-
-  </style>
-</head>
-<body>
-  <h2>Carousel with Alpha Shift</h2>
-
-<section class="native1-wrapper">
-  <h2 class="native1-title">landscape</h2>
-
-  <div class="native1-carousel-container">
-    <button class="native1-arrow native1-left" id="native1-prev">&lt;</button>
-
-    <div class="native1-carousel" id="native1-carousel">
-      <!-- Slide 1 -->
-      <div class="native1-slide">
-        <img src="fish in pond.png" alt="Fish in pond" />
-        <div class="native1-caption">鱼吸氧</div>
-      </div>
-      <!-- Slide 2 -->
-      <div class="native1-slide">
-        <img src="tour in Huang Mei county.png" alt="Tour in Huang Mei" />
-        <div class="native1-caption">游黄梅五祖</div>
-      </div>
-      <!-- Slide 3 -->
-      <div class="native1-slide">
-        <img src="shou zhua xiao bai cai.png" alt="Shou Zhua Xiao Bai Cai" />
-        <div class="native1-caption">地抓小白菜</div>
-      </div>
-      <!-- Slide 4 -->
-      <div class="native1-slide">
-        <img src="hong cai tai cai di.png" alt="Hong Cai Tai Cai Di" />
-        <div class="native1-caption">掐红菜苔</div>
-      </div>
-      <!-- Slide 5 -->
-      <div class="native1-slide">
-        <img src="Mu Lan Shan.png" alt="Mu Lan Shan" />
-        <div class="native1-caption">木兰山</div>
-      </div>
-    </div>
-
-    <button class="native1-arrow native1-right" id="native1-next">&gt;</button>
-  </div>
-</section>
-
-
-
+</style>
 
 <script>
-(function () {
-  const carousel = document.getElementById("native1-carousel");
-  const prevBtn = document.getElementById("native1-prev");
-  const nextBtn = document.getElementById("native1-next");
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.querySelector('.native1-carousel-container');
+  const track = document.querySelector('.native1-carousel-track');
+  const slides = Array.from(document.querySelectorAll('.native1-slide'));
+  const prevBtn = document.querySelector('.native1-prev');
+  const nextBtn = document.querySelector('.native1-next');
 
-  function updateButtons() {
-    const scrollLeft = carousel.scrollLeft;
-    const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
-    prevBtn.disabled = scrollLeft <= 5;
-    nextBtn.disabled = scrollLeft >= maxScrollLeft - 5;
+  const slideWidth = () => slides[0].offsetWidth + 15;
+
+  const updateNavButtons = () => {
+    const scrollLeft = container.scrollLeft;
+    const maxScroll = track.scrollWidth - container.clientWidth;
+    prevBtn.classList.toggle('disabled', scrollLeft <= 0);
+    nextBtn.classList.toggle('disabled', scrollLeft >= maxScroll - 5);
   }
 
-  prevBtn.addEventListener("click", () => {
-    const slideWidth = carousel.querySelector(".native1-slide").offsetWidth + 15;
-    carousel.scrollBy({ left: -slideWidth, behavior: "smooth" });
+  prevBtn.addEventListener('click', () => {
+    container.scrollLeft -= slideWidth();
+    setTimeout(updateNavButtons, 400);
   });
 
-  nextBtn.addEventListener("click", () => {
-    const slideWidth = carousel.querySelector(".native1-slide").offsetWidth + 15;
-    carousel.scrollBy({ left: slideWidth, behavior: "smooth" });
+  nextBtn.addEventListener('click', () => {
+    container.scrollLeft += slideWidth();
+    setTimeout(updateNavButtons, 400);
   });
 
-  carousel.addEventListener("scroll", updateButtons);
-  window.addEventListener("resize", updateButtons);
-  window.addEventListener("load", updateButtons);
-})();
+  container.addEventListener('scroll', updateNavButtons);
+  window.addEventListener('resize', updateNavButtons);
+  updateNavButtons();
+});
 </script>
-
-</body>
-</html>
