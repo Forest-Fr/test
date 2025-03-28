@@ -40,31 +40,47 @@
   margin-bottom: 12px;
 }
 .native1-carousel-container {
-  overflow-x: auto;
+position: relative;
+    width: 100%;
+    height: 495px; /* 固定高度 */
+    overflow: hidden;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10%; /* 两侧留白 */
+  
   scroll-snap-type: x mandatory;
-  display: flex;
   flex-direction: row;
   scroll-behavior: smooth;
-  position: relative;
+
   padding: 0 10%;
 }
 .native1-carousel-track {
-  display: flex;
-  gap: 15px;
+ display: flex; /* 使用 flex 布局 */
+    gap: 15px; /* 图片之间的间隔 */
+    transition: transform 0.5s ease-in-out;
+    justify-content: flex-start; /* 确保图片从左开始排列 */
 }
 .native1-slide {
   scroll-snap-align: center;
-  flex: 0 0 auto;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+   flex: 0 0 auto;
+    width: 100%;
+    position: relative; /* Relative positioning to position the overlay */
+    opacity: 1 !important;
+    transition: opacity 0.3s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* 若用 ::before 需要父级 position: relative */ /* 原没有触发去阴影 */
 }
 .native1-slide img {
-  width: 100%;
-  height: 495px;
-  object-fit: cover;
-  border-radius: 6px;
+ width: 100%; /* Ensure the image adapts to the container's width */
+    height: auto; /* Maintain the aspect ratio of the images */
+    display: block;
+    border-radius: 10px;
+    filter: none !important;
+    opacity: 1 !important;
 }
 .native1-caption {
   margin-top: 8px;
@@ -94,16 +110,29 @@
 
 @media (max-width: 768px) {
   .native1-carousel-container {
+    width: 100vw;
+    
     padding-left: calc((100vw - 66vw) / 2);
     padding-right: calc((100vw - 66vw) / 2);
+  overflow-x: hidden;
+    margin: 0 auto;
+  position: relative !important;
   }
   .native1-slide {
-    width: 66vw;
-    aspect-ratio: 9 / 16;
+   flex: 0 0 auto;
+    width:66vw;
+    aspect-ratio: 9 / 16;/* 宽高比例9:16 */
+    scroll-snap-align: center;
+    overflow: hidden;
+    position: relative;
   }
   .native1-slide img {
-    width: 100%;
+     width: 100%;
     height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: none !important;
+    opacity: 1 !important;
   }
 }
 </style>
