@@ -1,155 +1,183 @@
-<!-- ✅ 框架结构 -->
-<section class="native1-carousel-wrapper">
-  <h2 class="native1-title">Landscape</h2>
-  <div class="native1-carousel" id="native1Carousel">
-    <div class="native1-track">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Native1 Scroll Snap Carousel</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+    }
+
+    .native1-carousel-section {
+      margin: 12px 0 80px;
+      position: relative;
+      width: 100%;
+    }
+
+    .native1-carousel-title {
+      text-align: center;
+      font-size: 1.6rem;
+      margin-bottom: 12px;
+    }
+
+    .native1-carousel-container {
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+    }
+
+    .native1-carousel-track {
+      display: flex;
+      overflow-x: scroll;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      gap: 15px;
+      scroll-behavior: smooth;
+    }
+
+    .native1-carousel-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .native1-slide {
+      scroll-snap-align: center;
+      flex: 0 0 auto;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+    }
+
+    .native1-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .native1-caption {
+      margin-top: 8px;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    .native1-carousel-button {
+      position: absolute;
+      bottom: 80px;
+      z-index: 10;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background-color: rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .native1-carousel-button-left {
+      right: 130px;
+    }
+
+    .native1-carousel-button-right {
+      right: 80px;
+    }
+
+    @media (min-width: 769px) {
+      .native1-slide {
+        height: 495px;
+        width: calc((100% - 30px) / 3);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .native1-slide {
+        width: 66vw;
+        aspect-ratio: 9 / 16;
+        padding-left: calc((100vw - 66vw) / 2);
+        padding-right: calc((100vw - 66vw) / 2);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<section class="native1-carousel-section">
+  <div class="native1-carousel-title">Landscape</div>
+  <div class="native1-carousel-container">
+    <div class="native1-carousel-track" id="native1Track">
       <div class="native1-slide">
-        <img src="fish in pond.png" alt="fish in pond" />
-        <p class="native1-caption">鱼吸氧</p>
+        <img src="fish in pond.png" alt="fish">
+        <div class="native1-caption">鱼吸氧</div>
       </div>
       <div class="native1-slide">
-        <img src="tour in Huang Mei county.png" alt="tour in Huang Mei county" />
-        <p class="native1-caption">游黄梅五祖</p>
+        <img src="tour in Huang Mei county.png" alt="huangmei">
+        <div class="native1-caption">游黄梅五祖</div>
       </div>
       <div class="native1-slide">
-        <img src="shou zhua xiao bai cai.png" alt="shou zhua xiao bai cai" />
-        <p class="native1-caption">地抓小白菜</p>
+        <img src="shou zhua xiao bai cai.png" alt="baicai">
+        <div class="native1-caption">地抓小白菜</div>
       </div>
       <div class="native1-slide">
-        <img src="hong cai tai cai di.png" alt="hong cai tai cai di" />
-        <p class="native1-caption">掐红菜苔</p>
+        <img src="hong cai tai cai di.png" alt="hongcai">
+        <div class="native1-caption">掐红菜苔</div>
       </div>
       <div class="native1-slide">
-        <img src="Mu Lan Shan.png" alt="Mu Lan Shan" />
-        <p class="native1-caption">木兰山</p>
+        <img src="Mu Lan Shan.png" alt="mulan">
+        <div class="native1-caption">木兰山</div>
       </div>
     </div>
-  </div>
-  <!-- ✅ 左右按钮 -->
-  <div class="native1-controls">
-    <button id="native1-prev">&#x276E;</button>
-    <button id="native1-next">&#x276F;</button>
+    <div class="native1-carousel-button native1-carousel-button-left" id="native1PrevBtn">&#8249;</div>
+    <div class="native1-carousel-button native1-carousel-button-right" id="native1NextBtn">&#8250;</div>
   </div>
 </section>
 
-<style>
-/* ✅ 样式部分 */
-.native1-carousel-wrapper {
-  position: relative;
-  margin: 12px auto 80px auto;
-  width: 100%;
-  overflow: hidden;
-}
-
-.native1-title {
-  text-align: center;
-  margin-bottom: 12px;
-  font-size: 1.5rem;
-}
-
-.native1-carousel {
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  padding-left: calc((100% - 66%) / 2);
-  padding-right: calc((100% - 66%) / 2);
-}
-
-.native1-track {
-  display: flex;
-  gap: 15px;
-  scroll-behavior: smooth;
-}
-
-.native1-slide {
-  flex: 0 0 auto;
-  width: 66vw;
-  scroll-snap-align: center;
-  position: relative;
-  aspect-ratio: 9 / 16;
-}
-
-.native1-slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.native1-caption {
-  text-align: center;
-  margin-top: 8px;
-  font-size: 0.9rem;
-}
-
-.native1-controls {
-  position: absolute;
-  right: 80px;
-  bottom: 20px;
-  display: flex;
-  gap: 10px;
-}
-
-.native1-controls button {
-  background: #f3f3f5;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  font-size: 1.2rem;
-  color: #555;
-  cursor: pointer;
-  opacity: 0.9;
-}
-
-.native1-controls button:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-@media (min-width: 769px) {
-  .native1-slide {
-    width: 495px;
-    height: 495px;
-    aspect-ratio: auto;
-  }
-  .native1-carousel {
-    padding: 0 10%;
-  }
-}
-</style>
-
 <script>
-(function () {
-  const track = document.querySelector('.native1-track');
+  const track = document.getElementById('native1Track');
+  const prevBtn = document.getElementById('native1PrevBtn');
+  const nextBtn = document.getElementById('native1NextBtn');
   const slides = document.querySelectorAll('.native1-slide');
-  const prevBtn = document.getElementById('native1-prev');
-  const nextBtn = document.getElementById('native1-next');
 
   let currentIndex = 0;
 
-  const updateButtons = () => {
-    prevBtn.disabled = currentIndex === 0;
-    nextBtn.disabled = currentIndex === slides.length - 1;
-  };
+  function updateButtons() {
+    prevBtn.style.opacity = currentIndex === 0 ? '0.3' : '1';
+    prevBtn.style.pointerEvents = currentIndex === 0 ? 'none' : 'auto';
+    nextBtn.style.opacity = currentIndex === slides.length - 1 ? '0.3' : '1';
+    nextBtn.style.pointerEvents = currentIndex === slides.length - 1 ? 'none' : 'auto';
+  }
 
-  const scrollToCurrent = () => {
-    const slide = slides[currentIndex];
-    slide.scrollIntoView({ behavior: 'smooth', inline: 'center' });
-    updateButtons();
-  };
+  function scrollToSlide(index) {
+    const targetSlide = slides[index];
+    if (targetSlide) {
+      targetSlide.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+      currentIndex = index;
+      updateButtons();
+    }
+  }
 
   prevBtn.addEventListener('click', () => {
-    if (currentIndex > 0) currentIndex--;
-    scrollToCurrent();
+    if (currentIndex > 0) {
+      scrollToSlide(currentIndex - 1);
+    }
   });
 
   nextBtn.addEventListener('click', () => {
-    if (currentIndex < slides.length - 1) currentIndex++;
-    scrollToCurrent();
+    if (currentIndex < slides.length - 1) {
+      scrollToSlide(currentIndex + 1);
+    }
   });
 
   // 初始化按钮状态
   updateButtons();
-})();
 </script>
+
+</body>
+</html>
