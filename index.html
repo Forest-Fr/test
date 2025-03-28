@@ -30,6 +30,7 @@
 </section>
 
 <style>
+  @media (min-width: 769px) {
 .native1-carousel-wrapper {
   position: relative;
   margin: 12px 0 80px;
@@ -51,10 +52,10 @@ position: relative;
     padding: 0 10%; /* 两侧留白 */
   
   scroll-snap-type: x mandatory;
-  flex-direction: row;
+ 
   scroll-behavior: smooth;
 
-  padding: 0 10%;
+
 }
 .native1-carousel-track {
  display: flex; /* 使用 flex 布局 */
@@ -63,7 +64,6 @@ position: relative;
     justify-content: flex-start; /* 确保图片从左开始排列 */
 }
 .native1-slide {
-  scroll-snap-align: center;
    flex: 0 0 auto;
     width: 100%;
     position: relative; /* Relative positioning to position the overlay */
@@ -107,7 +107,7 @@ position: relative;
   opacity: 0.3;
   pointer-events: none;
 }
-
+} 
 @media (max-width: 768px) {
   .native1-carousel-container {
     width: 100vw;
