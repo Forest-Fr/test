@@ -9,174 +9,1003 @@
       margin: 0;
       font-family: sans-serif;
     }
+@media (min-width: 1024px) {
 
-    .native1-carousel-section {
-      margin: 12px 0 80px;
-      position: relative;
-      width: 100%;
-    }
+  /* ===== 轮播最外层容器 ===== */
+  .demo1-carousel-container {
+    position: relative;
+    width: 100%;
+    height: 495px; /* 固定高度 */
+    /* 如果想在 desktop 也可左右漏出、滚动，可改为: overflow: visible; */
+    overflow: hidden;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10%; /* 两侧留白 */
+  }
 
-    .native1-carousel-title {
-      text-align: center;
-      font-size: 1.6rem;
-      margin-bottom: 12px;
-    }
+  /* ===== 轮播轨道 (原先使用 transform 进行位移，现改用scroll-snap) ===== */
+  .demo1-carousel-track {
+    display: flex;
+    gap: 15px;
+    /* ---------- 移除原 transform 过渡 ---------- */
+    /* transition: transform 0.5s ease-in-out;  ←删掉或注释 */
+    justify-content: flex-start;
 
-    .native1-carousel-container {
-      overflow: hidden;
-      position: relative;
-      width: 100%;
-    }
+    /* ---------- 新增Scroll Snap相关 ---------- */
+    overflow-x: auto;               /* 原生滚动 */
+    scroll-snap-type: x mandatory;  /* 横向强制贴合 */
+    scroll-behavior: smooth;        /* 平滑滚动 */
+    -webkit-overflow-scrolling: touch;
+    /* 
+       可根据是否要左右漏出做 scroll-padding-left/right:
+       示例：scroll-padding-left: 10%; scroll-padding-right: 10%;
+       以保证居中对齐时能看到两侧的peek
+    */
+  }
 
-    .native1-carousel-track {
-      display: flex;
-      overflow-x: scroll;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      gap: 15px;
-      scroll-behavior: smooth;
-    }
+  .demo1-carousel-slide {
+    flex: 0 0 auto;
+    width: 100%;
+    position: relative;
+    opacity: 1 !important;
+    transition: opacity 0.3s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 保留原 position: relative; */
 
-    .native1-carousel-track::-webkit-scrollbar {
-      display: none;
-    }
+    /* ---------- Scroll Snap 对齐点 ---------- */
+    scroll-snap-align: center;
+  }
 
-    .native1-slide {
-      scroll-snap-align: center;
-      flex: 0 0 auto;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background: #fff;
-    }
+  .demo1-carousel-slide img {
+    width: 100%; /* Ensure the image adapts to the container's width */
+    height: auto; 
+    display: block;
+    border-radius: 10px;
+    filter: none !important;
+    opacity: 1 !important;
+  }
 
-    .native1-slide img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
+  .demo1-carousel-slide.shadow {
+    filter: brightness(0.6);
+    transition: filter 0.3s;
+  }
+  .demo1-carousel-slide.shadow::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.2);
+    pointer-events: none;
+  }
 
-    .native1-caption {
-      margin-top: 8px;
-      text-align: center;
-      font-size: 1rem;
-    }
+  /* ===== 覆盖层动画 & 文本/按钮等：原逻辑保持 ===== */
+  .demo1-overlay {
+    position: absolute;
+    left: 10%;
+    margin-top: 40px;
+    z-index: 10;
+    gap: 10px;
+    display: inline-block;
+    flex-direction: column;
+    align-items: flex-start;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
+    white-space: nowrap;
+  }
 
-    .native1-carousel-button {
-      position: absolute;
-      bottom: 80px;
-      z-index: 10;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background-color: rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 24px;
-      cursor: pointer;
-    }
+  .demo1-bottom-row {
+    display: flex;
+    gap: 15px;
+    position: relative;
+    align-items: center; /* 保持底部对齐等 */
+    left: 5px;
+    bottom: 15px;
+    z-index: 999;
+  }
 
-    .native1-carousel-button-left {
-      right: 130px;
-    }
+  .demo1-title {
+    position: absolute;
+    left: 0;
+    bottom:90px;
+    font-size:3.1rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3), 0 0 25px rgba(255,255,255,0.5);
+    padding-left:15px;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
+    z-index: 999;
+    white-space: nowrap;
+  }
 
-    .native1-carousel-button-right {
-      right: 80px;
-    }
+  demo1-button-title-group {
+    position: relative;
+    width:460px;  
+    height: 210px; 
+  }
 
-    @media (min-width: 769px) {
-      .native1-slide {
-        height: 495px;
-        width: calc((100% - 30px) / 3);
-      }
-    }
+  .demo1-text-bottom {
+    position: static !important;
+    font-size: 1.8rem;
+    font-weight: bold;
+    bottom: 0px;
+    opacity: 1;
+    transform: translateY(40px);
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
+    z-index: 1000;
+    color: white; 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0px;
+    left: 0;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    margin: 0;
+  }
 
-    @media (max-width: 768px) {
-      .native1-slide {
-        width: 66vw;
-        aspect-ratio: 9 / 16;
-        padding-left: calc((100vw - 66vw) / 2);
-        padding-right: calc((100vw - 66vw) / 2);
-      }
-    }
+  .demo1-text-top,
+  .demo1-text-bottom {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
+  }
+
+  /* 轮播“active”态时，让覆盖层与文字按钮渐入 */
+  .demo1-carousel-slide.active .demo1-overlay {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .demo1-carousel-slide.active .demo1-explore-btn {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.4s; 
+  }
+  .demo1-carousel-slide.active .demo1-text-top,
+  .demo1-carousel-slide.active .demo1-text-bottom {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.2s; 
+  }
+
+  .demo1-explore-btn {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+    z-index: 999;
+    opacity: 0;
+    transform: translateY(60px);
+    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in-out;
+    font-size: 1.8rem;
+    font-weight: bold;
+    position: static !important;
+    margin: 0;
+  }
+
+  .demo1-explore-btn:hover {
+    background-color: #0056b3;
+  }
+
+  .demo1-text-top {
+    position: absolute;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 320px;
+    opacity: 1;
+    transform: translateY(40px);
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-in-out;
+    z-index: 999;
+    color: white; 
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3), 0 0 25px rgba(255,255,255,0.5);
+  }
+
+  .demo1-carousel-slide.active .demo1-text-bottom {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .demo1-carousel-slide.active .demo1-title {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.4s;
+  }
+
+  /* ===== 小圆点容器 ===== */
+  .demo1-carousel-dots-container {
+    position: relative;
+    width: 100%;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .demo1-carousel-dots {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+  }
+  .demo1-carousel-dot {
+    width: 10px;
+    height: 10px;
+    background: #ccc;
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .demo1-carousel-dot.active {
+    background: #007BFF;
+  }
+
+  /* 桌面端隐藏prev/next按钮(保留原逻辑) */
+  .demo1-carousel-prev,
+  .demo1-carousel-next {
+    display: none;
+  }
+
+  .demo1-button-title-group {
+    position: absolute;
+    left: 5px;
+    top:130px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+
+  .demo1-title {
+    position: absolute;
+    left: 5px;
+    bottom: calc(40px + 165px);
+    font-size: 3.1rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3), 0 0 25px rgba(255, 255, 255, 0.5);
+    padding-left: 5px;
+    opacity: 1;
+    transform: translateY(0);
+    transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+  }
+
+  .demo1-carousel-dots {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+  }
+  .demo1-carousel-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: #ccc;
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .demo1-carousel-dot.active {
+    background: #007BFF;
+  }
+
+} /* End of @media (min-width: 1024px) */
+
+
+  
+/* ========== 移动端适配 ========== */
+@media (max-width: 768px) {
+
+  /* ===== 轮播容器 ===== */
+  .demo1-carousel-wrapper {
+    margin-top: 12px;
+    margin-bottom: 13px;
+    position: relative;
+  }
+
+  .demo1-carousel-container {
+    width: 100vw;
+    /* 使用Scroll Snap时，一般不必强制padding来模拟居中，但可视效果自行控制 */
+    padding-left: 0; 
+    padding-right: 0; 
+    overflow-x: hidden; 
+    margin: 0 auto;
+    position: relative !important;
+  }
+  .demo1-carousel-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ===== 轮播轨道：Scroll Snap ===== */
+  .demo1-carousel-track {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+
+    /* ---------- 移除 transform 过渡 ---------- */
+    /* transition: transform 0.5s ease-in-out;  ←删掉或注释 */
+
+    /* ---------- 新增Scroll Snap相关 ---------- */
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    /* 可根据需求设置 scroll-padding 来实现左右peek:
+       e.g. scroll-padding-left: (某个值);
+            scroll-padding-right: (某个值);
+    */
+  }
+
+  /* 每个轮播卡片：可使用宽度66vw等来做peek效果 */
+  .demo1-carousel-slide {
+    flex: 0 0 auto;
+    width: 66vw; /* 若要“中间居中且左右露边”，可结合 scroll-padding-left/right */
+    /* aspect-ratio: 9 / 16; 可按需写死比例 */
+    scroll-snap-align: center; /* 关键 */
+    overflow: hidden;
+    position: relative;
+  }
+
+  .demo1-carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+
+  .demo1-carousel-slide.shadow {
+    filter: brightness(0.6);
+    transition: filter 0.3s;
+  }
+  .demo1-carousel-slide.shadow::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.2);
+    pointer-events: none;
+  }
+
+  /* 覆盖层动画等：保留原有transform，仅移除轨道位移 */
+  .demo1-overlay {
+    position: absolute;
+    padding-bottom: 20px;
+    z-index: 1001;
+    gap: 10px;
+    display: inline-block;
+    flex-direction: column;
+    align-items: flex-start;
+    opacity: 0;
+    /* 原先可能有 translateX(-50%)/translateY(50px) 等，根据需求保留 */
+    transform: translateY(50px);
+    transition: transform 0.8s cubic-bezier(0.22,1,0.36,1), opacity 0.8s ease-in-out;
+    white-space: nowrap;
+    margin: 0;
+    padding-left:68px;
+  }
+  .demo1-carousel-slide.active .demo1-overlay {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  demo1-button-title-group {
+    position: relative;
+    width:460px;  
+    height: 210px; 
+  }
+
+  .demo1-bottom-row {
+    display: flex;
+    gap: 15px; 
+    position: absolute;
+    align-items: center; 
+    left: 5px;
+    bottom: 1px; 
+    z-index: 999;
+  }
+
+  .demo1-title {
+    position: absolute;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    bottom: calc(40px + 385px);
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: transform 0.6s, opacity 0.6s;
+    z-index: 999;
+    white-space: nowrap;
+    display: inline-block;
+    overflow: visible;
+    padding-left:67px;
+    margin:0;
+  }
+
+  .demo1-text-bottom {
+    font-size: 0.9rem;
+    position: static;
+    padding-bottom:76px;
+    padding-left:117px;
+    margin:0;
+    transform: translateX(-50%);
+    opacity: 0;
+    color: #fff !important;
+    z-index: 1001;
+    transition: transform 0.6s, opacity 0.6s;
+  }
+
+  .demo1-carousel-slide.active .demo1-title {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.4s;
+  }
+  .demo1-text-bottom,
+  .demo1-text-top {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: transform 0.6s, opacity 0.6s;
+  }
+  .demo1-carousel-slide.active .demo1-text-bottom,
+  .demo1-carousel-slide.active .demo1-text-top {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.2s;
+  }
+
+  .demo1-explore-btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+    z-index: 1002;
+    opacity: 0;
+    flex-direction: column;
+    align-items: center;
+    transform: translateX(-50%) translateY(60px);
+    transition: transform 0.8s, opacity 0.8s;
+    font-weight: bold;
+    position: absolute;
+    margin: 0;
+    white-space: nowrap;
+    display: flex;
+    width: auto;
+    left:50%;
+  }
+  .demo1-carousel-slide.active .demo1-explore-btn {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.4s;
+  }
+
+  /* 小圆点容器 */
+  .demo1-carousel-dots-container {
+    position: relative;
+    width: 100%;
+    height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 8px;
+  }
+  .demo1-carousel-dots {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+  }
+  .demo1-carousel-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: #ccc;
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .demo1-carousel-dot.active {
+    background: #007BFF;
+  }
+
+  /* 左右按钮在移动端显示 */
+  .demo1-carousel-prev,
+  .demo1-carousel-next {
+    display: block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: white;
+    padding: 15px !important; /* 扩大点击区域 */
+    z-index: 999;
+    cursor: pointer;
+  }
+  .demo1-carousel-prev {
+    left: calc(10px - 20px);
+  }
+  .demo1-carousel-next {
+    right: calc(10px - 20px);
+  }
+
+}
+
   </style>
 </head>
 <body>
 
-<section class="native1-carousel-section">
-  <div class="native1-carousel-title">Landscape</div>
-  <div class="native1-carousel-container">
-    <div class="native1-carousel-track" id="native1Track">
-      <div class="native1-slide">
-        <img src="fish in pond.png" alt="fish">
-        <div class="native1-caption">鱼吸氧</div>
+      <!-- ===== 轮播容器 ===== -->
+<div class="demo1-carousel-container">
+  <!-- 左侧切换按钮 -->
+  <button class="demo1-carousel-prev">&lt;</button>
+
+  <!-- 
+    新增的外层包裹：可在CSS里对 .demo1-carousel-track-wrapper
+    设置 overflow-x: auto; scroll-snap-type: x mandatory; 等 
+  -->
+  <div class="demo1-carousel-track-wrapper">
+    <div class="demo1-carousel-track">
+      
+      <!-- 轮播项1 -->
+      <div class="demo1-carousel-slide">
+        <a href="example.html" target="_blank">
+          <img src="Di cai hua.png" alt="Di cai hua">
+        </a>
+        <div class="demo1-overlay">
+          <div class="demo1-button-title-group">
+            <div class="demo1-bottom-row">
+              <button class="demo1-explore-btn" 
+                      onclick="window.open('example.html', '_blank')">
+                Explore now
+              </button>
+              <div class="demo1-text-bottom">New season.</div>
+            </div>
+            <div class="demo1-title">地菜花scoll snap</div>
+          </div>
+        </div>
       </div>
-      <div class="native1-slide">
-        <img src="tour in Huang Mei county.png" alt="huangmei">
-        <div class="native1-caption">游黄梅五祖</div>
+
+      <!-- 轮播项2 -->
+      <div class="demo1-carousel-slide">
+        <a href="example.html" target="_blank">
+          <img src="Lv-Se-qing-cai.png" alt="Lv-Se-qing-cai">
+        </a>
+        <div class="demo1-overlay">
+          <div class="demo1-button-title-group">
+            <div class="demo1-bottom-row">
+              <button class="demo1-explore-btn"
+                      onclick="window.open('example.html', '_blank')">
+                Explore now
+              </button>
+              <div class="demo1-text-bottom">New season.</div>
+            </div>
+            <div class="demo1-title">小颗青菜scoll snap</div>
+          </div>
+        </div>
       </div>
-      <div class="native1-slide">
-        <img src="shou zhua xiao bai cai.png" alt="baicai">
-        <div class="native1-caption">地抓小白菜</div>
+
+      <!-- 轮播项3 -->
+      <div class="demo1-carousel-slide">
+        <a href="example.html" target="_blank">
+          <img src="Two baskets of vegetables.png" alt="Two baskets of vegetables">
+        </a>
+        <div class="demo1-overlay">
+          <div class="demo1-button-title-group">
+            <div class="demo1-bottom-row">
+              <button class="demo1-explore-btn"
+                      onclick="window.open('example.html', '_blank')">
+                Explore now
+              </button>
+              <div class="demo1-text-bottom">New season.</div>
+            </div>
+            <div class="demo1-title">青菜scoll snap</div>
+          </div>
+        </div>
       </div>
-      <div class="native1-slide">
-        <img src="hong cai tai cai di.png" alt="hongcai">
-        <div class="native1-caption">掐红菜苔</div>
+
+      <!-- 轮播项4 -->
+      <div class="demo1-carousel-slide">
+        <a href="example.html" target="_blank">
+          <img src="A full-body portrait wearing a stylish summer work uniform.png" 
+               alt="红菜苔">
+        </a>
+        <div class="demo1-overlay">
+          <div class="demo1-button-title-group">
+            <div class="demo1-bottom-row">
+              <button class="demo1-explore-btn"
+                      onclick="window.open('example.html', '_blank')">
+                Explore now
+              </button>
+              <div class="demo1-text-bottom">New season.</div>
+            </div>
+            <div class="demo1-title">红菜苔scoll snap</div>
+          </div>
+        </div>
       </div>
-      <div class="native1-slide">
-        <img src="Mu Lan Shan.png" alt="mulan">
-        <div class="native1-caption">木兰山</div>
-      </div>
+
     </div>
-    <div class="native1-carousel-button native1-carousel-button-left" id="native1PrevBtn">&#8249;</div>
-    <div class="native1-carousel-button native1-carousel-button-right" id="native1NextBtn">&#8250;</div>
   </div>
-</section>
+
+  <!-- 右侧切换按钮 -->
+  <button class="demo1-carousel-next">&gt;</button>
+</div>
+
+<!-- 小圆点容器 (可继续放在外部) -->
+<div class="demo1-carousel-dots-container">
+  <div class="demo1-carousel-dots">
+    <span class="demo1-carousel-dot"></span>
+    <span class="demo1-carousel-dot"></span>
+    <span class="demo1-carousel-dot"></span>
+    <span class="demo1-carousel-dot"></span>
+  </div>
+</div>
 
 <script>
-  const track = document.getElementById('native1Track');
-  const prevBtn = document.getElementById('native1PrevBtn');
-  const nextBtn = document.getElementById('native1NextBtn');
-  const slides = document.querySelectorAll('.native1-slide');
-
-  let currentIndex = 0;
-
-  function updateButtons() {
-    prevBtn.style.opacity = currentIndex === 0 ? '0.3' : '1';
-    prevBtn.style.pointerEvents = currentIndex === 0 ? 'none' : 'auto';
-    nextBtn.style.opacity = currentIndex === slides.length - 1 ? '0.3' : '1';
-    nextBtn.style.pointerEvents = currentIndex === slides.length - 1 ? 'none' : 'auto';
+(function () {
+  // =============================
+  // 1) 等待轮播图的所有 <img> 加载后再初始化
+  // =============================
+  function waitImagesLoaded(images, callback) {
+    let loadedCount = 0;
+    const total = images.length;
+    function checkDone() {
+      loadedCount++;
+      if (loadedCount >= total) {
+        callback();
+      }
+    }
+    images.forEach((img) => {
+      if (img.complete) {
+        checkDone();
+      } else {
+        img.addEventListener("load", checkDone);
+        img.addEventListener("error", checkDone);
+      }
+    });
+    if (total === 0) callback();
   }
 
-  function scrollToSlide(index) {
-    const targetSlide = slides[index];
-    if (targetSlide) {
-      targetSlide.scrollIntoView({ behavior: 'smooth', inline: 'center' });
-      currentIndex = index;
-      updateButtons();
+  // ==================================
+  // 2) 初始化 Scroll Snap Carousel
+  // ==================================
+  function initdemo1CarouselTrack() {
+    const container = document.querySelector(".demo1-carousel-container");
+    const track = document.querySelector(".demo1-carousel-track");
+    let slides = Array.from(track.querySelectorAll(".demo1-carousel-slide"));
+
+    const prevBtn = document.querySelector(".demo1-carousel-prev");
+    const nextBtn = document.querySelector(".demo1-carousel-next");
+    const dots = Array.from(document.querySelectorAll(".demo1-carousel-dot"));
+
+    if (!container || !track || slides.length === 0 || dots.length === 0) return;
+
+    // 原始真实数量
+    const totalReal = slides.length;
+
+    // 是否正在“过渡”或自动滚动中
+    let isAnimating = false;
+    // 当前逻辑所记录的索引(注意带克隆后，真实索引要做+1)
+    let currentIndex = 1;
+
+    // ========== 2.1) 克隆首尾，添加到DOM中实现“无限”效果 ==========
+    const firstClone = slides[0].cloneNode(true);
+    const lastClone = slides[totalReal - 1].cloneNode(true);
+    track.appendChild(firstClone);
+    track.insertBefore(lastClone, track.firstChild);
+
+    // 重新获取带克隆的slides
+    slides = Array.from(track.querySelectorAll(".demo1-carousel-slide"));
+
+    // ========== 2.2) 根据设备宽度, 计算每张slide的宽度、间距, 并设置 scrollPadding ==========
+    function updateSlideWidth() {
+      const trackWidth = container.offsetWidth; // 外容器宽度
+      if (window.innerWidth <= 768) {
+        // 移动端：约66vw + 两侧各约2vw的空隙 => 保留你原先的逻辑
+        const slideW = trackWidth * 0.66; // ~66vw
+        const gapW = trackWidth * 0.04;   // ~4vw (两边分摊2vw)
+
+        slides.forEach((slide) => {
+          slide.style.width = slideW + "px";
+          // 左右margin各一半gapW(避免图片间的缝隙)
+          slide.style.margin = `0 ${gapW / 2}px`;
+        });
+
+        // Scroll Snap 需要设置 scroll-padding，才能确保“居中对准 + 露边”
+        // 这里设为可视宽度的一半(减掉半张幻灯片宽度)，模拟居中
+        // 也可直接用 CSS :root 里加 scroll-padding-left/right: 50vw - 33vw
+        // 这里用JS写：
+        const leftRightPadding = (trackWidth - slideW) / 2;
+        track.style.scrollPaddingLeft = leftRightPadding + "px";
+        track.style.scrollPaddingRight = leftRightPadding + "px";
+
+      } else {
+        // 桌面端：保留你的“固定间距 15px + 幻灯片实际宽度”逻辑
+        // 为了在 Scroll Snap 下依旧能漏出左右，需要在slide上统一加 margin
+        slides.forEach((slide) => {
+          // 桌面端不限制slide本身的宽度(假设内部图片是自适应)
+          slide.style.width = "";
+          slide.style.margin = "0 7.5px"; // 一边7.5px合计15px
+        });
+        // 根据第二张的实际宽度来计算 scrollPadding 以便居中
+        const secondSlide = slides[1];
+        if (secondSlide) {
+          const rect = secondSlide.getBoundingClientRect();
+          const slideW = rect.width;
+          // 让轮播图居中, 两侧漏出
+          // 如果想让当前Index的slide正好居中，可用 (容器宽度 - slideW)/2
+          const leftRightPadding = (trackWidth - slideW) / 2;
+          track.style.scrollPaddingLeft = leftRightPadding + "px";
+          track.style.scrollPaddingRight = leftRightPadding + "px";
+        }
+      }
     }
+
+    // ========== 2.3) 切换到指定Index(内部用) ==========
+    function scrollToIndex(index, smooth = true) {
+      // 安全检查
+      if (index < 0) index = 0;
+      if (index > slides.length - 1) index = slides.length - 1;
+
+      const targetSlide = slides[index];
+      if (!targetSlide) return;
+
+      // 禁止重复点击造成的连续动画
+      isAnimating = true;
+
+      // 设置滚动行为
+      track.style.scrollBehavior = smooth ? "smooth" : "auto";
+
+      // 核心: 原生scrollIntoView 或者 直接设置 scrollLeft = offsetLeft
+      // 这里用scrollIntoView示例。为了居中，需要 .demo1-carousel-slide { scroll-snap-align: center; } + scroll-padding
+      targetSlide.scrollIntoView({
+        behavior: smooth ? "smooth" : "auto",
+        block: "nearest",   // 竖向不动
+        inline: "center",   // 水平方向居中
+      });
+    }
+
+    // ========== 2.4) 根据 currentIndex 给 slides + dots 做 active/prev/next/ 等类名、按钮启用等 ==========
+    function updateClasses() {
+      // dots
+      // dotIndex: 0 ~ (totalReal-1)
+      let dotIndex = currentIndex === 0
+        ? totalReal - 1
+        : (currentIndex === slides.length - 1)
+          ? 0
+          : currentIndex - 1;
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle("active", i === dotIndex);
+      });
+
+      // slide类名
+      slides.forEach((sl) => {
+        sl.classList.remove("active", "prev", "next", "shadow");
+      });
+      slides[currentIndex].classList.add("active");
+
+      // prev/next
+      const nextIndex = (currentIndex + 1) % slides.length;
+      const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+      slides[nextIndex].classList.add("next");
+      slides[prevIndex].classList.add("prev");
+
+      // 其他都加shadow
+      slides.forEach((slide) => {
+        if (!slide.classList.contains("active")) {
+          slide.classList.add("shadow");
+        }
+      });
+
+      // active slide 内部链接可点
+      slides.forEach((slide) => {
+        const link = slide.querySelector("a");
+        if (link) {
+          link.style.pointerEvents = slide.classList.contains("active") ? "auto" : "none";
+        }
+      });
+
+      // explore按钮
+      document.querySelectorAll(".demo1-explore-btn").forEach((btn) => {
+        btn.style.opacity = "0";
+        btn.style.pointerEvents = "none";
+      });
+      const activeBtn = slides[currentIndex].querySelector(".demo1-explore-btn");
+      if (activeBtn) {
+        activeBtn.style.opacity = "1";
+        activeBtn.style.pointerEvents = "auto";
+      }
+    }
+
+    // ========== 2.5) “下一张”/“上一张”/“跳转” 函数 ==========
+    function nextSlide() {
+      if (isAnimating) return;
+      currentIndex++;
+      scrollToIndex(currentIndex, true);
+
+      // 等待滚动完成后修正(如果是克隆slide)
+      resetAfterAnimation();
+    }
+
+    function prevSlide() {
+      if (isAnimating) return;
+      currentIndex--;
+      scrollToIndex(currentIndex, true);
+
+      // 等待滚动完成后修正
+      resetAfterAnimation();
+    }
+
+    function jumpToSlide(i) {
+      if (isAnimating) return;
+      // i 是0~(totalReal-1)
+      currentIndex = i + 1; // 因为克隆了一个头部
+      scrollToIndex(currentIndex, true);
+
+      resetAfterAnimation();
+    }
+
+    // ========== 2.6) “无限”循环的关键: 当滑到克隆slide时，瞬间跳回真实slide ==========
+    function resetAfterAnimation() {
+      // 此处无法用transitionend, 因为我们用scroll-snap
+      // 做法：监听scroll事件 + setTimeout判断是否已停止滚动
+      // 当停止滚动后, 若currentIndex在克隆位置, 立刻jump到真实位置(不动画)
+      // 同时刷新类名
+      if (scrollEndTimer) clearTimeout(scrollEndTimer);
+      scrollEndTimer = setTimeout(() => {
+        fixCloneIndex();
+        updateClasses();
+        isAnimating = false;
+      }, 200); // 这里的200ms可根据滚动速度做微调
+    }
+
+    let scrollEndTimer = null;
+    function fixCloneIndex() {
+      // 若当前Index在0(头部克隆) => 跳到最后一张真实slide
+      if (currentIndex === 0) {
+        currentIndex = totalReal;
+        scrollToIndex(currentIndex, false); // 无动画瞬间调回
+      }
+      // 若当前Index在最后(尾部克隆) => 跳到第1张真实slide
+      else if (currentIndex === slides.length - 1) {
+        currentIndex = 1;
+        scrollToIndex(currentIndex, false);
+      }
+    }
+
+    // ========== 2.7) 自动播放 ==========
+    let interval = setInterval(nextSlide, 5000);
+    function resetInterval() {
+      clearInterval(interval);
+      interval = setInterval(nextSlide, 5000);
+    }
+
+    // ========== 2.8) 绑定按钮/点/点击slide事件 ==========
+    prevBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      prevSlide();
+      resetInterval();
+    });
+    nextBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      nextSlide();
+      resetInterval();
+    });
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener("click", (e) => {
+        e.stopPropagation();
+        jumpToSlide(i);
+        resetInterval();
+      });
+    });
+
+    slides.forEach((slide, idx) => {
+      slide.addEventListener("click", (e) => {
+        // 若本身是active, 则允许点击
+        if (slide.classList.contains("active")) {
+          return;
+        } else if (slide.classList.contains("next")) {
+          e.preventDefault();
+          nextSlide();
+          resetInterval();
+        } else if (slide.classList.contains("prev")) {
+          e.preventDefault();
+          prevSlide();
+          resetInterval();
+        }
+      });
+      // 若有 .demo1-explore-btn，则阻止冒泡，确保可点
+      const exploreBtn = slide.querySelector(".demo1-explore-btn");
+      if (exploreBtn) {
+        exploreBtn.addEventListener("click", (ev) => {
+          ev.stopPropagation();
+        });
+      }
+    });
+
+    // ========== 2.9) 手机端触摸逻辑(为了更灵敏, 20px就触发) ==========
+    // 虽然Scroll Snap本身也支持手指滑动，但这里保留你原先的阈值习惯
+    let startX = 0;
+    let isSwiping = false;
+    track.addEventListener(
+      "touchstart",
+      (e) => {
+        if (e.touches.length === 1) {
+          startX = e.touches[0].clientX;
+          isSwiping = true;
+        }
+      },
+      { passive: true }
+    );
+    track.addEventListener("touchmove", () => {}, { passive: true });
+    track.addEventListener(
+      "touchend",
+      (e) => {
+        if (!isSwiping) return;
+        isSwiping = false;
+        const endX = e.changedTouches[0].clientX;
+        const diff = endX - startX;
+        if (Math.abs(diff) > 20) {
+          if (diff < 0) {
+            nextSlide();
+          } else {
+            prevSlide();
+          }
+          resetInterval();
+        }
+      },
+      { passive: true }
+    );
+
+    // ========== 2.10) 初始化: 先更新宽度, 再滚动到初始位置, 再刷新类名 ==========
+    function init() {
+      updateSlideWidth();
+      // 无动画瞬间滚到索引1(也就是第一张真实slide)
+      scrollToIndex(currentIndex, false);
+      updateClasses();
+    }
+
+    // 监听窗口变化 => 自适应宽度
+    window.addEventListener("resize", () => {
+      // resize后位置和类名可能要重新计算
+      updateSlideWidth();
+      scrollToIndex(currentIndex, false);
+      updateClasses();
+    });
+
+    init();
   }
 
-  prevBtn.addEventListener('click', () => {
-    if (currentIndex > 0) {
-      scrollToSlide(currentIndex - 1);
-    }
+  // =============================
+  // 等待图片加载完再初始化
+  // =============================
+  const slideImgs = Array.from(document.querySelectorAll(".demo1-carousel-slide img"));
+  waitImagesLoaded(slideImgs, () => {
+    initdemo1CarouselTrack();
   });
+})();
 
-  nextBtn.addEventListener('click', () => {
-    if (currentIndex < slides.length - 1) {
-      scrollToSlide(currentIndex + 1);
-    }
-  });
-
-  // 初始化按钮状态
-  updateButtons();
 </script>
 
 </body>
