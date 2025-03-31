@@ -663,6 +663,7 @@
   </div>
 </div>
 
+
 <script>
 (function () {
   // ========== 1) 等图加载完再初始化 ==========
@@ -688,6 +689,7 @@
 
   // ========== 2) 初始化 scroll-snap Carousel ==========
   function initSnapCarousel() {
+    const container = document.querySelector(".demo1-carousel-container");
     const track = document.querySelector(".demo1-carousel-track");
     let slides = Array.from(track.querySelectorAll(".demo1-carousel-slide"));
 
@@ -709,6 +711,7 @@
     track.appendChild(firstClone);
     track.insertBefore(lastClone, track.firstChild);
 
+    // 重新获取克隆后的slide数组
     slides = Array.from(track.querySelectorAll(".demo1-carousel-slide"));
 
     // ========== 2.2) 滚动到指定Index ==========
@@ -720,7 +723,7 @@
       if (!targetSlide) return;
       isAnimating = true;
 
-      // 通过scroll-behavior来控制是否平滑
+      // 启用/禁用平滑滚动
       track.style.scrollBehavior = smooth ? "smooth" : "auto";
       targetSlide.scrollIntoView({
         behavior: smooth ? "smooth" : "auto",
@@ -758,7 +761,7 @@
         }
       });
 
-      // 可点击
+      // active slide 内部链接可点
       slides.forEach((s) => {
         const link = s.querySelector("a");
         if (link) {
@@ -891,10 +894,15 @@
       }
     }, { passive: true });
 
-    // ========== 2.8) 初始化 ==========
+    // ========== 2.8) 初始化：瞬间滚到索引1 + 更新类名 ==========
     function init() {
-      // 先瞬间滚到索引1
+      // 临时关闭动画
+      track.style.scrollBehavior = "auto";
+      // 滚到第1张真实slide
       scrollToIndex(currentIndex, false);
+      // 恢复smooth
+      track.style.scrollBehavior = "smooth";
+      // 同步类名
       updateClasses();
     }
     init();
@@ -906,10 +914,19 @@
     });
   }
 
-  // ========== 3) 等图片加载后再启动 ========== 
+  // ========== 3) 等图片加载后再启动 (隐藏->加载完->初始化->显示) ==========
+  const container = document.querySelector(".demo1-carousel-container");
+  if (container) {
+    container.style.visibility = "hidden"; // 先隐藏防止闪动
+  }
   const imgs = Array.from(document.querySelectorAll(".demo1-carousel-slide img"));
   waitImagesLoaded(imgs, () => {
+    // 等图片都加载完后 => 初始化轮播
     initSnapCarousel();
+    // 显示容器
+    if (container) {
+      container.style.visibility = "visible";
+    }
   });
 })();
 
