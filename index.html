@@ -313,7 +313,6 @@ display: inline-block;
   .natural1-carousel-container {
     position: relative;
     width: 100vw;
-    /* 让66vw居中 + 左右露出 */
     padding-left: calc((100vw - 66vw) / 2);
     padding-right: calc((100vw - 66vw) / 2);
     margin: 0 auto;
@@ -332,7 +331,6 @@ flex: 0 0 66vw;
     align-items: center;
     /* 原 transform 过渡注释掉 */
     /* transition: transform 0.5s ease-in-out; */
- will-change: transform;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
@@ -373,14 +371,14 @@ flex: 0 0 66vw;
 
   .natural1-overlay {
     position: absolute;
-    padding-bottom: 20px;
+    padding-bottom: 85px;
     z-index: 1001;
     gap: 10px;
     display: inline-block;
     flex-direction: column;
     align-items: flex-start;
     opacity: 0;
-    transform: translateY(50px);
+transform: translateX(-50%);
     transition: transform 0.8s cubic-bezier(0.22,1,0.36,1), opacity 0.8s ease-in-out;
     white-space: nowrap;
     margin: 0;
@@ -412,11 +410,10 @@ flex: 0 0 66vw;
     font-size: 10px;
     font-weight: bold;
     color: white;
- top: 70px;
-    left: 50%;
+
  text-align: center;
     text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
-    bottom: calc(40px + 385px);
+    bottom: calc(20px + 385px);
   transform: translateX(-50%);
  font-weight: 700;
     opacity: 0;
