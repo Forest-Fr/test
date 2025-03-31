@@ -295,15 +295,8 @@ display: inline-block;
     transition: background 0.3s;
   }
   .natural1-carousel-dot.active {
-  background: #000;             /* 激活时为黑色 */
+    background: #007BFF;
   }
-/* 默认（桌面端）：inline 显示黑点 · */
-.mobile-break {未启用
-  display: inline;
-}
-.natural1-dot {未启用
-  display: inline;
-}
 
 } /* End of @media (min-width: 769px) */
 
@@ -433,15 +426,10 @@ transform: translateY(40px);  /* 初始向下 */
     display: inline-block;
     overflow: visible;
 
- .mobile-break {未启用
-    display: block;
-    margin-bottom: 4px; /* 可根据视觉微调 */
-  }
-  .natural1-dot {未启用
-    display: none;
-  }
 
 
+
+  }
 
   .natural1-text-bottom {
 font-size: 0.9rem; /* 调整文字大小 */
@@ -459,6 +447,16 @@ color: #fff !important; /* 强制白色 */
     position: static !important;
  opacity: 0;
   transform: translateY(40px);  /* 初始向下 */
+  }
+ .natural1-text-bottom::before {
+    content: "模拟";
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 0px;
+ }
+ .natural1-text-bottom {
+    /* 去掉“模拟”字，只保留“Apple TV播放” */
+    /* 原有内容中只保留“Apple TV播放” */
  }
   .natural1-carousel-slide.active .natural1-title {
     opacity: 1;
@@ -516,32 +514,34 @@ transform: translateY(0); /* 文字从下方上升 */
   .natural1-carousel-dots-container {
     position: relative;
     width: 100%;
-    height: 28px;
-    margin-top: 12px;
+    height: 18px;原36
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-  }
-
-  .natural1-carousel-dots {
-    position: static;
-    gap: 8px;
     justify-content: center;
     align-items: center;
-    display: flex;
-    width: auto;
-    margin: 0 auto;
+    margin-top: 8px;
   }
-
+  .natural1-carousel-dots {
+     display: flex;
+    gap: 5px;
+    justify-content: center;
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+  }
   .natural1-carousel-dot {
+    display: inline-block;
     width: 10px;
     height: 10px;
     background: #ccc;
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .natural1-carousel-dot.active {
+    background: #007BFF;
   }
 
-  .natural1-carousel-dot.active {
-    background: #000; /* 手机端激活态也为黑色 */
-  }
   /* 移动端下左右按钮可见 */
   .natural1-carousel-prev,
   .natural1-carousel-next {
@@ -593,7 +593,7 @@ transform: translateY(0); /* 文字从下方上升 */
                       onclick="window.open('example.html', '_blank')">
                 Explore now
               </button>
-        <div class="natural1-text-bottom">模拟.Apple TV原生播放.</div>
+              <div class="natural1-text-bottom">模拟.Apple TV原生播放.</div>
             </div>
             <div class="natural1-title">生长的柚子</div>
           </div>
@@ -612,7 +612,7 @@ transform: translateY(0); /* 文字从下方上升 */
                       onclick="window.open('example.html', '_blank')">
                 Explore now
               </button>
-            <div class="natural1-text-bottom">模拟.Apple TV原生播放.</div>
+              <div class="natural1-text-bottom">模拟.Apple TV原生播放.</div>
             </div>
             <div class="natural1-title">虫子挑茄子</div>
           </div>
@@ -631,7 +631,7 @@ transform: translateY(0); /* 文字从下方上升 */
                       onclick="window.open('example.html', '_blank')">
                 Explore now
               </button>
-         <div class="natural1-text-bottom">模拟.Apple TV原生播放.</div>
+              <div class="natural1-text-bottom">模拟.Apple TV原生播放.</div>
             </div>
             <div class="natural1-title">稻谷</div>
           </div>
@@ -651,7 +651,7 @@ transform: translateY(0); /* 文字从下方上升 */
                       onclick="window.open('example.html', '_blank')">
                 Explore now
               </button>
-                <div class="natural1-text-bottom">模拟.Apple TV原生播放.</div>
+              <div class="natural1-text-bottom">模拟.Apple TV原生播放.</div>
             </div>
             <div class="natural1-title">杭椒</div>
           </div>
