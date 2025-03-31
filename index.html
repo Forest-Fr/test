@@ -511,34 +511,36 @@ bottom:-40px;
 transform: translateY(0); /* 文字从下方上升 */
     transition-delay: 0.4s;
   }
- .natural1-carousel-dots-container {
+.natural1-carousel-dots-container {
     position: relative;
     width: 100%;
-    height: 28px;
-    margin-top: 12px;
+    height: 18px;原36
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-  }
-
-  .natural1-carousel-dots {
-    position: static;
-    gap: 8px;
     justify-content: center;
     align-items: center;
-    display: flex;
-    width: auto;
-    margin: 0 auto;
+    margin-top: 8px;
   }
-
+  .natural1-carousel-dots {
+     display: flex;
+    gap: 5px;
+    justify-content: center;
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+  }
   .natural1-carousel-dot {
+    display: inline-block;
     width: 10px;
     height: 10px;
     background: #ccc;
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background 0.3s;
   }
-
   .natural1-carousel-dot.active {
     background: #000; /* 手机端激活态也为黑色 */
+  }
 
   /* 移动端下左右按钮可见 */
   .natural1-carousel-prev,
@@ -546,6 +548,7 @@ transform: translateY(0); /* 文字从下方上升 */
     display: block;
     position: absolute;
     top: 50%;
+bottom:50%;
     transform: translateY(-50%);
     background: none;
     border: none;
