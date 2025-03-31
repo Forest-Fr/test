@@ -323,6 +323,8 @@ height:495px;
   }
 
   .natural1-carousel-track {
+flex: 0 0 66vw;
+        min-height: auto;
     display: flex;
     gap: 15px;
     align-items: center;
@@ -336,12 +338,11 @@ height:495px;
   }
 
   .natural1-carousel-slide {
-    flex: 0 0 auto;
-    width: 66vw;
-    scroll-snap-align: center;
-    overflow: hidden;
-    position: relative;
-aspect-ratio: 9 / 16;
+    flex: 0 0 calc(66%);
+      scroll-snap-align: center;
+      height: 495px;
+      position: relative;
+ aspect-ratio: 9 / 16;
   }
 
   .natural1-carousel-slide img {
