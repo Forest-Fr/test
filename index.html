@@ -140,6 +140,7 @@ display: inline-block;
     padding-bottom: 0px;
     padding-left: 0px;
     margin: 0;
+ vertical-align: middle;
   }
 .natural1-text-bottom {
   font-weight: 600;
@@ -381,7 +382,7 @@ flex: 0 0 66vw;
     transition: transform 0.8s cubic-bezier(0.22,1,0.36,1), opacity 0.8s ease-in-out;
     white-space: nowrap;
     margin: 0;
-transform: translateX(-50%) translateY(60px);
+transform: translateY(40px);  /* 初始向下 */
 
   }
   .natural1-carousel-slide.active .natural1-overlay {
@@ -417,7 +418,7 @@ position: fixed;
     text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
     padding-left: 65px;
     opacity: 0;
-transform: translateX(-50%) translateY(60px);
+transform: translateY(40px);  /* 初始向下 */
 
    transition: transform 0.8s ease, opacity 0.8s ease;
     z-index: 999;
@@ -445,8 +446,7 @@ color: #fff !important; /* 强制白色 */
   z-index: 1001;
     position: static !important;
  opacity: 0;
-   transform: translateX(-50%) translateY(60px);
-
+  transform: translateY(40px);  /* 初始向下 */
   }
  .natural1-text-bottom::before {
     content: "模拟";
@@ -461,7 +461,7 @@ color: #fff !important; /* 强制白色 */
   }
   .natural1-text-bottom,
   .natural1-text-top {
-transform: translateX(-50%) translateY(60px);
+transform: translateY(40px);  /* 初始向下 */
 
   opacity: 0;
   transition: transform 0.8s ease, opacity 0.8s ease;
@@ -482,7 +482,7 @@ display: inline-block;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif; /* 苹果默认字体 */
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* 微弱阴影提升立体感 */
     bottom: 12px;
-transform: translateX(-50%) translateY(60px);
+transform: translateY(40px);  /* 初始向下 */
 
   font-size: 10px;                  /* 字体大小 */
     border: none;
