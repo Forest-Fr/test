@@ -298,10 +298,10 @@ display: inline-block;
   background: #000;             /* 激活时为黑色 */
   }
 /* 默认（桌面端）：inline 显示黑点 · */
-.mobile-break {
+.mobile-break {未启用
   display: inline;
 }
-.natural1-dot {
+.natural1-dot {未启用
   display: inline;
 }
 
@@ -433,11 +433,11 @@ transform: translateY(40px);  /* 初始向下 */
     display: inline-block;
     overflow: visible;
 
- .mobile-break {
+ .mobile-break {未启用
     display: block;
     margin-bottom: 4px; /* 可根据视觉微调 */
   }
-  .natural1-dot {
+  .natural1-dot {未启用
     display: none;
   }
 
@@ -543,9 +543,9 @@ transform: translateY(0); /* 文字从下方上升 */
     background: #000; /* 手机端激活态也为黑色 */
   }
   /* 移动端下左右按钮可见 */
- .natural1-carousel-prev,
+  .natural1-carousel-prev,
   .natural1-carousel-next {
-    display: block;                /* ✅ 显示按钮 */
+    display: block;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -557,14 +557,13 @@ transform: translateY(0); /* 文字从下方上升 */
     z-index: 999;
     cursor: pointer;
   }
-
   .natural1-carousel-prev {
-    left: 10px;                    /* ✅ 调整按钮位置 */
+    left: calc(10px - 20px);
+  }
+  .natural1-carousel-next {
+    right: calc(10px - 20px);
   }
 
-  .natural1-carousel-next {
-    right: 10px;
-  }
 }
   </style>
 </head>
@@ -594,7 +593,7 @@ transform: translateY(0); /* 文字从下方上升 */
                       onclick="window.open('example.html', '_blank')">
                 Explore now
               </button>
-       <span class="mobile-break">模拟<span class="natural1-dot"> · </span></span>Apple TV原生播放.
+        <div class="natural1-text-bottom">模拟.Apple TV原生播放.</div>
             </div>
             <div class="natural1-title">生长的柚子</div>
           </div>
@@ -613,7 +612,7 @@ transform: translateY(0); /* 文字从下方上升 */
                       onclick="window.open('example.html', '_blank')">
                 Explore now
               </button>
-        <span class="mobile-break">模拟<span class="natural1-dot"> · </span></span>Apple TV原生播放.
+            <div class="natural1-text-bottom">模拟.Apple TV原生播放.</div>
             </div>
             <div class="natural1-title">虫子挑茄子</div>
           </div>
@@ -632,7 +631,7 @@ transform: translateY(0); /* 文字从下方上升 */
                       onclick="window.open('example.html', '_blank')">
                 Explore now
               </button>
-      <span class="mobile-break">模拟<span class="natural1-dot"> · </span></span>Apple TV原生播放.
+         <div class="natural1-text-bottom">模拟.Apple TV原生播放.</div>
             </div>
             <div class="natural1-title">稻谷</div>
           </div>
@@ -652,7 +651,7 @@ transform: translateY(0); /* 文字从下方上升 */
                       onclick="window.open('example.html', '_blank')">
                 Explore now
               </button>
-            <span class="mobile-break">模拟<span class="natural1-dot"> · </span></span>Apple TV原生播放.
+                <div class="natural1-text-bottom">模拟.Apple TV原生播放.</div>
             </div>
             <div class="natural1-title">杭椒</div>
           </div>
