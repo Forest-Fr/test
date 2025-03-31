@@ -664,7 +664,9 @@
 
 <script>
 (function () {
-  // ===== 1) 等待图片加载完再初始化 =====
+  // =============================
+  // 1) 等待轮播图的所有 <img> 加载后再初始化
+  // =============================
   function waitImagesLoaded(images, callback) {
     let loadedCount = 0;
     const total = images.length;
@@ -685,10 +687,11 @@
     if (total === 0) callback();
   }
 
-  // ===== 2) 初始化函数 =====
-  function initScrollSnapCarousel() {
+  // ==================================
+  // 2) 初始化 Scroll Snap Carousel
+  // ==================================
+  function initdemo1CarouselTrack() {
     const container = document.querySelector(".demo1-carousel-container");
-    const trackWrapper = document.querySelector(".demo1-carousel-track-wrapper");
     const track = document.querySelector(".demo1-carousel-track");
     let slides = Array.from(track.querySelectorAll(".demo1-carousel-slide"));
 
@@ -698,84 +701,129 @@
 
     if (!container || !track || slides.length === 0 || dots.length === 0) return;
 
-    // 原始真实数量(不含克隆)
+    // 原始真实数量
     const totalReal = slides.length;
 
-    // 当前索引，从1开始(因为要放首尾克隆)
+    // 是否正在“过渡”或自动滚动中
+    let isAnimating = false;
+    // 当前逻辑所记录的索引(注意带克隆后，真实索引要做+1)
     let currentIndex = 1;
-    let isAnimating = false; // 防止短时间重复点击
 
-    // ===== 2.1) 克隆首尾来实现“无限循环” =====
+    // ========== 2.1) 克隆首尾，添加到DOM中实现“无限”效果 ==========
     const firstClone = slides[0].cloneNode(true);
-    const lastClone = slides[slides.length - 1].cloneNode(true);
+    const lastClone = slides[totalReal - 1].cloneNode(true);
     track.appendChild(firstClone);
     track.insertBefore(lastClone, track.firstChild);
 
-    // 重新获取克隆后slides
+    // 重新获取带克隆的slides
     slides = Array.from(track.querySelectorAll(".demo1-carousel-slide"));
 
-    // ===== 2.2) 公用函数：滚动到指定Index =====
+    // ========== 2.2) 根据设备宽度, 计算每张slide的宽度、间距, 并设置 scrollPadding ==========
+    function updateSlideWidth() {
+      const trackWidth = container.offsetWidth; // 外容器宽度
+      if (window.innerWidth <= 768) {
+        // 移动端：约66vw + 两侧各约2vw的空隙 => 保留你原先的逻辑
+        const slideW = trackWidth * 0.66; // ~66vw
+        const gapW = trackWidth * 0.04;   // ~4vw (两边分摊2vw)
+
+        slides.forEach((slide) => {
+          slide.style.width = slideW + "px";
+          // 左右margin各一半gapW(避免图片间的缝隙)
+          slide.style.margin = `0 ${gapW / 2}px`;
+        });
+
+        // Scroll Snap 需要设置 scroll-padding，才能确保“居中对准 + 露边”
+        // 这里设为可视宽度的一半(减掉半张幻灯片宽度)，模拟居中
+        // 也可直接用 CSS :root 里加 scroll-padding-left/right: 50vw - 33vw
+        // 这里用JS写：
+        const leftRightPadding = (trackWidth - slideW) / 2;
+        track.style.scrollPaddingLeft = leftRightPadding + "px";
+        track.style.scrollPaddingRight = leftRightPadding + "px";
+
+      } else {
+        // 桌面端：保留你的“固定间距 15px + 幻灯片实际宽度”逻辑
+        // 为了在 Scroll Snap 下依旧能漏出左右，需要在slide上统一加 margin
+        slides.forEach((slide) => {
+          // 桌面端不限制slide本身的宽度(假设内部图片是自适应)
+          slide.style.width = "";
+          slide.style.margin = "0 7.5px"; // 一边7.5px合计15px
+        });
+        // 根据第二张的实际宽度来计算 scrollPadding 以便居中
+        const secondSlide = slides[1];
+        if (secondSlide) {
+          const rect = secondSlide.getBoundingClientRect();
+          const slideW = rect.width;
+          // 让轮播图居中, 两侧漏出
+          // 如果想让当前Index的slide正好居中，可用 (容器宽度 - slideW)/2
+          const leftRightPadding = (trackWidth - slideW) / 2;
+          track.style.scrollPaddingLeft = leftRightPadding + "px";
+          track.style.scrollPaddingRight = leftRightPadding + "px";
+        }
+      }
+    }
+
+    // ========== 2.3) 切换到指定Index(内部用) ==========
     function scrollToIndex(index, smooth = true) {
+      // 安全检查
       if (index < 0) index = 0;
-      if (index >= slides.length) index = slides.length - 1;
-      
+      if (index > slides.length - 1) index = slides.length - 1;
+
       const targetSlide = slides[index];
       if (!targetSlide) return;
 
+      // 禁止重复点击造成的连续动画
       isAnimating = true;
-      // 打开/关闭平滑滚动
+
+      // 设置滚动行为
       track.style.scrollBehavior = smooth ? "smooth" : "auto";
 
-      // scrollIntoView 或者 track.scrollLeft = ...
+      // 核心: 原生scrollIntoView 或者 直接设置 scrollLeft = offsetLeft
+      // 这里用scrollIntoView示例。为了居中，需要 .demo1-carousel-slide { scroll-snap-align: center; } + scroll-padding
       targetSlide.scrollIntoView({
         behavior: smooth ? "smooth" : "auto",
-        block: "nearest",
-        inline: "center",
+        block: "nearest",   // 竖向不动
+        inline: "center",   // 水平方向居中
       });
     }
 
-    // ===== 2.3) 更新激活态、阴影、dots、按钮等 =====
+    // ========== 2.4) 根据 currentIndex 给 slides + dots 做 active/prev/next/ 等类名、按钮启用等 ==========
     function updateClasses() {
-      // 计算dotIndex(0 ~ totalReal-1)
-      // 如果 currentIndex=0 => 说明在最左侧克隆区 => 真实Index是 totalReal-1
-      // 如果 currentIndex=slides.length-1 => 最右侧克隆区 => 真实Index是 0
-      let dotIndex;
-      if (currentIndex === 0) {
-        dotIndex = totalReal - 1;
-      } else if (currentIndex === slides.length - 1) {
-        dotIndex = 0;
-      } else {
-        dotIndex = currentIndex - 1;
-      }
+      // dots
+      // dotIndex: 0 ~ (totalReal-1)
+      let dotIndex = currentIndex === 0
+        ? totalReal - 1
+        : (currentIndex === slides.length - 1)
+          ? 0
+          : currentIndex - 1;
 
       dots.forEach((dot, i) => {
         dot.classList.toggle("active", i === dotIndex);
       });
 
-      // 去除所有slide的样式
-      slides.forEach((sl) => sl.classList.remove("active","prev","next","shadow"));
-
-      // 当前slide加 active
+      // slide类名
+      slides.forEach((sl) => {
+        sl.classList.remove("active", "prev", "next", "shadow");
+      });
       slides[currentIndex].classList.add("active");
-      
-      // prev、next
+
+      // prev/next
       const nextIndex = (currentIndex + 1) % slides.length;
       const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
       slides[nextIndex].classList.add("next");
       slides[prevIndex].classList.add("prev");
 
-      // 其余都加 shadow
-      slides.forEach((sl) => {
-        if (!sl.classList.contains("active")) {
-          sl.classList.add("shadow");
+      // 其他都加shadow
+      slides.forEach((slide) => {
+        if (!slide.classList.contains("active")) {
+          slide.classList.add("shadow");
         }
       });
 
-      // 控制内部链接可点击
-      slides.forEach((sl) => {
-        const link = sl.querySelector("a");
+      // active slide 内部链接可点
+      slides.forEach((slide) => {
+        const link = slide.querySelector("a");
         if (link) {
-          link.style.pointerEvents = sl.classList.contains("active") ? "auto" : "none";
+          link.style.pointerEvents = slide.classList.contains("active") ? "auto" : "none";
         }
       });
 
@@ -791,95 +839,105 @@
       }
     }
 
-    // ===== 2.4) 当切换下一张/上一张时的逻辑 =====
+    // ========== 2.5) “下一张”/“上一张”/“跳转” 函数 ==========
     function nextSlide() {
       if (isAnimating) return;
       currentIndex++;
       scrollToIndex(currentIndex, true);
-      handleResetAfterAnimation();
+
+      // 等待滚动完成后修正(如果是克隆slide)
+      resetAfterAnimation();
     }
+
     function prevSlide() {
       if (isAnimating) return;
       currentIndex--;
       scrollToIndex(currentIndex, true);
-      handleResetAfterAnimation();
-    }
-    function jumpToSlide(i) {
-      if (isAnimating) return;
-      // i 是 0~(totalReal-1)
-      currentIndex = i + 1; // +1 因为前面多了一个 lastClone
-      scrollToIndex(currentIndex, true);
-      handleResetAfterAnimation();
+
+      // 等待滚动完成后修正
+      resetAfterAnimation();
     }
 
-    // ===== 2.5) “克隆”位置 => 瞬间跳回真实slide =====
-    let scrollEndTimer = null;
-    function handleResetAfterAnimation() {
-      // 手动做一个延时，等待scroll动画结束后，若当前在克隆slide，就瞬间跳转
+    function jumpToSlide(i) {
+      if (isAnimating) return;
+      // i 是0~(totalReal-1)
+      currentIndex = i + 1; // 因为克隆了一个头部
+      scrollToIndex(currentIndex, true);
+
+      resetAfterAnimation();
+    }
+
+    // ========== 2.6) “无限”循环的关键: 当滑到克隆slide时，瞬间跳回真实slide ==========
+    function resetAfterAnimation() {
+      // 此处无法用transitionend, 因为我们用scroll-snap
+      // 做法：监听scroll事件 + setTimeout判断是否已停止滚动
+      // 当停止滚动后, 若currentIndex在克隆位置, 立刻jump到真实位置(不动画)
+      // 同时刷新类名
       if (scrollEndTimer) clearTimeout(scrollEndTimer);
       scrollEndTimer = setTimeout(() => {
         fixCloneIndex();
         updateClasses();
         isAnimating = false;
-      }, 300); // 300ms可根据滚动速度微调
+      }, 200); // 这里的200ms可根据滚动速度做微调
     }
 
+    let scrollEndTimer = null;
     function fixCloneIndex() {
-      // 如果在最左侧(0) => 跳到最后一张真实
+      // 若当前Index在0(头部克隆) => 跳到最后一张真实slide
       if (currentIndex === 0) {
         currentIndex = totalReal;
-        scrollToIndex(currentIndex, false); // 不加动画
+        scrollToIndex(currentIndex, false); // 无动画瞬间调回
       }
-      // 如果在最右侧(slides.length - 1) => 跳到第1张真实
+      // 若当前Index在最后(尾部克隆) => 跳到第1张真实slide
       else if (currentIndex === slides.length - 1) {
         currentIndex = 1;
         scrollToIndex(currentIndex, false);
       }
     }
 
-    // ===== 2.6) 自动播放 =====
-    let autoInterval = setInterval(nextSlide, 5000);
-    function resetAutoInterval() {
-      clearInterval(autoInterval);
-      autoInterval = setInterval(nextSlide, 5000);
+    // ========== 2.7) 自动播放 ==========
+    let interval = setInterval(nextSlide, 5000);
+    function resetInterval() {
+      clearInterval(interval);
+      interval = setInterval(nextSlide, 5000);
     }
 
-    // ===== 2.7) 绑定事件：前后按钮 / dots点击 / slide点击 / touch滑动 =====
+    // ========== 2.8) 绑定按钮/点/点击slide事件 ==========
     prevBtn?.addEventListener("click", (e) => {
       e.stopPropagation();
       prevSlide();
-      resetAutoInterval();
+      resetInterval();
     });
     nextBtn?.addEventListener("click", (e) => {
       e.stopPropagation();
       nextSlide();
-      resetAutoInterval();
+      resetInterval();
     });
+
     dots.forEach((dot, i) => {
       dot.addEventListener("click", (e) => {
         e.stopPropagation();
         jumpToSlide(i);
-        resetAutoInterval();
+        resetInterval();
       });
     });
 
-    // 点击左右预览
     slides.forEach((slide, idx) => {
       slide.addEventListener("click", (e) => {
+        // 若本身是active, 则允许点击
         if (slide.classList.contains("active")) {
-          // 可点击链接
           return;
         } else if (slide.classList.contains("next")) {
           e.preventDefault();
           nextSlide();
-          resetAutoInterval();
+          resetInterval();
         } else if (slide.classList.contains("prev")) {
           e.preventDefault();
           prevSlide();
-          resetAutoInterval();
+          resetInterval();
         }
       });
-      // 若有 .demo1-explore-btn，阻止冒泡
+      // 若有 .demo1-explore-btn，则阻止冒泡，确保可点
       const exploreBtn = slide.querySelector(".demo1-explore-btn");
       if (exploreBtn) {
         exploreBtn.addEventListener("click", (ev) => {
@@ -888,55 +946,67 @@
       }
     });
 
-    // 触摸滑动(手机端) => 阈值 20px
+    // ========== 2.9) 手机端触摸逻辑(为了更灵敏, 20px就触发) ==========
+    // 虽然Scroll Snap本身也支持手指滑动，但这里保留你原先的阈值习惯
     let startX = 0;
     let isSwiping = false;
-    track.addEventListener("touchstart", (e) => {
-      if (e.touches.length === 1) {
-        startX = e.touches[0].clientX;
-        isSwiping = true;
-      }
-    }, { passive: true });
-    track.addEventListener("touchmove", () => {}, { passive: true });
-    track.addEventListener("touchend", (e) => {
-      if (!isSwiping) return;
-      isSwiping = false;
-      const endX = e.changedTouches[0].clientX;
-      const diff = endX - startX;
-      if (Math.abs(diff) > 20) {
-        if (diff < 0) {
-          nextSlide();
-        } else {
-          prevSlide();
+    track.addEventListener(
+      "touchstart",
+      (e) => {
+        if (e.touches.length === 1) {
+          startX = e.touches[0].clientX;
+          isSwiping = true;
         }
-        resetAutoInterval();
-      }
-    }, { passive: true });
+      },
+      { passive: true }
+    );
+    track.addEventListener("touchmove", () => {}, { passive: true });
+    track.addEventListener(
+      "touchend",
+      (e) => {
+        if (!isSwiping) return;
+        isSwiping = false;
+        const endX = e.changedTouches[0].clientX;
+        const diff = endX - startX;
+        if (Math.abs(diff) > 20) {
+          if (diff < 0) {
+            nextSlide();
+          } else {
+            prevSlide();
+          }
+          resetInterval();
+        }
+      },
+      { passive: true }
+    );
 
-    // ===== 2.8) 初始化：先瞬间滚到真实索引1，更新class =====
+    // ========== 2.10) 初始化: 先更新宽度, 再滚动到初始位置, 再刷新类名 ==========
     function init() {
+      updateSlideWidth();
+      // 无动画瞬间滚到索引1(也就是第一张真实slide)
       scrollToIndex(currentIndex, false);
       updateClasses();
     }
 
-    init();
-
-    // 窗口变化时，可选做一些宽度/scroll-padding等计算
+    // 监听窗口变化 => 自适应宽度
     window.addEventListener("resize", () => {
-      // 如需动态计算 slide 宽度、scroll-padding，可在此执行
-      // 这里示例只做一次 fixCloneIndex 防止越界
-      fixCloneIndex();
+      // resize后位置和类名可能要重新计算
+      updateSlideWidth();
+      scrollToIndex(currentIndex, false);
       updateClasses();
     });
+
+    init();
   }
 
-  // ===== 3) 启动：等图片加载完后初始化 =====
+  // =============================
+  // 等待图片加载完再初始化
+  // =============================
   const slideImgs = Array.from(document.querySelectorAll(".demo1-carousel-slide img"));
   waitImagesLoaded(slideImgs, () => {
-    initScrollSnapCarousel();
+    initdemo1CarouselTrack();
   });
 })();
-
 
 </script>
 
