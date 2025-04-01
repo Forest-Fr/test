@@ -650,9 +650,9 @@ transform: translateY(0); /* 文字从下方上升 */
                       onclick="window.open('example.html', '_blank')">
                 Explore now
               </button>
-              <div class="natural1-text-bottom">模拟.Apple TV原生播放.</div>
+              <div class="natural1-text-bottom">模拟Scoll原生播放.</div>
             </div>
-            <div class="natural1-title">快闪等不益做自动播放</div>
+            <div class="natural1-title">未优化好的快闪</div>
           </div>
         </div>
       </div>
@@ -677,72 +677,83 @@ transform: translateY(0); /* 文字从下方上升 */
 
 <script>
 (function(){
-  // ============== A) 等图加载完后再启动 ==============
+  // ============== A) 等图片加载完后再启动 ==============
   const container = document.querySelector(".natural1-carousel-container");
-  if(container) container.style.visibility="hidden";
+  if (container) container.style.visibility = "hidden";
 
-  const allImgs= Array.from(document.querySelectorAll(".natural1-carousel-slide img"));
+  const allImgs = Array.from(document.querySelectorAll(".natural1-carousel-slide img"));
 
   function waitImagesLoaded(images, callback){
-    let loaded=0;
+    let loadedCount=0;
     const total= images.length;
-    if(total===0) {callback();return;}
-    images.forEach(img=>{
+    if(total===0){
+      callback();
+      return;
+    }
+    images.forEach((img)=>{
       if(img.complete){
-        check();
+        checkDone();
       } else {
-        img.addEventListener("load",check);
-        img.addEventListener("error",check);
+        img.addEventListener("load", checkDone);
+        img.addEventListener("error", checkDone);
       }
     });
-    function check(){
-      loaded++;
-      if(loaded>= total) callback();
+    function checkDone(){
+      loadedCount++;
+      if(loadedCount>= total){
+        callback();
+      }
     }
   }
 
+  // 等图片都加载完后 => 判断移动端 or 桌面端
   waitImagesLoaded(allImgs, ()=>{
     if(!container) return;
     const isMobile= window.innerWidth<=768;
     if(isMobile){
-      initSnapCarouselMobileSmooth(); // 移动端改良版
+      initSnapCarouselMobileSmooth(); // 移动端苹果式transform逻辑
     } else {
       initSnapCarouselDesktop();      // 桌面端原逻辑
     }
-    container.style.visibility="visible";
+    container.style.visibility= "visible";
   });
 
 
   // =====================================================================
-  // B) 移动端: 苹果式 transform + 三套Slides + gap=15 + 优化灵敏度
+  // B) 移动端: 苹果式 transform + 三套Slides + 无限循环改良
   // =====================================================================
   function initSnapCarouselMobileSmooth(){
-    console.log("[Carousel] Mobile triple-set transform + smooth approach...");
+    console.log("[Carousel] Mobile triple-set transform + infinite approach...");
 
     const track = document.querySelector(".natural1-carousel-track");
     const container= document.querySelector(".natural1-carousel-container");
     let slides= Array.from(track.querySelectorAll(".natural1-carousel-slide"));
+
     const prevBtn= document.querySelector(".natural1-carousel-prev");
     const nextBtn= document.querySelector(".natural1-carousel-next");
     const dots= Array.from(document.querySelectorAll(".natural1-carousel-dot"));
 
-    if(!track|| !container|| slides.length===0) return;
+    if(!track || !container || slides.length===0) return;
 
-    // 1) 多套
+    // 1) 多套(三倍克隆)
     const original= slides.slice();
     const totalReal= original.length;
     track.innerHTML="";
-    original.forEach(sl=> track.appendChild(sl.cloneNode(true))); // 1
-    original.forEach(sl=> track.appendChild(sl.cloneNode(true))); // 2
-    original.forEach(sl=> track.appendChild(sl.cloneNode(true))); // 3
+    // 第一套
+    original.forEach(sl=> track.appendChild(sl.cloneNode(true)));
+    // 中间套
+    original.forEach(sl=> track.appendChild(sl.cloneNode(true)));
+    // 第三套
+    original.forEach(sl=> track.appendChild(sl.cloneNode(true)));
     slides= Array.from(track.querySelectorAll(".natural1-carousel-slide"));
-    const totalSlides= slides.length;
+    const totalSlides= slides.length; // = 3 * totalReal
 
-    // 2) “单张宽 + gap=15”
-    let containerW=0, totalSlideW=0;
+    // 2) 计算“单张宽+gap=15”
+    let containerW=0, totalSlideW=0; 
     function updateSizes(){
       containerW= container.offsetWidth;
       if(slides.length>=2){
+        // 计算相邻两张的left差 => 含 gap
         const left1= slides[0].getBoundingClientRect().left;
         const left2= slides[1].getBoundingClientRect().left;
         totalSlideW= Math.round(left2- left1);
@@ -752,98 +763,100 @@ transform: translateY(0); /* 文字从下方上升 */
     }
     updateSizes();
 
+    // 中间套 => 索引= totalReal
     let currentIndex= totalReal;
     let currentTranslate=0;
+    const TRANSITION_TIME= 600; // ms
 
-    // 过渡更柔和: 0.6s cubic-bezier(0.22,1,0.36,1)
     function setTrackPos(value, withTrans=true){
+      // 用更柔和的 0.6s cubic-bezier
       track.style.transition= withTrans? "transform 0.6s cubic-bezier(0.22,1,0.36,1)" : "none";
       track.style.transform= `translateX(${value}px)`;
       currentTranslate= value;
     }
 
+    // offset= (容器宽 - (slide本身宽)) /2 
+    // slide本身宽= totalSlideW -15
     function getTargetTranslate(i){
-      const realSlideWidth= totalSlideW-15; // 每张纯宽
-      const offset= (containerW- realSlideWidth)/2;
+      const realSlideW= totalSlideW-15;
+      const offset= (containerW- realSlideW)/2;
       return -(i* totalSlideW)+ offset;
     }
 
     function goToIndex(i, anim=true){
-      if(i<0) i=0;
-      if(i>= totalSlides) i= totalSlides-1;
+      // 不限制 i>= totalSlides
       currentIndex= i;
-      setTrackPos(getTargetTranslate(i), anim);
+      const target= getTargetTranslate(i);
+      setTrackPos(target, anim);
       updateClasses();
     }
 
-    // 3) fixClone => 若处于第一/第三套边缘 => 无动画瞬移回中间
+    // fixClone => 保持在中间套
     function fixCloneIndex(){
-      const actI= getActiveIndexByTranslate();
-      if(actI<=1){
-        currentIndex= actI + totalReal;
+      const activeI= getActiveIndexByTranslate();
+      currentIndex= activeI;
+      if(activeI<=1){
+        currentIndex= activeI + totalReal;
         setTrackPos(getTargetTranslate(currentIndex), false);
-      } else if(actI>= (2*totalReal-1)){
-        currentIndex= (actI -2*totalReal) + totalReal;
+      } else if(activeI>= (2*totalReal-1)){
+        currentIndex= (activeI -2*totalReal)+ totalReal;
         setTrackPos(getTargetTranslate(currentIndex), false);
-      } else {
-        currentIndex= actI;
       }
       updateClasses();
-      resetAutoTimer(); // fix完也重置自动播放
+      resetAutoTimer(); // fix后重启auto
     }
 
-    // 4) getActiveIndex => 通过 currentTranslate
     function getActiveIndexByTranslate(){
-      const realSlideWidth= totalSlideW-15;
-      const offset= (containerW- realSlideWidth)/2;
-      const approximate= -(currentTranslate- offset)/ totalSlideW;
+      const realSlideW= totalSlideW-15;
+      const offset= (containerW- realSlideW)/2;
+      let approximate= -(currentTranslate- offset)/ totalSlideW;
       return Math.round(approximate);
     }
+    function mapToRealIndex(i){
+      return i % totalReal;
+    }
 
-    function mapToRealIndex(i){ return i % totalReal; }
-
+    // updateClasses => active/prev/next/shadow + dots
     function updateClasses(){
       const actI= getActiveIndexByTranslate();
       slides.forEach(s=> s.classList.remove("active","shadow","prev","next"));
-      slides[actI]?.classList.add("active");
+      if(slides[actI]) slides[actI].classList.add("active");
       const nextI= (actI+1)% totalSlides;
       const prevI= (actI-1+ totalSlides)% totalSlides;
       slides[nextI]?.classList.add("next");
       slides[prevI]?.classList.add("prev");
       slides.forEach(s=>{
-        if(!s.classList.contains("active")){
-          s.classList.add("shadow");
-        }
+        if(!s.classList.contains("active")) s.classList.add("shadow");
       });
       // dots
-      const dotI= mapToRealIndex(actI);
+      const dotIndex= mapToRealIndex(actI);
       dots.forEach((d,i)=>{
-        d.classList.toggle("active", i===dotI);
+        d.classList.toggle("active", i===dotIndex);
       });
     }
 
-    // 5) next/prev
+    // next/prev => 后面用 fixClone
     function nextSlide(){
       currentIndex++;
-      if(currentIndex>= totalSlides) currentIndex= totalSlides-1;
       goToIndex(currentIndex,true);
+      setTimeout(()=> fixCloneIndex(), TRANSITION_TIME);
       resetAutoTimer();
     }
     function prevSlide(){
       currentIndex--;
-      if(currentIndex<0) currentIndex= 0;
       goToIndex(currentIndex,true);
+      setTimeout(()=> fixCloneIndex(), TRANSITION_TIME);
       resetAutoTimer();
     }
 
-    // 6) auto
+    // auto
     let autoTimer= setInterval(nextSlide,5000);
     function resetAutoTimer(){
       clearInterval(autoTimer);
       autoTimer= setInterval(nextSlide,5000);
     }
 
-    // 7) events => btn/ dots/ slide-click
+    // events => btn/dots
     prevBtn?.addEventListener("click",(e)=>{
       e.stopPropagation();
       prevSlide();
@@ -857,6 +870,7 @@ transform: translateY(0); /* 文字从下方上升 */
         e.stopPropagation();
         currentIndex= i+ totalReal;
         goToIndex(currentIndex,true);
+        setTimeout(()=> fixCloneIndex(), TRANSITION_TIME);
         resetAutoTimer();
       });
     });
@@ -871,7 +885,6 @@ transform: translateY(0); /* 文字从下方上升 */
           e.preventDefault();
           prevSlide();
         }
-        resetAutoTimer();
       });
       const exploreBtn= sl.querySelector(".natural1-explore-btn");
       if(exploreBtn){
@@ -881,7 +894,7 @@ transform: translateY(0); /* 文字从下方上升 */
       }
     });
 
-    // 8) touch => “苹果式”手势 => threshold=10, 并可加微小速度判断
+    // touch => 手势
     let startX=0, isDragging=false, dragStart=0, startTime=0;
     track.style.transition="none";
 
@@ -891,55 +904,42 @@ transform: translateY(0); /* 文字从下方上升 */
         track.style.transition="none";
         startX= e.touches[0].clientX;
         dragStart= currentTranslate;
-        startTime= Date.now(); // 用于判断滑动速度
+        startTime= Date.now();
       }
-    },{passive:false}); // 允许 e.preventDefault
-
+    },{passive:false});
     track.addEventListener("touchmove",(e)=>{
       if(!isDragging) return;
-      // 可 preventDefault() 以阻止页面滚动
       e.preventDefault();
-
       const diff= e.touches[0].clientX- startX;
-      const newX= dragStart+ diff;
-      track.style.transform= `translateX(${newX}px)`;
-      currentTranslate= newX;
+      track.style.transform= `translateX(${dragStart+ diff}px)`;
+      currentTranslate= dragStart+ diff;
     },{passive:false});
-
     track.addEventListener("touchend",(e)=>{
       if(!isDragging) return;
       isDragging= false;
-
-      // 计算手势速度
-      const dist= e.changedTouches[0].clientX- startX;
-      const elapsed= (Date.now()- startTime);
-      const speed= dist/ elapsed;  // px/ms
-
-      // 设置过渡
       track.style.transition= "transform 0.6s cubic-bezier(0.22,1,0.36,1)";
-      // threshold=10 =>更灵敏
+
+      const dist= e.changedTouches[0].clientX- startX;
+      const elapsed= Date.now()- startTime;
+      const speed= dist/ elapsed;
       if(Math.abs(dist)>10){
-        // 简单速度判断 => 若|speed|>0.5 => 强制下个slide
-        if(speed<-0.5){
-          nextSlide();
+        if(speed<-0.5){ 
+          nextSlide(); 
           return;
-        } else if(speed>0.5){
+        } else if(speed>0.5){ 
           prevSlide();
           return;
         }
-        // 否则 => normal
-        if(dist<0){
-          nextSlide();
-        } else {
-          prevSlide();
-        }
+        if(dist<0) nextSlide();
+        else prevSlide();
       } else {
-        // 回到当前
         goToIndex(currentIndex,true);
+        setTimeout(()=> fixCloneIndex(), TRANSITION_TIME);
+        resetAutoTimer();
       }
     },{passive:false});
 
-    // 9) resize
+    // resize
     window.addEventListener("resize",()=>{
       updateSizes();
       setTrackPos( getTargetTranslate(currentIndex), false);
@@ -960,6 +960,7 @@ transform: translateY(0); /* 文字从下方上升 */
   // =====================================================================
   function initSnapCarouselDesktop(){
     console.log("[Carousel] Desktop => Original logic (unchanged).");
+
 
     /* ========== 你的原桌面端函数, 不变 ========== */
     const container = document.querySelector(".natural1-carousel-container");
@@ -1164,6 +1165,7 @@ transform: translateY(0); /* 文字从下方上升 */
 
 })();
 </script>
+
 
 
 
