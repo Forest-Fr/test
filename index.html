@@ -687,22 +687,20 @@ transform: translateY(0); /* 文字从下方上升 */
 
 <script>
 (function(){
-  // ============== A) 等图片加载完后再执行 ==============
+  // ============== A) 等所有slide图片加载完，再初始化 ==============
   const container = document.querySelector(".natural1-carousel-container");
-  if (container) {
-    container.style.visibility = "hidden";
-  }
+  if (container) container.style.visibility = "hidden";
   const allImgs = Array.from(document.querySelectorAll(".natural1-carousel-slide img"));
 
   function waitImagesLoaded(images, callback) {
-    let loadedCount = 0;
-    const total = images.length;
-    if (total===0) {
+    let loadedCount=0;
+    const total= images.length;
+    if(total===0){
       callback();
       return;
     }
     images.forEach((img)=>{
-      if(img.complete) {
+      if(img.complete){
         checkDone();
       } else {
         img.addEventListener("load", checkDone);
@@ -719,22 +717,22 @@ transform: translateY(0); /* 文字从下方上升 */
 
   waitImagesLoaded(allImgs, ()=>{
     if(!container) return;
-    // 判断移动端 or 桌面端
+    // 如果移动端 => initMobile; 否则 => initDesktop
     const isMobile= window.innerWidth<=768;
     if(isMobile){
-      initSnapCarouselMobileSmooth();
+      initSnapCarouselMobile(); // 新增的三套Slides逻辑
     } else {
-      initSnapCarouselDesktopOriginal(); // 保留桌面端原逻辑
+      initSnapCarouselDesktop(); // 保留你提供的原桌面端逻辑
     }
     container.style.visibility= "visible";
   });
 
 
-  // ==========================================================
-  // B) 手机端：三套Slides + 减少回弹/闪白
-  // ==========================================================
-  function initSnapCarouselMobileSmooth(){
-    console.log("[Carousel] Mobile triple-set, smoother transition from last to next...");
+  // ==============================================================
+  // B) 移动端: 三套Slides + Peek Preview + 无缝环绕
+  // ==============================================================
+  function initSnapCarouselMobile(){
+    console.log("[Carousel] Mobile triple-set approach (optimized).");
 
     const track = document.querySelector(".natural1-carousel-track");
     const container= document.querySelector(".natural1-carousel-container");
@@ -744,23 +742,26 @@ transform: translateY(0); /* 文字从下方上升 */
     const nextBtn= document.querySelector(".natural1-carousel-next");
     const dots= Array.from(document.querySelectorAll(".natural1-carousel-dot"));
 
-    if(!track|| slides.length===0|| !container) return;
+    if(!track|| slides.length===0 || !container) return;
 
     // 1) 原始slides
     const original= slides.slice();
     const totalReal= original.length;
 
-    // 2) 清空, 三套
-    track.innerHTML= "";
-    original.forEach(sl=> track.appendChild(sl.cloneNode(true))); // 第一套
-    original.forEach(sl=> track.appendChild(sl.cloneNode(true))); // 中间套
-    original.forEach(sl=> track.appendChild(sl.cloneNode(true))); // 第三套
+    // 2) 清空 track, 三套
+    track.innerHTML="";
+    //   第一套
+    original.forEach(sl=> track.appendChild(sl.cloneNode(true)));
+    //   第二套(中间)
+    original.forEach(sl=> track.appendChild(sl.cloneNode(true)));
+    //   第三套
+    original.forEach(sl=> track.appendChild(sl.cloneNode(true)));
 
     slides= Array.from(track.querySelectorAll(".natural1-carousel-slide"));
-    const totalSlides= slides.length; // 3* totalReal
-    let currentIndex= totalReal;      // 中间套开始
+    const totalSlides= slides.length; // 3 * totalReal
+    let currentIndex= totalReal; // 中间套开始
 
-    // scrollToIndex
+    // 2.1) 滚到指定索引
     function scrollToIndex(i, smooth=true){
       if(i<0) i=0;
       if(i>= totalSlides) i= totalSlides-1;
@@ -769,12 +770,12 @@ transform: translateY(0); /* 文字从下方上升 */
       track.style.scrollBehavior= smooth?"smooth":"auto";
       target.scrollIntoView({
         behavior: smooth?"smooth":"auto",
-        block: "nearest",
-        inline: "center"
+        block:"nearest",
+        inline:"center"
       });
     }
 
-    // 初始化
+    // 2.2) 初始化 => 滚到中间套
     function init(){
       track.style.scrollBehavior="auto";
       scrollToIndex(currentIndex,false);
@@ -782,7 +783,7 @@ transform: translateY(0); /* 文字从下方上升 */
       updateClasses();
     }
 
-    // 计算激活
+    // 2.3) 计算当前激活
     function getActiveIndex(){
       const cRect= container.getBoundingClientRect();
       const cCenter= cRect.left + cRect.width/2;
@@ -799,15 +800,17 @@ transform: translateY(0); /* 文字从下方上升 */
       return activeI;
     }
 
+    // mapToRealIndex => 0.. (totalReal-1)
     function mapToRealIndex(i){
       return i % totalReal;
     }
 
-    // updateClasses + dots
+    // 2.4) 更新类名 + dots
     function updateClasses(){
       const activeI= getActiveIndex();
-      slides.forEach(s=> s.classList.remove("active","shadow","prev","next"));
+      slides.forEach(s=> s.classList.remove("active","prev","next","shadow"));
       slides[activeI]?.classList.add("active");
+
       const nextI= (activeI+1)% totalSlides;
       const prevI= (activeI-1+ totalSlides)% totalSlides;
       slides[nextI]?.classList.add("next");
@@ -824,38 +827,41 @@ transform: translateY(0); /* 文字从下方上升 */
       });
     }
 
-    // fixCloneIndex => 提前or延后判断
+    // 2.5) 修正(若到第一/第三套 => 回中间套)
     function fixCloneIndex(){
       const activeI= getActiveIndex();
-      // 第1套 => [0.. totalReal-1], 中间 => [totalReal.. 2*totalReal-1], 第3套 => [2*totalReal.. 3*totalReal-1]
-
-      // 若到第1套最右几张 (activeI <=1), 提前平滑到中间套
-      if(activeI<=1){
+      // 第1套 => [0.. totalReal-1]
+      if(activeI< totalReal){
         const realI= activeI;
         currentIndex= realI+ totalReal;
-        scrollToIndex(currentIndex,true);
+        track.style.scrollBehavior="auto";
+        scrollToIndex(currentIndex,false);
+        track.style.scrollBehavior="smooth";
       }
-      // 若到第3套最左几张 => activeI >= 2*totalReal-1
-      else if(activeI>= (2*totalReal-1)){
+      // 第3套 => [2*totalReal..(3*totalReal-1)]
+      else if(activeI>= 2*totalReal){
         const realI= activeI- 2*totalReal;
-        currentIndex= realI + totalReal;
-        scrollToIndex(currentIndex,true);
+        currentIndex= realI+ totalReal;
+        track.style.scrollBehavior="auto";
+        scrollToIndex(currentIndex,false);
+        track.style.scrollBehavior="smooth";
       }
       else {
         currentIndex= activeI;
       }
     }
 
-    let scrollTimer= null;
-    track.addEventListener("scroll",()=>{
+    // 2.6) scroll事件 => fix + update
+    let scrollTimer=null;
+    track.addEventListener("scroll", ()=>{
       if(scrollTimer) clearTimeout(scrollTimer);
       scrollTimer= setTimeout(()=>{
         fixCloneIndex();
         updateClasses();
-      }, 150);
+      },150);
     });
 
-    // next/prev
+    // 2.7) 切换 => next/prev
     function nextSlide(){
       currentIndex++;
       if(currentIndex>= totalSlides) currentIndex= totalSlides-1;
@@ -867,20 +873,20 @@ transform: translateY(0); /* 文字从下方上升 */
       scrollToIndex(currentIndex,true);
     }
 
-    // 自动播放
-    let autoTimer= setInterval(nextSlide, 5000);
+    // 2.8) 自动播放
+    let autoTimer= setInterval(nextSlide,5000);
     function resetAutoTimer(){
       clearInterval(autoTimer);
       autoTimer= setInterval(nextSlide,5000);
     }
 
-    // 按钮 + dots
-    prevBtn?.addEventListener("click",(e)=>{
+    // 2.9) 按钮 + dots
+    prevBtn?.addEventListener("click", e=>{
       e.stopPropagation();
       prevSlide();
       resetAutoTimer();
     });
-    nextBtn?.addEventListener("click",(e)=>{
+    nextBtn?.addEventListener("click", e=>{
       e.stopPropagation();
       nextSlide();
       resetAutoTimer();
@@ -894,7 +900,7 @@ transform: translateY(0); /* 文字从下方上升 */
       });
     });
 
-    // 点击slide => next/prev
+    // 2.10) slide点击 => next/prev
     slides.forEach(sl=>{
       sl.addEventListener("click",(e)=>{
         if(sl.classList.contains("active")){
@@ -917,7 +923,7 @@ transform: translateY(0); /* 文字从下方上升 */
       }
     });
 
-    // 触摸滑动
+    // 2.11) 触摸滑动
     let startX=0, isSwiping=false;
     track.addEventListener("touchstart",(e)=>{
       if(e.touches.length===1){
@@ -936,19 +942,21 @@ transform: translateY(0); /* 文字从下方上升 */
       }
     }, {passive:true});
 
-    window.addEventListener("resize",()=>{
+    // 2.12) resize => fix
+    window.addEventListener("resize", ()=>{
       fixCloneIndex();
       updateClasses();
     });
 
+    // init
     init();
   }
 
 
   // =====================================================================
-  // C) 桌面端逻辑：你的原脚本
+  // C) 桌面端: 保留你原桌面端逻辑(只克隆首尾)
   // =====================================================================
-  function initSnapCarouselDesktopOriginal(){
+  function initSnapCarouselDesktop(){
     console.log("[Carousel] Desktop => Original logic (unchanged).");
 
     const container = document.querySelector(".natural1-carousel-container");
@@ -1114,7 +1122,7 @@ transform: translateY(0); /* 文字从下方上升 */
     dots.forEach((dot,i)=>{
       dot.addEventListener("click",(e)=>{
         e.stopPropagation();
-        currentIndex= i+1;
+        currentIndex= i+1; // dot i => slides[i+1]
         scrollToIndex(currentIndex,true);
         resetAutoTimer();
       });
@@ -1153,7 +1161,7 @@ transform: translateY(0); /* 文字从下方上升 */
     track.addEventListener("touchend",(e)=>{
       if(!isSwiping) return;
       isSwiping= false;
-      const diff= e.changedTouches[0].clientX- startX;
+      const diff= e.changedTouches[0].clientX - startX;
       if(Math.abs(diff)>20){
         diff<0? nextSlide(): prevSlide();
         resetAutoTimer();
@@ -1176,8 +1184,22 @@ transform: translateY(0); /* 文字从下方上升 */
     });
   }
 
+
+  // ====================================================
+  // ============== 入口：调用“桌面/移动端” ==============
+  // ====================================================
+  function initSnapCarousel(){
+    const isMobile= window.innerWidth<=768;
+    if(isMobile){
+      initSnapCarouselMobile();
+    } else {
+      initSnapCarouselDesktop();
+    }
+  }
+
 })();
 </script>
+
 
 
 
