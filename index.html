@@ -337,8 +337,8 @@ display: inline-block;
   }
 
   .natural1-carousel-slide {
-        flex: 0 0 auto;
-    width:66vw;
+       flex: 0 0 66vw; /* ✅ 保证主图宽度，单位 vw 更直观 */
+      scroll-snap-align: center;
 height: 495px;
     /* 去掉scroll-snap-align */
     position: relative;
