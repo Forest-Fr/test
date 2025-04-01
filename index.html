@@ -321,20 +321,18 @@ display: inline-block;
 
   .natural1-carousel-container {
     position: relative;
-    width: 100vw;
-    padding-left: calc((100vw - 66vw) / 2);
-    padding-right: calc((100vw - 66vw) / 2);
-    margin: 0 auto;
-    overflow-x: hidden;
-height:495px;
+  width: 100vw;
+  /* ✅ 去掉左右 padding */
+  padding: 0;
+  margin: 0 auto;
+  overflow-x: visible; /* ✅ 允许两侧图片 peek 出来 */
+  height: 495px;
   }
   .natural1-carousel-container::-webkit-scrollbar {
     display: none;
   }
 
   .natural1-carousel-track {
-   padding: 0 10%; /* 保证两侧可见 */
-        min-height: auto;
     display: flex;
     gap: 15px;
     align-items: center;
@@ -347,8 +345,7 @@ height:495px;
   }
 
   .natural1-carousel-slide {
-  flex: 0 0 auto;
-  width: 66vw; /* 控制单张图片不占满整个屏幕 */
+   flex: 0 0 66vw; /* ✅ 保证主图宽度，单位 vw 更直观 */
       scroll-snap-align: center;
       height: 495px;
       position: relative;
