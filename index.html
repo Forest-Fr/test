@@ -317,6 +317,7 @@ display: inline-block;
   .natural1-carousel-container {
     position: relative;
     width: 100vw;
+  padding: 0;
     margin: 0 auto;
     overflow: hidden;  /* ✅ 让JS控制transform, 所以改为hidden */
     height: 495px;
@@ -341,6 +342,7 @@ display: inline-block;
     /* 去掉scroll-snap-align */
     position: relative;
     box-sizing: border-box;
+aspect-ratio: 9 / 16;
   }
 
   .natural1-carousel-slide img {
@@ -348,6 +350,8 @@ display: inline-block;
     height: 100%;
     object-fit: cover;
     display: block;
+    filter: none !important;
+    opacity: 1 !important;
   }
 
   .natural1-carousel-slide.shadow {
