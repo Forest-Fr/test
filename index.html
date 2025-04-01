@@ -325,22 +325,20 @@ display: inline-block;
 
   /* 让 track 在移动端用“inline块 + transform”方式 */
   .natural1-carousel-track {
-    /* 原先: overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; */
-    /* 全部移除，以免冲突 */
-    overflow: visible; /* or hidden, but usually visible here is fine */
-    white-space: nowrap;  /* 横向排列 */
-    gap: 15px;   /* 你保留的间距 */
-    /* 不再依赖 scroll-behavior or scroll-snap */
-    transition: none; /* JS会自己设置transition, 以备 transform */
-    position: relative; /* for transform positioning if needed */
+     /* 用flex + gap */
+    display: flex;
+    gap: 15px;  /* 让卡片之间有15px距离 */
+    /* 去掉 scroll-snap */
+    overflow: visible;
+    white-space: nowrap; /* 可去掉，也可保留，只要是flex本身就会管布局 */
+    position: relative;  /* 让JS transform可以工作 */
+    transition: none;
   }
 
   .natural1-carousel-slide {
-    display: inline-block;
-    width: 66vw; 
+ flex: 0 0 66vw; /* 保持每张66vw宽度 */
     height: 495px;
-    /* 移除 scroll-snap-align: center; */
-    vertical-align: top;
+    /* 去掉scroll-snap-align */
     position: relative;
     box-sizing: border-box;
   }
