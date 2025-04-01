@@ -687,99 +687,87 @@ transform: translateY(0); /* 文字从下方上升 */
 
 <script>
 (function(){
-  // =============== A. 通用辅助函数：等待图片加载、隐藏容器 ===============
-  const container = document.querySelector(".demo1-carousel-container");
-  if (container) container.style.visibility = "hidden"; // 避免加载时闪动
-  const allImgs = Array.from(document.querySelectorAll(".demo1-carousel-slide img"));
+  // ============== A) 等所有slide图片加载完，再初始化 ==============
+  const container = document.querySelector(".natural1-carousel-container");
+  if (container) container.style.visibility = "hidden";
+  const allImgs = Array.from(document.querySelectorAll(".natural1-carousel-slide img"));
 
   function waitImagesLoaded(images, callback) {
-    let loadedCount = 0;
-    const total = images.length;
-    if (total === 0) {
+    let loadedCount=0;
+    const total= images.length;
+    if(total===0){
       callback();
       return;
     }
-    images.forEach((img) => {
-      if (img.complete) {
+    images.forEach((img)=>{
+      if(img.complete){
         checkDone();
       } else {
         img.addEventListener("load", checkDone);
         img.addEventListener("error", checkDone);
       }
     });
-    function checkDone() {
+    function checkDone(){
       loadedCount++;
-      if (loadedCount >= total) {
+      if(loadedCount>= total){
         callback();
       }
     }
   }
 
-  waitImagesLoaded(allImgs, () => {
-    // 等图片加载完后 => 判断屏幕宽度 => 分别初始化
-    const isMobile = window.innerWidth <= 768;
-    if (!container) return;
-
-    if (isMobile) {
-      initSnapCarouselMobile();  // B. 移动端(三套Slides)
+  waitImagesLoaded(allImgs, ()=>{
+    if(!container) return;
+    // 如果移动端 => initMobile; 否则 => initDesktop
+    const isMobile= window.innerWidth<=768;
+    if(isMobile){
+      initSnapCarouselMobile(); // 新增的三套Slides逻辑
     } else {
-      initSnapCarouselDesktop(); // C. 桌面端(原逻辑, 首尾克隆)
+      initSnapCarouselDesktop(); // 保留你提供的原桌面端逻辑
     }
-    container.style.visibility = "visible";
+    container.style.visibility= "visible";
   });
 
 
-  // =============== B. 移动端脚本：三套Slides环绕法(真正无缝) ===============
+  // ==============================================================
+  // B) 移动端: 三套Slides + Peek Preview + 无缝环绕
+  // ==============================================================
   function initSnapCarouselMobile(){
-    console.log("[Carousel] Using Mobile triple-set approach...");
-    const track = document.querySelector(".demo1-carousel-track");
-    const container = document.querySelector(".demo1-carousel-container");
-    let slides = Array.from(track.querySelectorAll(".demo1-carousel-slide"));
-    const prevBtn = document.querySelector(".demo1-carousel-prev");
-    const nextBtn = document.querySelector(".demo1-carousel-next");
-    const dots = Array.from(document.querySelectorAll(".demo1-carousel-dot"));
+    console.log("[Carousel] Mobile triple-set approach (optimized).");
 
-    if (!track || slides.length===0) return;
+    const track = document.querySelector(".natural1-carousel-track");
+    const container= document.querySelector(".natural1-carousel-container");
+    let slides= Array.from(track.querySelectorAll(".natural1-carousel-slide"));
 
-    // 1) 先把原始slides收集(真实数量)
-    const originalSlides = slides; 
-    const totalReal = originalSlides.length;
+    const prevBtn= document.querySelector(".natural1-carousel-prev");
+    const nextBtn= document.querySelector(".natural1-carousel-next");
+    const dots= Array.from(document.querySelectorAll(".natural1-carousel-dot"));
 
-    // 2) 清空track, 创建三套slides (可根据需求2~3套)
-    track.innerHTML = "";
-    // (a) 第1套 (克隆)
-    originalSlides.forEach(sl => {
-      const clone = sl.cloneNode(true);
-      track.appendChild(clone);
-    });
-    // (b) 第2套(中间套, 主套)
-    originalSlides.forEach(sl => {
-      const clone = sl.cloneNode(true);
-      track.appendChild(clone);
-    });
-    // (c) 第3套(克隆)
-    originalSlides.forEach(sl => {
-      const clone = sl.cloneNode(true);
-      track.appendChild(clone);
-    });
+    if(!track|| slides.length===0 || !container) return;
 
-    // 3) 获取新的slides
-    slides = Array.from(track.querySelectorAll(".demo1-carousel-slide"));
-    const totalSlides = slides.length; // e.g. 3 * totalReal
+    // 1) 原始slides
+    const original= slides.slice();
+    const totalReal= original.length;
 
-    // 4) 计算"中间套"起始索引
-    //    第1套 = [0..totalReal-1], 中间套= [totalReal..(2*totalReal -1)], 第3套= [2*totalReal..(3*totalReal-1)]
-    //    中间套的起始= totalReal
-    //    currentIndex => totalReal(指向中间套的第一张)
-    let currentIndex = totalReal; 
+    // 2) 清空 track, 三套
+    track.innerHTML="";
+    //   第一套
+    original.forEach(sl=> track.appendChild(sl.cloneNode(true)));
+    //   第二套(中间)
+    original.forEach(sl=> track.appendChild(sl.cloneNode(true)));
+    //   第三套
+    original.forEach(sl=> track.appendChild(sl.cloneNode(true)));
 
-    // 5) 辅助函数: scrollToIndex
-    function scrollToIndex(idx, smooth=true) {
-      if (idx<0) idx=0;
-      if (idx>= totalSlides) idx= totalSlides-1;
-      const target = slides[idx];
-      if (!target) return;
-      track.style.scrollBehavior = smooth ? "smooth":"auto";
+    slides= Array.from(track.querySelectorAll(".natural1-carousel-slide"));
+    const totalSlides= slides.length; // 3 * totalReal
+    let currentIndex= totalReal; // 中间套开始
+
+    // 2.1) 滚到指定索引
+    function scrollToIndex(i, smooth=true){
+      if(i<0) i=0;
+      if(i>= totalSlides) i= totalSlides-1;
+      const target= slides[i];
+      if(!target) return;
+      track.style.scrollBehavior= smooth?"smooth":"auto";
       target.scrollIntoView({
         behavior: smooth?"smooth":"auto",
         block:"nearest",
@@ -787,312 +775,112 @@ transform: translateY(0); /* 文字从下方上升 */
       });
     }
 
-    // 6) 初始化 => 瞬间滚到中间套第一张
+    // 2.2) 初始化 => 滚到中间套
     function init(){
-      track.style.scrollBehavior = "auto";
-      scrollToIndex(currentIndex,false); 
-      track.style.scrollBehavior = "smooth";
+      track.style.scrollBehavior="auto";
+      scrollToIndex(currentIndex,false);
+      track.style.scrollBehavior="smooth";
       updateClasses();
     }
 
-    // 7) 根据容器中心获取最接近的slide索引
+    // 2.3) 计算当前激活
     function getActiveIndex(){
-      const cRect = container.getBoundingClientRect();
-      const cCenter = cRect.left + cRect.width/2;
+      const cRect= container.getBoundingClientRect();
+      const cCenter= cRect.left + cRect.width/2;
       let minDiff= Infinity, activeI= currentIndex;
-      slides.forEach((sl,i) => {
-        const slRect = sl.getBoundingClientRect();
-        const slCenter = slRect.left + slRect.width/2;
-        const diff = Math.abs(slCenter - cCenter);
-        if (diff<minDiff) {
-          minDiff=diff; 
-          activeI=i;
+      slides.forEach((sl,i)=>{
+        const slRect= sl.getBoundingClientRect();
+        const slCenter= slRect.left + slRect.width/2;
+        const diff= Math.abs(slCenter- cCenter);
+        if(diff< minDiff){
+          minDiff= diff;
+          activeI= i;
         }
       });
       return activeI;
     }
 
-    // 8) 从 slidesIndex 推算 "对应真实slide" 方便更新dots/overlay
-    //    公式: (slidesIndex mod totalReal) => [0..totalReal-1]
-    function mapToRealIndex(slIndex){
-      // 先让slIndex落在 0..(3*totalReal-1)
-      // 真实Index => slIndex % totalReal
-      return (slIndex % totalReal);
+    // mapToRealIndex => 0.. (totalReal-1)
+    function mapToRealIndex(i){
+      return i % totalReal;
     }
 
-    // 9) 更新类名/阴影/prev/next/dots
-    function updateClasses() {
-      const activeI = getActiveIndex();
-      slides.forEach(sl => {
-        sl.classList.remove("active","shadow","prev","next");
-      });
-      if (slides[activeI]) slides[activeI].classList.add("active");
+    // 2.4) 更新类名 + dots
+    function updateClasses(){
+      const activeI= getActiveIndex();
+      slides.forEach(s=> s.classList.remove("active","prev","next","shadow"));
+      slides[activeI]?.classList.add("active");
 
-      const nextI = (activeI +1) % totalSlides;
-      const prevI = (activeI -1 + totalSlides) % totalSlides;
+      const nextI= (activeI+1)% totalSlides;
+      const prevI= (activeI-1+ totalSlides)% totalSlides;
       slides[nextI]?.classList.add("next");
       slides[prevI]?.classList.add("prev");
-
-      slides.forEach((sl) => {
-        if (!sl.classList.contains("active")) {
-          sl.classList.add("shadow");
+      slides.forEach(s=>{
+        if(!s.classList.contains("active")){
+          s.classList.add("shadow");
         }
       });
-
-      // dotIndex => mapToRealIndex(activeI)
-      const dotIndex = mapToRealIndex(activeI);
-      dots.forEach((dot, i) => {
-        dot.classList.toggle("active", i===dotIndex);
+      // dots
+      const dotIndex= mapToRealIndex(activeI);
+      dots.forEach((d,i)=>{
+        d.classList.toggle("active", i===dotIndex);
       });
     }
 
-    // 10) 修正环绕(若滑到第1套或第3套时 => 瞬间跳回中间套对应slide)
-    function fixCloneIndex() {
-      const activeI = getActiveIndex();
-      // 如果activeI在 [0..(totalReal-1)] => 第1套
-      if (activeI < totalReal){
-        // 对应的 "真实" => activeI
-        // 中间套索引 => activeI + totalReal
-        currentIndex = activeI + totalReal;
+    // 2.5) 修正(若到第一/第三套 => 回中间套)
+    function fixCloneIndex(){
+      const activeI= getActiveIndex();
+      // 第1套 => [0.. totalReal-1]
+      if(activeI< totalReal){
+        const realI= activeI;
+        currentIndex= realI+ totalReal;
         track.style.scrollBehavior="auto";
         scrollToIndex(currentIndex,false);
         track.style.scrollBehavior="smooth";
       }
-      // 如果activeI在 [2*totalReal..(3*totalReal -1)] => 第3套
-      else if (activeI >= 2*totalReal){
-        // 对应真实 => activeI - 2*totalReal
-        // 中间套索引 => (activeI -2*totalReal) + totalReal
-        const realI = activeI - 2*totalReal;
-        currentIndex = realI + totalReal;
+      // 第3套 => [2*totalReal..(3*totalReal-1)]
+      else if(activeI>= 2*totalReal){
+        const realI= activeI- 2*totalReal;
+        currentIndex= realI+ totalReal;
         track.style.scrollBehavior="auto";
         scrollToIndex(currentIndex,false);
         track.style.scrollBehavior="smooth";
       }
       else {
-        // 在中间套
         currentIndex= activeI;
       }
     }
 
-    // 11) scroll事件 => fix & update
+    // 2.6) scroll事件 => fix + update
     let scrollTimer=null;
     track.addEventListener("scroll", ()=>{
       if(scrollTimer) clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(()=>{
+      scrollTimer= setTimeout(()=>{
         fixCloneIndex();
         updateClasses();
       },150);
     });
 
-    // 12) 切换函数 => next/prev
+    // 2.7) 切换 => next/prev
     function nextSlide(){
-      // 先切+1
       currentIndex++;
-      if (currentIndex >= totalSlides) currentIndex = totalSlides-1;
+      if(currentIndex>= totalSlides) currentIndex= totalSlides-1;
       scrollToIndex(currentIndex,true);
     }
     function prevSlide(){
       currentIndex--;
-      if (currentIndex<0) currentIndex=0;
+      if(currentIndex<0) currentIndex=0;
       scrollToIndex(currentIndex,true);
     }
 
-    // 13) 自动播放
-    let autoTimer = setInterval(nextSlide, 5000);
-    function resetAutoTimer(){
-      clearInterval(autoTimer);
-      autoTimer = setInterval(nextSlide, 5000);
-    }
-
-    // 14) 前后按钮 + dots + 点击slide
-    prevBtn?.addEventListener("click", e=>{
-      e.stopPropagation();
-      prevSlide();
-      resetAutoTimer();
-    });
-    nextBtn?.addEventListener("click", e=>{
-      e.stopPropagation();
-      nextSlide();
-      resetAutoTimer();
-    });
-    dots.forEach((dot,i)=>{
-      dot.addEventListener("click", e=>{
-        e.stopPropagation();
-        // user wants go to "中间套"+"i"
-        currentIndex = i + totalReal; // middleSet start= totalReal
-        scrollToIndex(currentIndex,true);
-        resetAutoTimer();
-      });
-    });
-    slides.forEach((slide)=>{
-      slide.addEventListener("click", e=>{
-        if (slide.classList.contains("active")){
-          // do nothing
-        } else if (slide.classList.contains("next")){
-          e.preventDefault();
-          nextSlide();
-          resetAutoTimer();
-        } else if (slide.classList.contains("prev")){
-          e.preventDefault();
-          prevSlide();
-          resetAutoTimer();
-        }
-      });
-      const exploreBtn = slide.querySelector(".demo1-explore-btn");
-      if(exploreBtn){
-        exploreBtn.addEventListener("click", ev=>{
-          ev.stopPropagation();
-        });
-      }
-    });
-
-    // 15) touch滑动(手机端)
-    let startX=0, isSwiping=false;
-    track.addEventListener("touchstart", e=>{
-      if(e.touches.length===1){
-        startX = e.touches[0].clientX;
-        isSwiping=true;
-      }
-    },{passive:true});
-    track.addEventListener("touchmove", ()=>{},{passive:true});
-    track.addEventListener("touchend", e=>{
-      if(!isSwiping) return;
-      isSwiping=false;
-      const diff = e.changedTouches[0].clientX - startX;
-      if (Math.abs(diff)>20){
-        diff<0? nextSlide(): prevSlide();
-        resetAutoTimer();
-      }
-    },{passive:true});
-
-    // 16) window resize => 重新fix
-    window.addEventListener("resize", ()=>{
-      fixCloneIndex();
-      updateClasses();
-    });
-
-    // 初始化
-    init();
-  }
-
-
-  // =============== C. 桌面端脚本：保留原先 “仅克隆首尾” 逻辑 ===============
-  function initSnapCarouselDesktop() {
-    console.log("[Carousel] Using Desktop single-set approach...");
-
-    const container = document.querySelector(".demo1-carousel-container");
-    const track = document.querySelector(".demo1-carousel-track");
-    let slides = Array.from(track.querySelectorAll(".demo1-carousel-slide"));
-    const prevBtn = document.querySelector(".demo1-carousel-prev");
-    const nextBtn = document.querySelector(".demo1-carousel-next");
-    const dots = Array.from(document.querySelectorAll(".demo1-carousel-dot"));
-
-    if (!container || !track || slides.length===0) return;
-
-    const totalReal = slides.length;
-    let currentIndex = 1; // 因为要在最前面插入一个克隆
-
-    // 克隆首尾
-    const firstClone = slides[0].cloneNode(true);
-    const lastClone = slides[totalReal-1].cloneNode(true);
-    track.appendChild(firstClone);
-    track.insertBefore(lastClone, slides[0]);
-    slides = Array.from(track.querySelectorAll(".demo1-carousel-slide"));
-
-    function setInitialPos(){
-      track.style.scrollBehavior="auto";
-      slides[1].scrollIntoView({behavior:"auto", block:"nearest", inline:"center"});
-      track.style.scrollBehavior="smooth";
-      updateClasses();
-    }
-
-    function getActiveIndex(){
-      const cRect = container.getBoundingClientRect();
-      const cCenter = cRect.left + cRect.width/2;
-      let minDiff=Infinity, activeI=1;
-      slides.forEach((sl,i)=>{
-        const slRect = sl.getBoundingClientRect();
-        const slCenter = slRect.left + slRect.width/2;
-        const diff=Math.abs(slCenter-cCenter);
-        if(diff<minDiff){
-          minDiff=diff;
-          activeI=i;
-        }
-      });
-      return activeI;
-    }
-    function updateClasses(){
-      const activeI = getActiveIndex();
-      slides.forEach(sl => {
-        sl.classList.remove("active","shadow","prev","next");
-      });
-      slides[activeI]?.classList.add("active");
-      const nextI= (activeI+1)%slides.length;
-      const prevI= (activeI-1+slides.length)%slides.length;
-      slides[nextI]?.classList.add("next");
-      slides[prevI]?.classList.add("prev");
-      slides.forEach((sl)=>{
-        if(!sl.classList.contains("active")) sl.classList.add("shadow");
-      });
-
-      // dots
-      let dotIndex;
-      if (activeI===0){
-        dotIndex= totalReal-1;
-      } else if(activeI=== slides.length-1){
-        dotIndex=0;
-      } else {
-        dotIndex= activeI-1;
-      }
-      dots.forEach((d,i)=> d.classList.toggle("active", i===dotIndex));
-    }
-
-    function fixCloneIndex(){
-      const activeI = getActiveIndex();
-      if(activeI===0){
-        // 跳到最后一张真实
-        track.style.scrollBehavior="auto";
-        slides[totalReal].scrollIntoView({block:"nearest",inline:"center"});
-        track.style.scrollBehavior="smooth";
-      } else if(activeI=== slides.length-1){
-        // 跳到第一张真实
-        track.style.scrollBehavior="auto";
-        slides[1].scrollIntoView({block:"nearest",inline:"center"});
-        track.style.scrollBehavior="smooth";
-      }
-    }
-
-    let scrollTimer=null;
-    track.addEventListener("scroll",()=>{
-      if(scrollTimer) clearTimeout(scrollTimer);
-      scrollTimer=setTimeout(()=>{
-        fixCloneIndex();
-        updateClasses();
-      },150);
-    });
-
-    function scrollToIndex(idx, smooth=true){
-      if(idx<0) idx=0;
-      if(idx>=slides.length) idx=slides.length-1;
-      const target= slides[idx];
-      track.style.scrollBehavior= smooth?"smooth":"auto";
-      target.scrollIntoView({behavior: smooth?"smooth":"auto", block:"nearest",inline:"center"});
-    }
-    function nextSlide(){
-      currentIndex++;
-      scrollToIndex(currentIndex,true);
-    }
-    function prevSlide(){
-      currentIndex--;
-      scrollToIndex(currentIndex,true);
-    }
-
-    let autoTimer= setInterval(nextSlide, 5000);
+    // 2.8) 自动播放
+    let autoTimer= setInterval(nextSlide,5000);
     function resetAutoTimer(){
       clearInterval(autoTimer);
       autoTimer= setInterval(nextSlide,5000);
     }
 
+    // 2.9) 按钮 + dots
     prevBtn?.addEventListener("click", e=>{
       e.stopPropagation();
       prevSlide();
@@ -1104,9 +892,237 @@ transform: translateY(0); /* 文字从下方上升 */
       resetAutoTimer();
     });
     dots.forEach((dot,i)=>{
-      dot.addEventListener("click", e=>{
+      dot.addEventListener("click",(e)=>{
         e.stopPropagation();
-        currentIndex= i+1;
+        currentIndex= i+ totalReal;
+        scrollToIndex(currentIndex,true);
+        resetAutoTimer();
+      });
+    });
+
+    // 2.10) slide点击 => next/prev
+    slides.forEach(sl=>{
+      sl.addEventListener("click",(e)=>{
+        if(sl.classList.contains("active")){
+          // do nothing
+        } else if(sl.classList.contains("next")){
+          e.preventDefault();
+          nextSlide();
+          resetAutoTimer();
+        } else if(sl.classList.contains("prev")){
+          e.preventDefault();
+          prevSlide();
+          resetAutoTimer();
+        }
+      });
+      const exploreBtn= sl.querySelector(".natural1-explore-btn");
+      if(exploreBtn){
+        exploreBtn.addEventListener("click",(ev)=>{
+          ev.stopPropagation();
+        });
+      }
+    });
+
+    // 2.11) 触摸滑动
+    let startX=0, isSwiping=false;
+    track.addEventListener("touchstart",(e)=>{
+      if(e.touches.length===1){
+        startX= e.touches[0].clientX;
+        isSwiping= true;
+      }
+    }, {passive:true});
+    track.addEventListener("touchmove",()=>{}, {passive:true});
+    track.addEventListener("touchend",(e)=>{
+      if(!isSwiping) return;
+      isSwiping= false;
+      const diff= e.changedTouches[0].clientX- startX;
+      if(Math.abs(diff)>20){
+        diff<0? nextSlide(): prevSlide();
+        resetAutoTimer();
+      }
+    }, {passive:true});
+
+    // 2.12) resize => fix
+    window.addEventListener("resize", ()=>{
+      fixCloneIndex();
+      updateClasses();
+    });
+
+    // init
+    init();
+  }
+
+
+  // =====================================================================
+  // C) 桌面端: 保留你原桌面端逻辑(只克隆首尾)
+  // =====================================================================
+  function initSnapCarouselDesktop(){
+    console.log("[Carousel] Desktop => Original logic (unchanged).");
+
+    const container = document.querySelector(".natural1-carousel-container");
+    const track = document.querySelector(".natural1-carousel-track");
+    let slides = Array.from(track.querySelectorAll(".natural1-carousel-slide"));
+
+    const prevBtn = document.querySelector(".natural1-carousel-prev");
+    const nextBtn = document.querySelector(".natural1-carousel-next");
+    const dots = Array.from(document.querySelectorAll(".natural1-carousel-dot"));
+
+    if (!container || !track || slides.length === 0) return;
+
+    const totalReal = slides.length;
+    let currentIndex = 1;
+    let scrollTimer = null;
+
+    // ========== 1) 克隆首尾 ==========
+    const firstClone = slides[0].cloneNode(true);
+    const lastClone = slides[slides.length - 1].cloneNode(true);
+    track.appendChild(firstClone);
+    track.insertBefore(lastClone, slides[0]);
+    slides = Array.from(track.querySelectorAll(".natural1-carousel-slide"));
+
+    // ========== 2) 初始 => 滚到索引1(第一张真实slide) ==========
+    function setInitialPos() {
+      track.style.scrollBehavior = "auto";
+      slides[1].scrollIntoView({ behavior:"auto", block:"nearest", inline:"center" });
+      track.style.scrollBehavior = "smooth";
+    }
+    setInitialPos();
+
+    // ========== 3) 根据容器中心计算激活slide ==========
+    function getActiveIndex() {
+      const rect = container.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      let minDiff = Infinity, activeI = 1;
+      slides.forEach((sl, i) => {
+        const slRect = sl.getBoundingClientRect();
+        const slCenterX = slRect.left + slRect.width / 2;
+        const diff = Math.abs(slCenterX - centerX);
+        if (diff < minDiff) {
+          minDiff = diff;
+          activeI = i;
+        }
+      });
+      return activeI;
+    }
+
+    // ========== 4) 更新类名/ dots/ shadow ==========
+    function updateClasses() {
+      const activeI = getActiveIndex();
+      slides.forEach((s) => s.classList.remove("active","prev","next","shadow"));
+      slides[activeI]?.classList.add("active");
+      const nextI = (activeI + 1) % slides.length;
+      const prevI = (activeI - 1 + slides.length) % slides.length;
+      slides[nextI]?.classList.add("next");
+      slides[prevI]?.classList.add("prev");
+      slides.forEach((s) => {
+        if (!s.classList.contains("active")) {
+          s.classList.add("shadow");
+        }
+      });
+      let dotIndex;
+      if (activeI === 0) {
+        dotIndex = totalReal - 1;
+      } else if (activeI === slides.length - 1) {
+        dotIndex = 0;
+      } else {
+        dotIndex = activeI - 1;
+      }
+      dots.forEach((d, i) => {
+        d.classList.toggle("active", i === dotIndex);
+      });
+    }
+
+    // ========== 5) 无缝修正：若在克隆区 => 瞬间跳到真实slide ==========
+    function fixCloneIndex() {
+      const activeI = getActiveIndex();
+      if (activeI === 0) {
+        // 左克隆 => 跳到最后真实
+        currentIndex = totalReal;
+        track.style.scrollBehavior = "auto";
+        slides[currentIndex].scrollIntoView({ block:"nearest", inline:"center" });
+        track.style.scrollBehavior = "smooth";
+      } else if (activeI === slides.length - 1) {
+        // 右克隆 => 跳到第1张真实
+        currentIndex = 1;
+        track.style.scrollBehavior = "auto";
+        slides[currentIndex].scrollIntoView({ block:"nearest", inline:"center" });
+        track.style.scrollBehavior = "smooth";
+      } else {
+        currentIndex = activeI;
+      }
+    }
+
+    // ========== 6) scroll事件 (用户手动滑动) ==========
+    track.addEventListener("scroll", () => {
+      if (scrollTimer) clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        fixCloneIndex();
+        updateClasses();
+      }, 150);
+    });
+
+    // ========== 7) 切换 => next/prev, 与原脚本一致 ==========
+    function nextSlide() {
+      // 若当前已是 slides.length-2(最后真实slide)
+      // => 下一个会是 slides.length-1(克隆)
+      // => 先瞬间回到第一张
+      if (currentIndex === slides.length - 2) {
+        track.style.scrollBehavior = "auto";
+        currentIndex = 1;
+        slides[currentIndex].scrollIntoView({ block:"nearest", inline:"center" });
+        track.style.scrollBehavior = "smooth";
+      } else {
+        currentIndex++;
+        scrollToIndex(currentIndex, true);
+      }
+    }
+    function prevSlide() {
+      // 若当前=1 => 上一个=0(克隆) => 瞬间回到最后真实
+      if (currentIndex === 1) {
+        track.style.scrollBehavior = "auto";
+        currentIndex = totalReal;
+        slides[currentIndex].scrollIntoView({ block:"nearest", inline:"center" });
+        track.style.scrollBehavior = "smooth";
+      } else {
+        currentIndex--;
+        scrollToIndex(currentIndex, true);
+      }
+    }
+    function scrollToIndex(i, smooth=true) {
+      if (i<0) i=0;
+      if(i>= slides.length) i= slides.length-1;
+      const target= slides[i];
+      if(!target) return;
+      track.style.scrollBehavior= smooth?"smooth":"auto";
+      target.scrollIntoView({
+        behavior: smooth?"smooth":"auto",
+        block:"nearest",
+        inline:"center"
+      });
+    }
+
+    // ========== 8) 自动播放 ==========
+    let autoTimer= setInterval(nextSlide, 5000);
+    function resetAutoTimer() {
+      clearInterval(autoTimer);
+      autoTimer= setInterval(nextSlide, 5000);
+    }
+
+    // ========== 9) 按钮 & dots & 点击slide ==========
+    prevBtn?.addEventListener("click",(e)=>{
+      e.stopPropagation();
+      prevSlide();
+      resetAutoTimer();
+    });
+    nextBtn?.addEventListener("click",(e)=>{
+      e.stopPropagation();
+      nextSlide();
+      resetAutoTimer();
+    });
+    dots.forEach((dot,i)=>{
+      dot.addEventListener("click",(e)=>{
+        e.stopPropagation();
+        currentIndex= i+1; // dot i => slides[i+1]
         scrollToIndex(currentIndex,true);
         resetAutoTimer();
       });
@@ -1125,37 +1141,60 @@ transform: translateY(0); /* 文字从下方上升 */
           resetAutoTimer();
         }
       });
-      const exploreBtn= slide.querySelector(".demo1-explore-btn");
+      const exploreBtn= slide.querySelector(".natural1-explore-btn");
       if(exploreBtn){
-        exploreBtn.addEventListener("click", ev=>{
+        exploreBtn.addEventListener("click",(ev)=>{
           ev.stopPropagation();
         });
       }
     });
+
+    // ========== 10) 触摸滑动 ==========
     let startX=0, isSwiping=false;
-    track.addEventListener("touchstart", e=>{
+    track.addEventListener("touchstart",(e)=>{
       if(e.touches.length===1){
         startX= e.touches[0].clientX;
-        isSwiping=true;
+        isSwiping= true;
       }
-    },{passive:true});
-    track.addEventListener("touchmove",()=>{},{passive:true});
-    track.addEventListener("touchend", e=>{
+    }, {passive:true});
+    track.addEventListener("touchmove",()=>{}, {passive:true});
+    track.addEventListener("touchend",(e)=>{
       if(!isSwiping) return;
-      isSwiping=false;
-      const diff= e.changedTouches[0].clientX- startX;
+      isSwiping= false;
+      const diff= e.changedTouches[0].clientX - startX;
       if(Math.abs(diff)>20){
         diff<0? nextSlide(): prevSlide();
         resetAutoTimer();
       }
-    },{passive:true});
+    }, {passive:true});
 
+    // ========== 11) 初始化 ==========
+    function init(){
+      track.style.scrollBehavior="auto";
+      scrollToIndex(currentIndex,false);
+      track.style.scrollBehavior="smooth";
+      updateClasses();
+    }
+    init();
+
+    // ========== 12) resize时校正 ==========
     window.addEventListener("resize", ()=>{
       fixCloneIndex();
       updateClasses();
     });
+  }
 
-    setInitialPos();
+
+  // ====================================================
+  // ============== 入口：调用“桌面/移动端” ==============
+  // ====================================================
+  function initSnapCarousel(){
+    const isMobile= window.innerWidth<=768;
+    if(isMobile){
+      initSnapCarouselMobile();
+    } else {
+      initSnapCarouselDesktop();
+    }
   }
 
 })();
