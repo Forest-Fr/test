@@ -317,7 +317,6 @@ display: inline-block;
   .natural1-carousel-container {
     position: relative;
     width: 100vw;
-  padding: 0;
     margin: 0 auto;
     overflow: hidden;  /* ✅ 让JS控制transform, 所以改为hidden */
     height: 495px;
@@ -337,8 +336,8 @@ display: inline-block;
   }
 
   .natural1-carousel-slide {
-       flex: 0 0 66vw; /* ✅ 保证主图宽度，单位 vw 更直观 */
-    
+        flex: 0 0 auto;   /* 不拉伸 */
+  width: 66vw;      /* 主宽度66vw */
 height: 495px;
     /* 去掉scroll-snap-align */
     position: relative;
@@ -592,9 +591,9 @@ transform: translateY(0); /* 文字从下方上升 */
                       onclick="window.open('example.html', '_blank')">
                 Explore now
               </button>
-              <div class="natural1-text-bottom">模拟.Apple TV原生播放.</div>
+              <div class="natural1-text-bottom">模拟Scoll原生播放.</div>
             </div>
-            <div class="natural1-title">scoll carousel优化不足</div>
+            <div class="natural1-title">优化不足</div>
           </div>
         </div>
       </div>
@@ -611,7 +610,7 @@ transform: translateY(0); /* 文字从下方上升 */
                       onclick="window.open('example.html', '_blank')">
                 Explore now
               </button>
-              <div class="natural1-text-bottom">模拟.Apple TV原生播放.</div>
+              <div class="natural1-text-bottom">模拟Scoll原生播放.</div>
             </div>
             <div class="natural1-title">移动端划快等问题</div>
           </div>
@@ -630,9 +629,9 @@ transform: translateY(0); /* 文字从下方上升 */
                       onclick="window.open('example.html', '_blank')">
                 Explore now
               </button>
-              <div class="natural1-text-bottom">模拟.Apple TV原生播放.</div>
+              <div class="natural1-text-bottom">模拟scoll原生播放.</div>
             </div>
-            <div class="natural1-title">虽不偏移</div>
+            <div class="natural1-title">防止偏移</div>
           </div>
         </div>
       </div>
@@ -677,14 +676,16 @@ transform: translateY(0); /* 文字从下方上升 */
 
 <script>
 (function(){
-  // ============== A) 等图片加载完后再启动 ==============
+  // ==================================
+  // A) 等图片加载完后，再初始化
+  // ==================================
   const container = document.querySelector(".natural1-carousel-container");
-  if (container) container.style.visibility = "hidden";
+  if(container) container.style.visibility = "hidden";
 
   const allImgs = Array.from(document.querySelectorAll(".natural1-carousel-slide img"));
 
   function waitImagesLoaded(images, callback){
-    let loadedCount=0;
+    let loaded=0;
     const total= images.length;
     if(total===0){
       callback();
@@ -692,51 +693,48 @@ transform: translateY(0); /* 文字从下方上升 */
     }
     images.forEach((img)=>{
       if(img.complete){
-        checkDone();
+        check();
       } else {
-        img.addEventListener("load", checkDone);
-        img.addEventListener("error", checkDone);
+        img.addEventListener("load", check);
+        img.addEventListener("error", check);
       }
     });
-    function checkDone(){
-      loadedCount++;
-      if(loadedCount>= total){
-        callback();
-      }
+    function check(){
+      loaded++;
+      if(loaded>= total) callback();
     }
   }
 
-  // 等图片都加载完后 => 判断移动端 or 桌面端
   waitImagesLoaded(allImgs, ()=>{
     if(!container) return;
-    const isMobile= window.innerWidth<=768;
+    const isMobile = window.innerWidth<=768;
     if(isMobile){
-      initSnapCarouselMobileSmooth(); // 移动端苹果式transform逻辑
+      initSnapCarouselMobileApple();   // 移动端：苹果式 transform
     } else {
-      initSnapCarouselDesktop();      // 桌面端原逻辑
+      initSnapCarouselDesktop();       // 桌面端：你原先的首尾克隆 + scroll-snap
     }
-    container.style.visibility= "visible";
+    container.style.visibility = "visible";
   });
 
 
-  // =====================================================================
-  // B) 移动端: 苹果式 transform + 三套Slides + 无限循环改良
-  // =====================================================================
-  function initSnapCarouselMobileSmooth(){
-    console.log("[Carousel] Mobile triple-set transform + infinite approach...");
+  // =======================================================================
+  // B) 移动端：三套Slides + transform + gap=15 + 无限循环 + 对称居中
+  // =======================================================================
+  function initSnapCarouselMobileApple(){
+    console.log("[Carousel] Mobile triple-set transform (gap=15, infinite) approach...");
 
     const track = document.querySelector(".natural1-carousel-track");
-    const container= document.querySelector(".natural1-carousel-container");
-    let slides= Array.from(track.querySelectorAll(".natural1-carousel-slide"));
+    const container = document.querySelector(".natural1-carousel-container");
+    let slides = Array.from(track.querySelectorAll(".natural1-carousel-slide"));
 
     const prevBtn= document.querySelector(".natural1-carousel-prev");
     const nextBtn= document.querySelector(".natural1-carousel-next");
-    const dots= Array.from(document.querySelectorAll(".natural1-carousel-dot"));
+    const dots = Array.from(document.querySelectorAll(".natural1-carousel-dot"));
 
-    if(!track || !container || slides.length===0) return;
+    if(!track|| !container|| slides.length===0) return;
 
     // 1) 多套(三倍克隆)
-    const original= slides.slice();
+    const original = slides.slice();
     const totalReal= original.length;
     track.innerHTML="";
     // 第一套
@@ -746,77 +744,77 @@ transform: translateY(0); /* 文字从下方上升 */
     // 第三套
     original.forEach(sl=> track.appendChild(sl.cloneNode(true)));
     slides= Array.from(track.querySelectorAll(".natural1-carousel-slide"));
-    const totalSlides= slides.length; // = 3 * totalReal
+    const totalSlides= slides.length; // 3 * totalReal
 
-    // 2) 计算“单张宽+gap=15”
-    let containerW=0, totalSlideW=0; 
+    // 2) 计算 “单张+gap= pitch” 用来对齐居中
+    let containerW=0, pitch=0; 
     function updateSizes(){
       containerW= container.offsetWidth;
       if(slides.length>=2){
-        // 计算相邻两张的left差 => 含 gap
+        // pitch = 左坐标差
         const left1= slides[0].getBoundingClientRect().left;
         const left2= slides[1].getBoundingClientRect().left;
-        totalSlideW= Math.round(left2- left1);
+        pitch = left2- left1;  // 含 15px gap
       } else if(slides[0]){
-        totalSlideW= slides[0].offsetWidth + 15;
+        // fallback
+        pitch = slides[0].offsetWidth + 15;
       }
     }
     updateSizes();
 
-    // 中间套 => 索引= totalReal
-    let currentIndex= totalReal;
+    let currentIndex= totalReal; // 中间套起始
     let currentTranslate=0;
-    const TRANSITION_TIME= 600; // ms
+    const TRANSITION_TIME=600;
 
     function setTrackPos(value, withTrans=true){
-      // 用更柔和的 0.6s cubic-bezier
-      track.style.transition= withTrans? "transform 0.6s cubic-bezier(0.22,1,0.36,1)" : "none";
+      track.style.transition = withTrans? "transform 0.6s cubic-bezier(0.22,1,0.36,1)" : "none";
       track.style.transform= `translateX(${value}px)`;
       currentTranslate= value;
     }
 
-    // offset= (容器宽 - (slide本身宽)) /2 
-    // slide本身宽= totalSlideW -15
-    function getTargetTranslate(i){
-      const realSlideW= totalSlideW-15;
-      const offset= (containerW- realSlideW)/2;
-      return -(i* totalSlideW)+ offset;
+    // offset= (containerWidth - (pitch-15))/2
+    // transformX= -(index*pitch) + offset
+    function getTargetTranslate(idx){
+      const realSlideWidth= pitch - 15; 
+      const offset= (containerW- realSlideWidth)/2;
+      return -(idx * pitch)+ offset;
     }
 
-    function goToIndex(i, anim=true){
-      // 不限制 i>= totalSlides
+    // goToIndex => 不限制
+    function goToIndex(i, animate=true){
       currentIndex= i;
       const target= getTargetTranslate(i);
-      setTrackPos(target, anim);
+      setTrackPos(target, animate);
       updateClasses();
     }
 
-    // fixClone => 保持在中间套
+    // fixCloneIndex => 若 index落在第一/第三套边界 => 瞬移回中间
     function fixCloneIndex(){
-      const activeI= getActiveIndexByTranslate();
-      currentIndex= activeI;
-      if(activeI<=1){
-        currentIndex= activeI + totalReal;
+      const actI= getActiveIndexByTranslate();
+      currentIndex= actI;
+      if(actI<=1){
+        currentIndex= actI+ totalReal;
         setTrackPos(getTargetTranslate(currentIndex), false);
-      } else if(activeI>= (2*totalReal-1)){
-        currentIndex= (activeI -2*totalReal)+ totalReal;
-        setTrackPos(getTargetTranslate(currentIndex), false);
+      } else if(actI>= (2*totalReal -1)){
+        currentIndex= (actI - 2*totalReal)+ totalReal;
+        setTrackPos( getTargetTranslate(currentIndex), false );
       }
       updateClasses();
-      resetAutoTimer(); // fix后重启auto
+      resetAutoTimer(); // fix完也重启auto
     }
 
+    // getActiveIndexByTranslate => approximate
     function getActiveIndexByTranslate(){
-      const realSlideW= totalSlideW-15;
-      const offset= (containerW- realSlideW)/2;
-      let approximate= -(currentTranslate- offset)/ totalSlideW;
+      const realSlideWidth= pitch-15;
+      const offset= (containerW- realSlideWidth)/2;
+      let approximate= -(currentTranslate- offset)/ pitch;
       return Math.round(approximate);
     }
+
     function mapToRealIndex(i){
       return i % totalReal;
     }
 
-    // updateClasses => active/prev/next/shadow + dots
     function updateClasses(){
       const actI= getActiveIndexByTranslate();
       slides.forEach(s=> s.classList.remove("active","shadow","prev","next"));
@@ -826,7 +824,9 @@ transform: translateY(0); /* 文字从下方上升 */
       slides[nextI]?.classList.add("next");
       slides[prevI]?.classList.add("prev");
       slides.forEach(s=>{
-        if(!s.classList.contains("active")) s.classList.add("shadow");
+        if(!s.classList.contains("active")){
+          s.classList.add("shadow");
+        }
       });
       // dots
       const dotIndex= mapToRealIndex(actI);
@@ -835,10 +835,11 @@ transform: translateY(0); /* 文字从下方上升 */
       });
     }
 
-    // next/prev => 后面用 fixClone
+    // next/prev
     function nextSlide(){
       currentIndex++;
       goToIndex(currentIndex,true);
+      // 等动画结束再 fix
       setTimeout(()=> fixCloneIndex(), TRANSITION_TIME);
       resetAutoTimer();
     }
@@ -856,7 +857,7 @@ transform: translateY(0); /* 文字从下方上升 */
       autoTimer= setInterval(nextSlide,5000);
     }
 
-    // events => btn/dots
+    // 按钮 & dots
     prevBtn?.addEventListener("click",(e)=>{
       e.stopPropagation();
       prevSlide();
@@ -894,7 +895,7 @@ transform: translateY(0); /* 文字从下方上升 */
       }
     });
 
-    // touch => 手势
+    // touch => threshold=10, speed check
     let startX=0, isDragging=false, dragStart=0, startTime=0;
     track.style.transition="none";
 
@@ -907,32 +908,36 @@ transform: translateY(0); /* 文字从下方上升 */
         startTime= Date.now();
       }
     },{passive:false});
+
     track.addEventListener("touchmove",(e)=>{
       if(!isDragging) return;
-      e.preventDefault();
+      e.preventDefault(); // prevent page scroll
       const diff= e.touches[0].clientX- startX;
       track.style.transform= `translateX(${dragStart+ diff}px)`;
       currentTranslate= dragStart+ diff;
     },{passive:false});
+
     track.addEventListener("touchend",(e)=>{
       if(!isDragging) return;
       isDragging= false;
-      track.style.transition= "transform 0.6s cubic-bezier(0.22,1,0.36,1)";
 
-      const dist= e.changedTouches[0].clientX- startX;
+      track.style.transition= "transform 0.6s cubic-bezier(0.22,1,0.36,1)";
+      const dist= e.changedTouches[0].clientX - startX;
       const elapsed= Date.now()- startTime;
-      const speed= dist/ elapsed;
+      const speed= dist/elapsed;
+
       if(Math.abs(dist)>10){
-        if(speed<-0.5){ 
-          nextSlide(); 
+        // simple speed check
+        if(speed<-0.5){
+          nextSlide();
           return;
-        } else if(speed>0.5){ 
+        } else if(speed>0.5){
           prevSlide();
           return;
         }
-        if(dist<0) nextSlide();
-        else prevSlide();
+        if(dist<0) nextSlide(); else prevSlide();
       } else {
+        // 回到当前
         goToIndex(currentIndex,true);
         setTimeout(()=> fixCloneIndex(), TRANSITION_TIME);
         resetAutoTimer();
@@ -942,13 +947,14 @@ transform: translateY(0); /* 文字从下方上升 */
     // resize
     window.addEventListener("resize",()=>{
       updateSizes();
-      setTrackPos( getTargetTranslate(currentIndex), false);
+      setTrackPos(getTargetTranslate(currentIndex),false);
       fixCloneIndex();
     });
 
+    // init
     function init(){
       updateSizes();
-      setTrackPos( getTargetTranslate(currentIndex), false);
+      setTrackPos(getTargetTranslate(currentIndex), false);
       updateClasses();
     }
     init();
@@ -956,13 +962,11 @@ transform: translateY(0); /* 文字从下方上升 */
 
 
   // =====================================================================
-  // C) 桌面端: 保留你原桌面端逻辑(只克隆首尾)
+  // C) 桌面端：保留你原桌面端逻辑(首尾克隆 + scroll-snap)
   // =====================================================================
   function initSnapCarouselDesktop(){
     console.log("[Carousel] Desktop => Original logic (unchanged).");
 
-
-    /* ========== 你的原桌面端函数, 不变 ========== */
     const container = document.querySelector(".natural1-carousel-container");
     const track = document.querySelector(".natural1-carousel-track");
     let slides = Array.from(track.querySelectorAll(".natural1-carousel-slide"));
@@ -971,91 +975,92 @@ transform: translateY(0); /* 文字从下方上升 */
     const nextBtn = document.querySelector(".natural1-carousel-next");
     const dots = Array.from(document.querySelectorAll(".natural1-carousel-dot"));
 
-    if(!container|| !track|| slides.length===0) return;
+    if (!container || !track || slides.length === 0) return;
 
     const totalReal= slides.length;
-    let currentIndex=1;
+    let currentIndex= 1;
     let scrollTimer=null;
- // ========== 1) 克隆首尾 ========== 
-    const firstClone = slides[0].cloneNode(true);
-    const lastClone = slides[totalReal-1].cloneNode(true);
+
+    // == 1)克隆首尾
+    const firstClone= slides[0].cloneNode(true);
+    const lastClone= slides[totalReal-1].cloneNode(true);
     track.appendChild(firstClone);
     track.insertBefore(lastClone, slides[0]);
-    slides = Array.from(track.querySelectorAll(".natural1-carousel-slide"));
+    slides= Array.from(track.querySelectorAll(".natural1-carousel-slide"));
 
-    // ========== 2) 初始 => 滚到索引1 ==========
-    function setInitialPos() {
-      track.style.scrollBehavior = "auto";
-      slides[1].scrollIntoView({ behavior:"auto", block:"nearest", inline:"center" });
-      track.style.scrollBehavior = "smooth";
+    // == 2) 初始 => scroll to index=1
+    function setInitialPos(){
+      track.style.scrollBehavior="auto";
+      slides[1].scrollIntoView({behavior:"auto", block:"nearest", inline:"center"});
+      track.style.scrollBehavior="smooth";
     }
     setInitialPos();
 
-    // ========== 3) getActiveIndex ==========
-    function getActiveIndex() {
-      const rect = container.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      let minDiff = Infinity, activeI = 1;
-      slides.forEach((sl, i) => {
-        const slRect = sl.getBoundingClientRect();
-        const slCenterX = slRect.left + slRect.width / 2;
-        const diff = Math.abs(slCenterX - centerX);
-        if (diff < minDiff) {
-          minDiff = diff;
-          activeI = i;
+    // == 3) getActiveIndex
+    function getActiveIndex(){
+      const cRect= container.getBoundingClientRect();
+      const cCenter= cRect.left+ cRect.width/2;
+      let minDiff= Infinity, activeI=1;
+      slides.forEach((sl,i)=>{
+        const slRect= sl.getBoundingClientRect();
+        const slCenter= slRect.left+ slRect.width/2;
+        const diff= Math.abs(slCenter-cCenter);
+        if(diff< minDiff){
+          minDiff= diff; 
+          activeI= i;
         }
       });
       return activeI;
     }
 
-    // ========== 4) updateClasses ==========
-    function updateClasses() {
-      const activeI = getActiveIndex();
-      slides.forEach((s) => s.classList.remove("active","prev","next","shadow"));
+    // == 4) updateClasses
+    function updateClasses(){
+      const activeI= getActiveIndex();
+      slides.forEach(s=> s.classList.remove("active","prev","next","shadow"));
       slides[activeI]?.classList.add("active");
 
-      const nextI = (activeI + 1) % slides.length;
-      const prevI = (activeI - 1 + slides.length) % slides.length;
+      const nextI= (activeI+1)% slides.length;
+      const prevI= (activeI-1+ slides.length)% slides.length;
       slides[nextI]?.classList.add("next");
       slides[prevI]?.classList.add("prev");
-      slides.forEach((s) => {
-        if (!s.classList.contains("active")) {
+      slides.forEach(s=>{
+        if(!s.classList.contains("active")){
           s.classList.add("shadow");
         }
       });
 
       let dotIndex;
-      if (activeI === 0) {
-        dotIndex = totalReal - 1;
-      } else if (activeI === slides.length - 1) {
-        dotIndex = 0;
+      if(activeI===0){
+        dotIndex= totalReal-1;
+      } else if(activeI=== slides.length-1){
+        dotIndex= 0;
       } else {
-        dotIndex = activeI - 1;
+        dotIndex= activeI-1;
       }
-      dots.forEach((d, i) => {
-        d.classList.toggle("active", i === dotIndex);
+      dots.forEach((d,i)=>{
+        d.classList.toggle("active", i===dotIndex);
       });
     }
 
-    // ========== 5) fixCloneIndex ==========
-    function fixCloneIndex() {
-      const activeI = getActiveIndex();
-      if (activeI === 0) {
-        currentIndex = totalReal;
-        track.style.scrollBehavior = "auto";
-        slides[currentIndex].scrollIntoView({ block:"nearest", inline:"center" });
-        track.style.scrollBehavior = "smooth";
-      } else if (activeI === slides.length - 1) {
-        currentIndex = 1;
-        track.style.scrollBehavior = "auto";
-        slides[currentIndex].scrollIntoView({ block:"nearest", inline:"center" });
-        track.style.scrollBehavior = "smooth";
+    // == 5) fixCloneIndex
+    function fixCloneIndex(){
+      const activeI= getActiveIndex();
+      if(activeI===0){
+        currentIndex= totalReal;
+        track.style.scrollBehavior="auto";
+        slides[currentIndex].scrollIntoView({block:"nearest", inline:"center"});
+        track.style.scrollBehavior="smooth";
+      } else if(activeI=== slides.length-1){
+        currentIndex=1;
+        track.style.scrollBehavior="auto";
+        slides[currentIndex].scrollIntoView({block:"nearest", inline:"center"});
+        track.style.scrollBehavior="smooth";
       } else {
-        currentIndex = activeI;
+        currentIndex= activeI;
       }
     }
 
-    // ========== 6) scroll事件 ==========
+    // == 6) scroll事件 => fix + update
     track.addEventListener("scroll",()=>{
       if(scrollTimer) clearTimeout(scrollTimer);
       scrollTimer= setTimeout(()=>{
@@ -1064,12 +1069,12 @@ transform: translateY(0); /* 文字从下方上升 */
       },150);
     });
 
-    // ========== 7) next/prev ==========
+    // == 7) next/prev
     function nextSlide(){
       if(currentIndex=== slides.length-2){
         track.style.scrollBehavior="auto";
         currentIndex=1;
-        slides[currentIndex].scrollIntoView({ block:"nearest", inline:"center" });
+        slides[currentIndex].scrollIntoView({block:"nearest", inline:"center"});
         track.style.scrollBehavior="smooth";
       } else {
         currentIndex++;
@@ -1080,7 +1085,7 @@ transform: translateY(0); /* 文字从下方上升 */
       if(currentIndex===1){
         track.style.scrollBehavior="auto";
         currentIndex= totalReal;
-        slides[currentIndex].scrollIntoView({ block:"nearest", inline:"center" });
+        slides[currentIndex].scrollIntoView({block:"nearest", inline:"center"});
         track.style.scrollBehavior="smooth";
       } else {
         currentIndex--;
@@ -1093,21 +1098,17 @@ transform: translateY(0); /* 文字从下方上升 */
       const target= slides[i];
       if(!target) return;
       track.style.scrollBehavior= smooth?"smooth":"auto";
-      target.scrollIntoView({
-        behavior: smooth?"smooth":"auto",
-        block:"nearest",
-        inline:"center"
-      });
+      target.scrollIntoView({ behavior: smooth?"smooth":"auto", block:"nearest", inline:"center" });
     }
 
-    // ========== 8) auto ==========
-    let autoTimer= setInterval(nextSlide, 5000);
+    // == 8) auto
+    let autoTimer= setInterval(nextSlide,5000);
     function resetAutoTimer(){
       clearInterval(autoTimer);
       autoTimer= setInterval(nextSlide,5000);
     }
 
-    // ========== 9) btn & dots & click preview ==========
+    // == 9) btn & dots
     prevBtn?.addEventListener("click",(e)=>{
       e.stopPropagation();
       prevSlide();
@@ -1148,7 +1149,7 @@ transform: translateY(0); /* 文字从下方上升 */
       }
     });
 
-    // ========== 10) init + resize ==========
+    // == 10) init
     function init(){
       track.style.scrollBehavior="auto";
       scrollToIndex(currentIndex,false);
@@ -1165,6 +1166,7 @@ transform: translateY(0); /* 文字从下方上升 */
 
 })();
 </script>
+
 
 
 
